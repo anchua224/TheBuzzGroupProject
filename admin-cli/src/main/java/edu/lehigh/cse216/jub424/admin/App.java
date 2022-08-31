@@ -1,4 +1,4 @@
-package edu.lehigh.cse216.ju424.admin;
+package edu.lehigh.cse216.jub424.admin;
 
 /**
  * Hello world!
