@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'dart:developer' as developer;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+void my_async_post_method() async {
+  var data = {'title': 'My first post'};
+  var resp = await http.post(
+    Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+    headers: {'Content-Type': 'application/json; charset=UTF-8'},
+    body: json.encode(data),
+  );
+  print(resp.body);
+}
+
 void main() {
   runApp(const MyApp());
 }
@@ -80,11 +94,86 @@ class HttpReqWords extends StatefulWidget {
 }
 
 class _HttpReqWordsState extends State<HttpReqWords> {
+  // Future<List<String>> _future_words = doSomeLongRunningCalculation();
+  late Future<List<String>> _future_words;
+  var _words = <String>['a', 'b', 'c', 'd'];
+  final _biggerFont = const TextStyle(fontSize: 18);
+
+  @override
+  void initState() {
+    super.initState();
+    _future_words = doSomeLongRunningCalculation();
+  }
+
   @override
   Widget build(BuildContext context) {
-     // this will get more interesting as we progress in the tutorial
-    // for now, simply return a Text widget holding a random word pair
-    final wordPair = WordPair.random();
-    return Text(wordPair.asPascalCase);  
+    var fb = FutureBuilder<List<String>>(
+      future: _future_words,
+      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        Widget child;
+
+        if (snapshot.hasData) {
+          developer.log('`using` ${snapshot.data}', name: 'my.app.category');
+          // create  listview to show one row per array element of json response
+          child = ListView.builder(
+              //shrinkWrap: true, //expensive! consider refactoring. https://api.flutter.dev/flutter/widgets/ScrollView/shrinkWrap.html
+              padding: const EdgeInsets.all(16.0),
+              itemCount: snapshot.data!.length,
+              itemBuilder: /*1*/ (context, i) {
+                return Column(
+                  children: <Widget>[
+                    ListTile(
+                      title: Text(
+                        snapshot.data![i],
+                        style: _biggerFont,
+                      ),
+                    ),
+                    Divider(height: 1.0),
+                  ],
+                );
+              });
+        } else {
+          // awaiting snapshot data, return simple text widget
+          child = Text('Calculating answer...');
+          // child = const CircularProgressIndicator(); // could show a loading spinner.
+        }
+        return child;
+      },
+    );
+
+    return fb;
   }
+}
+Future<List<String>> getWebData() async {
+  developer.log('Making web request...');
+  // var url = Uri.http('www.cse.lehigh.edu', '~spear/courses.json');
+  var url = Uri.parse('http://www.cse.lehigh.edu/~spear/courses.json');
+  // var url = Uri.parse('http://www.cse.lehigh.edu/~spear/5k.json');
+ // var url = Uri.parse('https://jsonplaceholder.typicode.com/albums/1');
+  var headers = {"Accept": "application/json"};  // <String,String>{};
+
+  var response = await http.get(url, headers: headers);  
+
+  developer.log('Response status: ${response.statusCode}');
+  developer.log('Response headers: ${response.headers}');
+  developer.log('Response body: ${response.body}');
+
+  print(await http.read(url)); // should be same as response.body
+
+  var res = jsonDecode(response.body);
+  print('json decode: $res');
+
+  //return [response.body]; // returns body as only element of List
+  return List<String>.from(res);
+}
+
+// method for trying out a long-running calculation
+Future<List<String>> doSomeLongRunningCalculation() async {
+  //return simpleLongRunningCalculation();
+  return getWebData(); // we'll try this next.
+}
+
+Future<List<String>> simpleLongRunningCalculation() async {
+  await Future.delayed(Duration(seconds: 5)); // wait 5 sec
+  return ['x', 'y', 'z'];
 }
