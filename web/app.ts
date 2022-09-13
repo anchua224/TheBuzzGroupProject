@@ -28,6 +28,10 @@ class NewEntryForm {
     clearForm() {
         (<HTMLInputElement>document.getElementById("newTitle")).value = "";
         (<HTMLInputElement>document.getElementById("newMessage")).value = "";
+        // reset the UI
+        (<HTMLElement>document.getElementById("editElement")).style.display = "none";
+        (<HTMLElement>document.getElementById("addElement")).style.display = "none";
+        (<HTMLElement>document.getElementById("showElements")).style.display = "block"; 
     }
 
      /**
@@ -174,20 +178,38 @@ class ElementList {
          for (let i = 0; i < all_delbtns.length; ++i) {
              all_delbtns[i].addEventListener("click", (e) => {mainList.clickDelete( e );});
          }  
+
+        // Find all of the edit buttons, and set their behavior
+        const all_editbtns = (<HTMLCollectionOf<HTMLInputElement>>document.getElementsByClassName("editbtn"));
+        for (let i = 0; i < all_editbtns.length; ++i) {
+            all_editbtns[i].addEventListener("click", (e) => {mainList.clickEdit( e );});
+        }
     }
 
-     /**
-     * buttons() adds a 'delete' button to the HTML for each row
+    /**
+     * buttons() adds a 'delete' button and an 'edit' button to the HTML for each row
      */
     private buttons(id: string): DocumentFragment {
         let fragment = document.createDocumentFragment();
         let td = document.createElement('td');
+
+        // create edit button, add to new td, add td to returned fragment
         let btn = document.createElement('button');
+        btn.classList.add("editbtn");
+        btn.setAttribute('data-value', id);
+        btn.innerHTML = 'Edit';
+        td.appendChild(btn);
+        fragment.appendChild(td);
+
+        // create delete button, add to new td, add td to returned fragment
+        td = document.createElement('td');
+        btn = document.createElement('button');
         btn.classList.add("delbtn");
         btn.setAttribute('data-value', id);
         btn.innerHTML = 'Delete';
         td.appendChild(btn);
         fragment.appendChild(td);
+
         return fragment;
     }
 
@@ -228,7 +250,178 @@ class ElementList {
         //       think about refactoring and abstracting this boilerplate into something
         //       easier to reuse, if possible 
     }
+
+    /**
+    * clickEdit is the code we run in response to a click of a delete button
+    */
+    private clickEdit(e: Event) {
+        // as in clickDelete, we need the ID of the row
+        const id = (<HTMLElement>e.target).getAttribute("data-value");
+
+        // Issue an AJAX GET and then pass the result to editEntryForm.init()
+        const doAjax = async () => {
+            await fetch(`/messages/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            }).then( (response) => {
+                if (response.ok) {
+                    return Promise.resolve( response.json() );
+                }
+                else{
+                    window.alert(`The server replied not ok: ${response.status}\n` + response.statusText);
+                }
+                return Promise.reject(response);
+            }).then( (data) => {
+                editEntryForm.init(data);
+                console.log(data);
+            }).catch( (error) => {
+                console.warn('Something went wrong.', error);
+                window.alert("Unspecified error");
+            });
+        }
+
+        // make the AJAX post and output value or error message to console
+        doAjax().then(console.log).catch(console.log);        
+    }
+
 } // end class ElementList
+
+
+// a global for the EditEntryForm of the program.  See newEntryForm for explanation
+var editEntryForm: EditEntryForm;
+
+/**
+ * EditEntryForm encapsulates all of the code for the form for editing an entry
+ */
+class EditEntryForm {
+    /**
+     * To initialize the object, we say what method of EditEntryForm should be
+     * run in response to each of the form's buttons being clicked.
+     */
+    constructor() {
+        document.getElementById("editCancel")?.addEventListener("click", (e) => {editEntryForm.clearForm();});
+        document.getElementById("editButton")?.addEventListener("click", (e) => {editEntryForm.submitForm();});        
+    }
+
+    /**
+     * init() is called from an AJAX GET, and should populate the form if and 
+     * only if the GET did not have an error
+     */
+    init(data: any) {
+        // If we get an "ok" message, fill in the edit form
+        if (data.mStatus === "ok") {
+            (<HTMLInputElement>document.getElementById("editTitle")).value = data.mData.mTitle;
+            (<HTMLInputElement>document.getElementById("editMessage")).value = data.mData.mContent;
+            (<HTMLInputElement>document.getElementById("editId")).value = data.mData.mId;
+            (<HTMLInputElement>document.getElementById("editCreated")).value = data.mData.mCreated;
+
+            // show the edit form
+            (<HTMLElement>document.getElementById("editElement")).style.display = "block";
+            (<HTMLElement>document.getElementById("addElement")).style.display = "none";
+            (<HTMLElement>document.getElementById("showElements")).style.display = "none";
+        }
+        // Handle explicit errors with a detailed popup message
+        else if (data.mStatus === "error") {
+            window.alert("The server replied with an error:\n" + data.mMessage);
+        }
+        // Handle other errors with a less-detailed popup message
+        else {
+            window.alert("Unspecified error");
+        }        
+    }
+
+    /**
+     * Clear the form's input fields
+     */
+    clearForm() {
+        (<HTMLInputElement>document.getElementById("editTitle")).value = "";
+        (<HTMLInputElement>document.getElementById("editMessage")).value = "";        
+        (<HTMLInputElement>document.getElementById("editId")).value = "";       
+        (<HTMLInputElement>document.getElementById("editCreated")).value = "";   
+        // reset the UI
+        (<HTMLElement>document.getElementById("editElement")).style.display = "none";
+        (<HTMLElement>document.getElementById("addElement")).style.display = "none";
+        (<HTMLElement>document.getElementById("showElements")).style.display = "block";    
+    }
+
+    /**
+     * Check if the input fields are both valid, and if so, do an AJAX call.
+     */
+    submitForm() {
+        window.alert("Submit edit form called.");
+        // get the values of the two fields, force them to be strings, and check
+        // that neither is empty
+        let title = "" + (<HTMLInputElement>document.getElementById("editTitle")).value;
+        let msg = "" + (<HTMLInputElement>document.getElementById("editMessage")).value;
+        // NB: we assume that the user didn't modify the value of editId
+        let id = "" + (<HTMLInputElement>document.getElementById("editId")).value;
+        if (title === "" || msg === "" || id === "") { 
+            window.alert("Error: title, message, or id is not valid");
+            return;
+        }        
+
+        // set up an AJAX PUT.
+        // When the server replies, the result will go to onSubmitResponse
+        const doAjax = async () => {
+            await fetch(`/messages/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    mTitle: title,
+                    mMessage: msg
+                }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            }).then( (response) => {
+                // If we get an "ok" message, return the json
+                if (response.ok) {
+                    // return response.json();
+                    return Promise.resolve( response.json() );
+                }
+                // Otherwise, handle server errors with a detailed popup message
+                else{
+                    window.alert(`The server replied not ok: ${response.status}\n` + response.statusText);
+                }
+                // return response;
+                return Promise.reject(response);
+            }).then( (data) => {
+                editEntryForm.onSubmitResponse(data);
+                console.log(data);
+            }).catch( (error) => {
+                console.warn('Something went wrong.', error);
+                window.alert("Unspecified error");
+            });
+        }
+
+        // make the AJAX post and output value or error message to console
+        doAjax().then(console.log).catch(console.log);
+    }
+
+    /**
+     * onSubmitResponse runs when the AJAX call in submitForm() returns a 
+     * result.
+     * 
+     * @param data The object returned by the server
+     */
+    private onSubmitResponse(data: any) {
+        // If we get an "ok" message, clear the form and refresh the main 
+        // listing of messages
+        if (data.mStatus === "ok") {
+            editEntryForm.clearForm();
+            mainList.refresh();
+        }
+        // Handle explicit errors with a detailed popup message
+        else if (data.mStatus === "error") {
+            window.alert("The server replied with an error:\n" + data.mMessage);
+        }
+        // Handle other errors with a less-detailed popup message
+        else {
+            window.alert("Unspecified error");
+        }
+    }
+} // end class EditEntryForm
 
 // Run some configuration code when the web page loads
 document.addEventListener('DOMContentLoaded', () => {
@@ -238,4 +431,17 @@ document.addEventListener('DOMContentLoaded', () => {
     mainList = new ElementList();
     mainList.refresh();
     window.alert('DOMContentLoaded');
+    // Create the object that controls the "Edit Entry" form
+    editEntryForm = new EditEntryForm();
+
+    // set up initial UI state
+    (<HTMLElement>document.getElementById("editElement")).style.display = "none";
+    (<HTMLElement>document.getElementById("addElement")).style.display = "none";
+    (<HTMLElement>document.getElementById("showElements")).style.display = "block";
+
+    // set up the "Add Message" button
+    document.getElementById("showFormButton")?.addEventListener("click", (e) => {
+        (<HTMLElement>document.getElementById("addElement")).style.display = "block";
+        (<HTMLElement>document.getElementById("showElements")).style.display = "none";
+    });
 }, false);
