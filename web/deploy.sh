@@ -28,3 +28,6 @@ cp -r src $TARGETFOLDER/$WEBFOLDERNAME/src
 
 # step 4: copy css files
 cp todo.css $TARGETFOLDER/$WEBFOLDERNAME
+
+# step 5: compile TypeScript files
+node_modules/typescript/bin/tsc app.ts --strict --outFile $TARGETFOLDER/$WEBFOLDERNAME/app.js
