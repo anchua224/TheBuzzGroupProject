@@ -30,7 +30,7 @@ class NewEntryForm {
         (<HTMLInputElement>document.getElementById("newMessage")).value = "";
     }
 
-    /**
+     /**
      * Check if the input fields are both valid, and if so, do an AJAX call.
      */
     submitForm() {
@@ -44,33 +44,39 @@ class NewEntryForm {
             return;
         }
 
-        // Do a POST. When the server replies, the result will go to onSubmitResponse
-        fetch('/messages', {
-            method: 'POST',
-            body: JSON.stringify({
-                mTitle: title,
-                mMessage: msg
-            }),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8'
-            }
-        }).then( (response) => {
-            // If we get an "ok" message, return the json
-            if (response.ok) {
-                return response.json(); //return Promise.resolve( response.json() );
-            }
-            // Otherwise, handle server errors with a detailed popup message
-            else{
-                window.alert(`The server replied not ok: ${response.status}\n` + response.statusText);
-            }
-            return response;
-        }).then( (data) => {
-            newEntryForm.onSubmitResponse(data);
-            console.log(data);
-        }).catch( (error) => {
-            console.warn('Something went wrong.', error);
-            window.alert("Unspecified error");
-        });
+        // set up an AJAX POST. 
+        // When the server replies, the result will go to onSubmitResponse
+        const doAjax = async () => {
+            await fetch('/messages', {
+                method: 'POST',
+                body: JSON.stringify({
+                    mTitle: title,
+                    mMessage: msg
+                }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            }).then( (response) => {
+                // If we get an "ok" message, return the json
+                if (response.ok) {
+                    return Promise.resolve( response.json() );
+                }
+                // Otherwise, handle server errors with a detailed popup message
+                else{
+                    window.alert(`The server replied not ok: ${response.status}\n` + response.statusText);
+                }
+                return Promise.reject(response);
+            }).then( (data) => {
+                newEntryForm.onSubmitResponse(data);
+                console.log(data);
+            }).catch( (error) => {
+                console.warn('Something went wrong.', error);
+                window.alert("Unspecified error");
+            });
+        }
+
+        // make the AJAX post and output value or error message to console
+        doAjax().then(console.log).catch(console.log);
     }
 
     /**

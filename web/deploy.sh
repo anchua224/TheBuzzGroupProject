@@ -30,4 +30,4 @@ cp -r src $TARGETFOLDER/$WEBFOLDERNAME/src
 cp todo.css $TARGETFOLDER/$WEBFOLDERNAME
 
 # step 5: compile TypeScript files
-node_modules/typescript/bin/tsc app.ts --strict --outFile $TARGETFOLDER/$WEBFOLDERNAME/app.js
+node_modules/typescript/bin/tsc app.ts --lib "es2015","dom" --target es5 --strict --outFile $TARGETFOLDER/$WEBFOLDERNAME/app.js
