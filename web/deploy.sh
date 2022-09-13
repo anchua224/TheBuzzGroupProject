@@ -18,3 +18,6 @@ mkdir $TARGETFOLDER/$WEBFOLDERNAME
 
 # there are many more steps to be done.  For now, we will just copy an HTML file
 cp index_simple.html $TARGETFOLDER/$WEBFOLDERNAME/index.html
+
+# step 2: update our npm dependencies
+npm update

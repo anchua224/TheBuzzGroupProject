@@ -7,8 +7,23 @@
 
   <title>Hello World</title>
 </head>
-<body>
-  <p>Hello World</p>
-  <p>Hi</p>
+<body onload="changeText()">
+  <p id="demo">Hello CSE216 World! You should not see this after load.</p>
+  <div id="replaceable"></div>
 </body>
+
+<script>
+function changeText() {
+    document.getElementById("demo").innerHTML = "Greetings, planet!";
+}
+window.addEventListener('load', function() {
+    // your code here
+    fetch('/messages')
+        .then(response => response.json()) // could use .then(response => response.text())
+        // .then(json => console.log(json))  // could use .then(text => console.log(text));
+        .then(json => document.getElementById("demo").innerHTML = "The data is " + JSON.stringify(json))        
+        .catch(error => console.error(error));
+});
+</script>
+
 </html>
