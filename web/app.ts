@@ -89,6 +89,7 @@ class NewEntryForm {
         // If we get an "ok" message, clear the form
         if (data.mStatus === "ok") {
             newEntryForm.clearForm();
+            mainList.refresh();
         }
         // Handle explicit errors with a detailed popup message
         else if (data.mStatus === "error") {
@@ -99,6 +100,7 @@ class NewEntryForm {
             window.alert("Unspecified error");
         }
     }
+    
 } // end class NewEntryForm
 
 // a global for the main ElementList of the program.  See newEntryForm for 
@@ -166,16 +168,65 @@ class ElementList {
             fragment.appendChild(table);
 
             elem_messageList.appendChild(fragment);
-        }       
+        }     
+         // Find all of the delete buttons, and set their behavior
+         const all_delbtns = (<HTMLCollectionOf<HTMLInputElement>>document.getElementsByClassName("delbtn"));
+         for (let i = 0; i < all_delbtns.length; ++i) {
+             all_delbtns[i].addEventListener("click", (e) => {mainList.clickDelete( e );});
+         }  
     }
 
-    /**
+     /**
      * buttons() adds a 'delete' button to the HTML for each row
-     *
-     * doesn't do anything yet
      */
     private buttons(id: string): DocumentFragment {
-        return document.createDocumentFragment();
+        let fragment = document.createDocumentFragment();
+        let td = document.createElement('td');
+        let btn = document.createElement('button');
+        btn.classList.add("delbtn");
+        btn.setAttribute('data-value', id);
+        btn.innerHTML = 'Delete';
+        td.appendChild(btn);
+        fragment.appendChild(td);
+        return fragment;
+    }
+
+     /**
+    * clickDelete is the code we run in response to a click of a delete button
+    */
+    private clickDelete(e: Event) {
+        const id = (<HTMLElement>e.target).getAttribute("data-value");
+
+        // Issue an AJAX DELETE and then invoke refresh()
+        const doAjax = async () => {
+            await fetch(`/messages/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            }).then( (response) => {
+                if (response.ok) {
+                    return Promise.resolve( response.json() );
+                }
+                else{
+                    window.alert(`The server replied not ok: ${response.status}\n` + response.statusText);
+                }
+                return Promise.reject(response);
+            }).then( (data) => {
+                mainList.refresh();
+                console.log(data);
+            }).catch( (error) => {
+                console.warn('Something went wrong.', error);
+                window.alert("Unspecified error");
+            });
+        }
+
+        // make the AJAX post and output value or error message to console
+        doAjax().then(console.log).catch(console.log);
+
+        // TODO: we've reapeated the same pattern 3+ times now, so we should really
+        //       think about refactoring and abstracting this boilerplate into something
+        //       easier to reuse, if possible 
     }
 } // end class ElementList
 
