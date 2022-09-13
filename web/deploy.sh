@@ -21,3 +21,10 @@ cp index_simple.html $TARGETFOLDER/$WEBFOLDERNAME/index.html
 
 # step 2: update our npm dependencies
 npm update
+
+# step 3: copy javascript and other files from src folder
+cp todo.js $TARGETFOLDER/$WEBFOLDERNAME
+cp -r src $TARGETFOLDER/$WEBFOLDERNAME/src
+
+# step 4: copy css files
+cp todo.css $TARGETFOLDER/$WEBFOLDERNAME

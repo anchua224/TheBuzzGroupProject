@@ -4,18 +4,45 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <link rel="stylesheet" href="todo.css" />
   <title>Hello World</title>
 </head>
-<body onload="changeText()">
-  <p id="demo">Hello CSE216 World! You should not see this after load.</p>
-  <div id="replaceable"></div>
+<body>
+  <div id="addElement">
+    <h3>Add a New Entry</h3>
+    <label>Title</label>
+    <input type="text" id="newTitle" />
+    <label>Message</label>
+    <textarea id="newMessage"></textarea>
+    <button id="addButton">Add</button>
+    <button id="addCancel">Cancel</button>
+  </div>
+  <div id="editElement">
+    <h3>Edit an Entry</h3>
+    <label>Title</label>
+    <input type="text" id="editTitle" />
+    <label>Message</label>
+    <textarea id="editMessage"></textarea>
+    <span id="editCreated"></span>
+    <input type="hidden" id="editId" />
+    <button id="editButton">Update</button>
+    <button id="editCancel">Cancel</button>
+  </div>
+  <div id="showElements">
+    <h3>All Messages</h3>
+    <button id="showFormButton">Add Message</button>
+    <div id="messageList"></div>
+  </div>
+  <script defer type="module" src="todo.js"></script>
+  <hr />
+  <app-root></app-root>
 </body>
 
 <script>
 function changeText() {
     document.getElementById("demo").innerHTML = "Greetings, planet!";
 }
+
 window.addEventListener('load', function() {
     // your code here
     fetch('/messages')
