@@ -9,6 +9,10 @@ var $: any;
 // 'this' won't work correctly.
 var newEntryForm: NewEntryForm;
 
+
+// This constant indicates the path to our backend server (change to your own)
+const backendUrl = "https://frozen-dawn-29919.herokuapp.com/";
+
 /**
  * NewEntryForm encapsulates all of the code for the form for adding an entry
  */
@@ -51,7 +55,7 @@ class NewEntryForm {
         // set up an AJAX POST. 
         // When the server replies, the result will go to onSubmitResponse
         const doAjax = async () => {
-            await fetch('/messages', {
+            await fetch(`${backendUrl}/messages`, {
                 method: 'POST',
                 body: JSON.stringify({
                     mTitle: title,
@@ -121,7 +125,7 @@ class ElementList {
     refresh() {
         // Issue an AJAX GET and then pass the result to update(). 
         const doAjax = async () => {
-            await fetch('/messages', {
+            await fetch(`${backendUrl}/messages`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8'
@@ -221,7 +225,7 @@ class ElementList {
 
         // Issue an AJAX DELETE and then invoke refresh()
         const doAjax = async () => {
-            await fetch(`/messages/${id}`, {
+            await fetch(`${backendUrl}/messages/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8'
@@ -260,7 +264,7 @@ class ElementList {
 
         // Issue an AJAX GET and then pass the result to editEntryForm.init()
         const doAjax = async () => {
-            await fetch(`/messages/${id}`, {
+            await fetch(`${backendUrl}/messages/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8'
@@ -365,7 +369,7 @@ class EditEntryForm {
         // set up an AJAX PUT.
         // When the server replies, the result will go to onSubmitResponse
         const doAjax = async () => {
-            await fetch(`/messages/${id}`, {
+            await fetch(`${backendUrl}/messages/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
                     mTitle: title,

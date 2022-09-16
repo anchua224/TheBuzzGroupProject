@@ -1,4 +1,4 @@
-package edu.lehigh.cse216.jub424.admin;
+package edu.lehigh.cse216.jub424.backend;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Database {
     /**
@@ -51,40 +52,6 @@ public class Database {
      * A prepared statement for dropping the table in our database
      */
     private PreparedStatement mDropTable;
-
-    /**
-     * RowData is like a struct in C: we use it to hold data, and we allow 
-     * direct access to its fields.  In the context of this Database, RowData 
-     * represents the data we'd see in a row.
-     * 
-     * We make RowData a static class of Database because we don't really want
-     * to encourage users to think of RowData as being anything other than an
-     * abstract representation of a row of the database.  RowData and the 
-     * Database are tightly coupled: if one changes, the other should too.
-     */
-    public static class RowData {
-        /**
-         * The ID of this row of the database
-         */
-        int mId;
-        /**
-         * The subject stored in this row
-         */
-        String mSubject;
-        /**
-         * The message stored in this row
-         */
-        String mMessage;
-
-        /**
-         * Construct a RowData object by providing values for its fields
-         */
-        public RowData(int id, String subject, String message) {
-            mId = id;
-            mSubject = subject;
-            mMessage = message;
-        }
-    }
 
     /**
      * The Database constructor is private: we only create Database objects 
@@ -132,7 +99,6 @@ public class Database {
             System.out.println("URI Syntax Error");
             return null;
         }
-    
 
         // Attempt to create all of our prepared statements.  If any of these 
         // fail, the whole getDatabase() call should fail
@@ -154,7 +120,7 @@ public class Database {
             db.mInsertOne = db.mConnection.prepareStatement("INSERT INTO tblData VALUES (default, ?, ?)");
             db.mSelectAll = db.mConnection.prepareStatement("SELECT id, subject FROM tblData");
             db.mSelectOne = db.mConnection.prepareStatement("SELECT * from tblData WHERE id=?");
-            db.mUpdateOne = db.mConnection.prepareStatement("UPDATE tblData SET message = ? WHERE id = ?");
+            db.mUpdateOne = db.mConnection.prepareStatement("UPDATE tblData SET subject = ?, message = ? WHERE id = ?");
         } catch (SQLException e) {
             System.err.println("Error creating prepared statement");
             e.printStackTrace();
@@ -214,12 +180,12 @@ public class Database {
      * 
      * @return All rows, as an ArrayList
      */
-    ArrayList<RowData> selectAll() {
-        ArrayList<RowData> res = new ArrayList<RowData>();
+    ArrayList<DataRow> selectAll() {
+        ArrayList<DataRow> res = new ArrayList<DataRow>();
         try {
             ResultSet rs = mSelectAll.executeQuery();
             while (rs.next()) {
-                res.add(new RowData(rs.getInt("id"), rs.getString("subject"), null));
+                res.add(new DataRow(rs.getInt("id"), rs.getString("subject"), null));
             }
             rs.close();
             return res;
@@ -236,13 +202,13 @@ public class Database {
      * 
      * @return The data for the requested row, or null if the ID was invalid
      */
-    RowData selectOne(int id) {
-        RowData res = null;
+    DataRow selectOne(int id) {
+        DataRow res = null;
         try {
             mSelectOne.setInt(1, id);
             ResultSet rs = mSelectOne.executeQuery();
             if (rs.next()) {
-                res = new RowData(rs.getInt("id"), rs.getString("subject"), rs.getString("message"));
+                res = new DataRow(rs.getInt("id"), rs.getString("subject"), rs.getString("message"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -276,11 +242,12 @@ public class Database {
      * 
      * @return The number of rows that were updated.  -1 indicates an error.
      */
-    int updateOne(int id, String message) {
+    int updateOne(int id, String subject, String message) {
         int res = -1;
         try {
-            mUpdateOne.setString(1, message);
-            mUpdateOne.setInt(2, id);
+            mUpdateOne.setString(1, subject);
+            mUpdateOne.setString(2, message);
+            mUpdateOne.setInt(3, id);
             res = mUpdateOne.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
