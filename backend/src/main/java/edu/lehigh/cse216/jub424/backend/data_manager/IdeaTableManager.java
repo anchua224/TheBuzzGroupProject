@@ -90,8 +90,8 @@ public class IdeaTableManager {
                         rs.getInt("id"),
                         rs.getString("subject"),
                         rs.getString("message"),
-                        rs.getInt("like"),
-                        rs.getInt("dislike")));
+                        rs.getInt("likecount"),
+                        rs.getInt("dislikecount")));
             }
             rs.close();
             return res;
@@ -118,8 +118,8 @@ public class IdeaTableManager {
                         rs.getInt("id"),
                         rs.getString("subject"),
                         rs.getString("message"),
-                        rs.getInt("like"),
-                        rs.getInt("dislike"));
+                        rs.getInt("likecount"),
+                        rs.getInt("dislikecount"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -199,7 +199,9 @@ public class IdeaTableManager {
         try {
             mGetLike.setInt(1, id);
             ResultSet rs = mGetLike.executeQuery();
-            res = rs.getInt("likecount");
+            if (rs.next()) {
+                res = rs.getInt("likecount");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -237,7 +239,9 @@ public class IdeaTableManager {
         try {
             mGetDislike.setInt(1, id);
             ResultSet rs = mGetDislike.executeQuery();
-            res = rs.getInt("dislikecount");
+            if (rs.next()) {
+                res = rs.getInt("dislikecount");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

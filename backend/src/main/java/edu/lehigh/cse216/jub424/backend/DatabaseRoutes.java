@@ -9,14 +9,15 @@ import edu.lehigh.cse216.jub424.backend.data_request.*;
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 
 public class DatabaseRoutes {
-    public static void ideasRoutes(Database mDatabase, Gson gson) {
+    public static void ideasRoutes(Database mDatabase) {
 
+        final Gson gson = new Gson();
         // GET route that returns all message titles and Ids with the like and dislike.
         // All we do is get
         // the data, embed it in a StructuredResponse, turn it into JSON, and
         // return it. If there's no data, we return "[]", so there's no need
         // for error handling.
-        Spark.get("/idea", (request, response) -> {
+        Spark.get("/ideas", (request, response) -> {
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
@@ -59,7 +60,8 @@ public class DatabaseRoutes {
             response.type("application/json");
             Idea idea = mDatabase.mIdeaTableManager.selectOneIdea(idx);
             if (idea == null) {
-                return gson.toJson(new StructuredResponse("error", idx + " not found", null));
+                return gson.toJson(new StructuredResponse("error", idx + " not found",
+                        null));
             } else {
                 return gson.toJson(new StructuredResponse("ok", null, idea));
             }

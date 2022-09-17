@@ -62,6 +62,7 @@ public class Idea {
      */
     public Idea(int id, String title, String massage, int like, int dislike) {
         this.id = id;
+        this.title = title;
         this.massage = massage;
         this.like = like;
         this.dislike = dislike;
@@ -81,6 +82,7 @@ public class Idea {
      */
     public Idea(int id, String title, String massage) {
         this.id = id;
+        this.title = title;
         this.massage = massage;
         this.like = 0;
         this.dislike = 0;

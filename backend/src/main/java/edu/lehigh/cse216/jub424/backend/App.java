@@ -66,7 +66,7 @@ public class App {
             return "";
         });
 
-        DatabaseRoutes.ideasRoutes(mDatabase, gson);
+        DatabaseRoutes.ideasRoutes(mDatabase);
 
     }
 
