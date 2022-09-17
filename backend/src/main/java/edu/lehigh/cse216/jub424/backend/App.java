@@ -6,9 +6,6 @@ import spark.Spark;
 
 import java.util.Map;
 
-// Import Google's JSON library
-import com.google.gson.*;
-
 /**
  * For now, our app creates an HTTP server that can only get and add data.
  */
@@ -22,7 +19,6 @@ public class App {
         //
         // NB: Gson is thread-safe. See
         // https://stackoverflow.com/questions/10380835/is-it-ok-to-use-gson-instance-as-a-static-field-in-a-model-bean-reuse
-        final Gson gson = new Gson();
 
         // dataStore holds all of the data that has been provided via HTTP
         // requests

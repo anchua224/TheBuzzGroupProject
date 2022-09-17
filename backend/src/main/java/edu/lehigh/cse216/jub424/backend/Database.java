@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
 
-import java.util.ArrayList;
 import edu.lehigh.cse216.jub424.backend.data_manager.*;
 
 public class Database {
