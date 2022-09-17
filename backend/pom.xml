@@ -63,7 +63,7 @@
         <version>3.0.4</version>
         <configuration>
           <jdkVersion>1.8</jdkVersion>
-          <appName>frozen-dawn-29919</appName>
+          <appName>cse216-fl22-team14</appName>
           <processTypes>
             <web>java -jar ./target/backend-1.0-SNAPSHOT-jar-with-dependencies.jar</web>
           </processTypes>

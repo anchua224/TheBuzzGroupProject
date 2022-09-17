@@ -11,7 +11,7 @@ var newEntryForm: NewEntryForm;
 
 
 // This constant indicates the path to our backend server (change to your own)
-const backendUrl = "https://frozen-dawn-29919.herokuapp.com/";
+const backendUrl = "https://cse216-fl22-team14.herokuapp.com/";
 
 /**
  * NewEntryForm encapsulates all of the code for the form for adding an entry

@@ -45,7 +45,7 @@ var $;
 // 'this' won't work correctly.
 var newEntryForm;
 // This constant indicates the path to our backend server (change to your own)
-var backendUrl = "https://frozen-dawn-29919.herokuapp.com/";
+var backendUrl = "https://cse216-fl22-team14.herokuapp.com/";
 /**
  * NewEntryForm encapsulates all of the code for the form for adding an entry
  */

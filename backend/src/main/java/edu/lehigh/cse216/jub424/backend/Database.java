@@ -9,12 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Database {
     /**
-     * The connection to the database.  When there is no connection, it should
-     * be null.  Otherwise, there is a valid open connection
+     * The connection to the database. When there is no connection, it should
+     * be null. Otherwise, there is a valid open connection
      */
     private Connection mConnection;
 
@@ -54,7 +53,7 @@ public class Database {
     private PreparedStatement mDropTable;
 
     /**
-     * The Database constructor is private: we only create Database objects 
+     * The Database constructor is private: we only create Database objects
      * through the getDatabase() method.
      */
     private Database() {
@@ -100,19 +99,19 @@ public class Database {
             return null;
         }
 
-        // Attempt to create all of our prepared statements.  If any of these 
+        // Attempt to create all of our prepared statements. If any of these
         // fail, the whole getDatabase() call should fail
         try {
             // NB: we can easily get ourselves in trouble here by typing the
-            //     SQL incorrectly.  We really should have things like "tblData"
-            //     as constants, and then build the strings for the statements
-            //     from those constants.
+            // SQL incorrectly. We really should have things like "tblData"
+            // as constants, and then build the strings for the statements
+            // from those constants.
 
-            // Note: no "IF NOT EXISTS" or "IF EXISTS" checks on table 
+            // Note: no "IF NOT EXISTS" or "IF EXISTS" checks on table
             // creation/deletion, so multiple executions will cause an exception
             db.mCreateTable = db.mConnection.prepareStatement(
                     "CREATE TABLE tblData (id SERIAL PRIMARY KEY, subject VARCHAR(50) "
-                    + "NOT NULL, message VARCHAR(500) NOT NULL)");
+                            + "NOT NULL, message VARCHAR(500) NOT NULL)");
             db.mDropTable = db.mConnection.prepareStatement("DROP TABLE tblData");
 
             // Standard CRUD operations
@@ -133,8 +132,8 @@ public class Database {
     /**
      * Close the current connection to the database, if one exists.
      * 
-     * NB: The connection will always be null after this call, even if an 
-     *     error occurred during the closing operation.
+     * NB: The connection will always be null after this call, even if an
+     * error occurred during the closing operation.
      * 
      * @return True if the connection was cleanly closed, false otherwise
      */
@@ -221,7 +220,7 @@ public class Database {
      * 
      * @param id The id of the row to delete
      * 
-     * @return The number of rows that were deleted.  -1 indicates an error.
+     * @return The number of rows that were deleted. -1 indicates an error.
      */
     int deleteRow(int id) {
         int res = -1;
@@ -237,10 +236,10 @@ public class Database {
     /**
      * Update the message for a row in the database
      * 
-     * @param id The id of the row to update
+     * @param id      The id of the row to update
      * @param message The new message contents
      * 
-     * @return The number of rows that were updated.  -1 indicates an error.
+     * @return The number of rows that were updated. -1 indicates an error.
      */
     int updateOne(int id, String subject, String message) {
         int res = -1;
@@ -256,7 +255,7 @@ public class Database {
     }
 
     /**
-     * Create tblData.  If it already exists, this will print an error
+     * Create tblData. If it already exists, this will print an error
      */
     void createTable() {
         try {
@@ -267,7 +266,7 @@ public class Database {
     }
 
     /**
-     * Remove tblData from the database.  If it does not exist, this will print
+     * Remove tblData from the database. If it does not exist, this will print
      * an error.
      */
     void dropTable() {
