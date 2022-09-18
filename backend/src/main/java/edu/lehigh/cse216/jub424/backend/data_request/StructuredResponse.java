@@ -1,4 +1,4 @@
-package edu.lehigh.cse216.jub424.backend;
+package edu.lehigh.cse216.jub424.backend.data_request;
 
 /**
  * StructuredResponse provides a common format for success and failure messages,
@@ -9,7 +9,7 @@ package edu.lehigh.cse216.jub424.backend;
 public class StructuredResponse {
     /**
      * The status is a string that the application can use to quickly determine
-     * if the response indicates an error.  Values will probably just be "ok" or
+     * if the response indicates an error. Values will probably just be "ok" or
      * "error", but that may evolve over time.
      */
     public String mStatus;
@@ -29,9 +29,9 @@ public class StructuredResponse {
      * Construct a StructuredResponse by providing a status, message, and data.
      * If the status is not provided, set it to "invalid".
      * 
-     * @param status The status of the response, typically "ok" or "error"
+     * @param status  The status of the response, typically "ok" or "error"
      * @param message The message to go along with an error status
-     * @param object An object with additional data to send to the client
+     * @param object  An object with additional data to send to the client
      */
     public StructuredResponse(String status, String message, Object data) {
         mStatus = (status != null) ? status : "invalid";
