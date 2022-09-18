@@ -11,7 +11,7 @@ public class Database {
      * The connection to the database. When there is no connection, it should
      * be null. Otherwise, there is a valid open connection
      */
-    private Connection mConnection;
+    public Connection mConnection;
 
     public IdeaTableManager mIdeaTableManager;
 
