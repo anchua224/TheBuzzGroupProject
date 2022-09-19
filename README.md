@@ -15,3 +15,24 @@ https://trello.com/invite/b/MEsnAxxj/0745274807676a41afc93408ecbc6a7e/team-fourt
 3. Na Chen
 4. Gerardo Hernandez Macoto
 5. Alex Guataipu
+
+# Artifacts
+## System Architecture Diagram
+
+## Routes
+
+## Entity Diagram
+
+## User Stories
+- Anonymous User
+	- As a user, I want to create and save posts, so that I can share my ideas
+	- As a user, I want to interact with other posts, so that I can like and dislike ideas
+	- As a user, I want to see other posts, so that I can view other users' ideas
+	- As a user, I want to post on mobile or web, so that I can access data on different platforms
+	- As a user, I want to edit a post, so that I can change my idea
+- Admin
+	- As an admin, I want to create and drop a table, so that I can manage posts
+	- As an admin, I want a command-line interface, so that I can interact with and manage ideas
+	- As an admin, I want to create other routes, so that I can send data to the front-end
+	
+
