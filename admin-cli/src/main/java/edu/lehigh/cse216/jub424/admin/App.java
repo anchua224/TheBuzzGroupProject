@@ -37,6 +37,10 @@ public class App {
         System.out.println("  [-] Delete a row");
         System.out.println("  [+] Insert a new row");
         System.out.println("  [~] Update a row");
+        
+        System.out.println("  [l] Quit Program");
+        System.out.println("  [n] Quit Program");
+        
         //System.out.println("  [q] Quit Program");
         System.out.println("  [?] Help (this message)");
         System.out.println("  [<] Return to main memu");
@@ -51,7 +55,7 @@ public class App {
      */
     static char prompt(BufferedReader in) {
         // The valid actions:
-        String actions = "TD1*-+~q?<";
+        String actions = "TD1*-+~ln?<";
 
         // We repeat until a valid single-character option is selected        
         while (true) {
@@ -216,7 +220,7 @@ public class App {
                           int res = db.mIdeaTable.insertIdea(subject, message);
                           System.out.println(res + " rows added");
                       } else if (action == '~') {
-                          int id = getInt(in, "Enter the row ID :> ");
+                          int id = getInt(in, "Enter the row ID ");
                           if (id == -1)
                               continue;
                           String newMessage = getString(in, "Enter the new message");
@@ -225,8 +229,18 @@ public class App {
                           if (res == -1)
                               continue;
                           System.out.println("  " + res + " rows updated");
-                      } else if(action == '<'){
-                           
+                      } else if(action == 'l'){
+                          int id = getInt(in, "Enter the row ID ");
+                          if (id == -1)
+                              continue;
+                          int res = db.mIdeaTable.likeIdea(id);
+                          System.out.println(res + " idea liked");
+                      } else if (action == 'n'){
+                          int id = getInt(in, "Enter the row ID ");
+                          if (id == -1)
+                              continue;
+                          int res = db.mIdeaTable.dislikeIdea(id);
+                          System.out.println(res + " idea disliked");
                       }
                       break;
                       //case 2; case 3;....... for future needed

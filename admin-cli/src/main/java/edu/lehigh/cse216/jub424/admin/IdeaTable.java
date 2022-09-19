@@ -77,7 +77,7 @@ class IdeaTable{
                 "UPDATE ideas SET likecount = (SELECT likecount from ideas WHERE id = ?) + 1 WHERE id = ?");
         mGetDislike = mConnection.prepareStatement("SELECT dislikecount from ideas WHERE id=?");
         mDislike = mConnection.prepareStatement(
-                "UPDATE ideas SET likecount = (SELECT dislikecount from ideas WHERE id = ?) + 1 WHERE id = ?");
+                "UPDATE ideas SET dislikecount = (SELECT dislikecount from ideas WHERE id = ?) + 1 WHERE id = ?");
     }
 
     class Idea{
@@ -251,46 +251,89 @@ class IdeaTable{
         }
         return res;
     }
+
     /**
-     * get the likecount of an ideas of specific id
+     * Update the likecount for a row in the database let it + 1
      * 
-     * @param id The id of the row to get like count
-     * 
-     * @return The number of like count of the row. -1 indicates an error.
+     * @param id The id of the row to update
+     *
+     * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int getLikeCount(int id) {
+    public int likeIdea(int id) {
         int res = -1;
         try {
-            mGetLike.setInt(1, id);
-            ResultSet rs = mGetLike.executeQuery();
-            if (rs.next()) {
-                res = rs.getInt("likecount");
-            }
+            mLike.setInt(1, id);
+            mLike.setInt(2, id);
+            res = mLike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return res;
     }
+
     /**
-     * get the likecount of an ideas of specific id
+     * Update the dislikecount for a row in the database let it + 1
      * 
-     * @param id The id of the row to get like count
-     * 
-     * @return The number of like count of the row. -1 indicates an error.
+     * @param id The id of the row to update
+     *
      */
-    public int getDislikeCount(int id) {
+    public int dislikeIdea(int id) {
         int res = -1;
         try {
-            mGetDislike.setInt(1, id);
-            ResultSet rs = mGetDislike.executeQuery();
-            if (rs.next()) {
-                res = rs.getInt("dislikecount");
-            }
+            mDislike.setInt(1, id);
+            mDislike.setInt(2, id);
+            res = mDislike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return res;
     }
+
+
+
+
+    
+
+    // /**
+    //  * get the likecount of an ideas of specific id
+    //  * 
+    //  * @param id The id of the row to get like count
+    //  * 
+    //  * @return The number of like count of the row. -1 indicates an error.
+    //  */
+    // public int getLikeCount(int id) {
+    //     int res = -1;
+    //     try {
+    //         mGetLike.setInt(1, id);
+    //         ResultSet rs = mGetLike.executeQuery();
+    //         if (rs.next()) {
+    //             res = rs.getInt("likecount");
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return res;
+    // }
+    // /**
+    //  * get the likecount of an ideas of specific id
+    //  * 
+    //  * @param id The id of the row to get like count
+    //  * 
+    //  * @return The number of like count of the row. -1 indicates an error.
+    //  */
+    // public int getDislikeCount(int id) {
+    //     int res = -1;
+    //     try {
+    //         mGetDislike.setInt(1, id);
+    //         ResultSet rs = mGetDislike.executeQuery();
+    //         if (rs.next()) {
+    //             res = rs.getInt("dislikecount");
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return res;
+    // }
 
 }
 
