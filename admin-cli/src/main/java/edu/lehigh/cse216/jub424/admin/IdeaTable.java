@@ -80,6 +80,7 @@ class IdeaTable{
                 "UPDATE ideas SET dislikecount = (SELECT dislikecount from ideas WHERE id = ?) + 1 WHERE id = ?");
     }
 
+    //inner class Idea, holds information of one row in the idea table
     class Idea{
         /**
         * id, which is the primary key of idea
@@ -106,6 +107,18 @@ class IdeaTable{
         */
         public int dislike;
 
+
+         /**
+     * Create a new Idea with the provided id, title and massage. And a
+     * creation date based on the system clock at the time the constructor was
+     * called. the like and dislike will be 0
+     * 
+     * @param id id to the idea, which is unique for the whole time
+     * 
+     * @title The title of this idea
+     * 
+     * @param massage massage of the idea
+     */
         public Idea(int id, String title, String massage){
             this.id = id;
             this.title = title;
@@ -113,6 +126,22 @@ class IdeaTable{
             this.like = 0;
             this.dislike = 0;
         }
+
+    /**
+     * Create a new Idea with the provided id, title, massage, like and dislike. And
+     * a creation date based on the system clock at the time the constructor was
+     * called
+     * 
+     * @param id id to the idea, which is unique for the whole time
+     * 
+     * @title The title of this idea
+     * 
+     * @param massage massage of the idea
+     * 
+     * @param like    like count
+     * 
+     * @param dislike The dislike count
+     */
         public Idea(int id, String title, String massage,int like, int dislike){
             this.id = id;
             this.title = title;
