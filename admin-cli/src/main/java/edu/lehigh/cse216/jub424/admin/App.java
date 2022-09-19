@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * App is our basic admin app.  For now, it is a demonstration of the six key 
@@ -16,17 +17,26 @@ public class App {
     /**
      * Print the menu for our program
      */
+    
     static void menu() {
         System.out.println("Main Menu");
-        System.out.println("  [T] Create tblData");
-        System.out.println("  [D] Drop tblData");
+        System.out.println("  [q] Quit Program");
+        System.out.println("  [?] Help");
+        System.out.println("  [s] Select a table you want to make change: ");
+        System.out.println("    1. IDEAS");
+        //There is only one tables called IDEAS for now, other tables could be added to the menu later when needed
+    }
+    static void inner_menu(String tableName){
+        System.out.println("  [T] Create "+tableName);
+        System.out.println("  [D] Drop "+tableName);
         System.out.println("  [1] Query for a specific row");
         System.out.println("  [*] Query for all rows");
         System.out.println("  [-] Delete a row");
         System.out.println("  [+] Insert a new row");
         System.out.println("  [~] Update a row");
-        System.out.println("  [q] Quit Program");
+        //System.out.println("  [q] Quit Program");
         System.out.println("  [?] Help (this message)");
+        System.out.println("  [<] Return to main memu");
     }
 
     /**
@@ -38,7 +48,7 @@ public class App {
      */
     static char prompt(BufferedReader in) {
         // The valid actions:
-        String actions = "TD1*-+~q?";
+        String actions = "TD1*-+~q?<";
 
         // We repeat until a valid single-character option is selected        
         while (true) {
@@ -94,11 +104,12 @@ public class App {
             i = Integer.parseInt(in.readLine());
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (NumberFormatException e) {
+        } /*catch (NumberFormatException e) {
             e.printStackTrace();
-        }
+        }*/
         return i;
     }
+    
 
     /**
      * The main routine runs a loop that gets a request from the user and
@@ -118,64 +129,103 @@ public class App {
 
         // Start our basic command-line interpreter:
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
-            // Get the user's request, and do it
-            //
-            // NB: for better testability, each action should be a separate
-            //     function call
-            char action = prompt(in);
-            if (action == '?') {
-                menu();
-            } else if (action == 'q') {
+       
+        // Number of Tables: a variable that stores the total number of tables in the database
+        int numOfTable=1;
+
+        menu();
+        while(true){
+            String option=getString(in, "Enter an option [q?s]");
+            if(option.compareTo("q")==0){
                 break;
-            } else if (action == 'T') {
-                db.createTable();
-            } else if (action == 'D') {
-                db.dropTable();
-            } else if (action == '1') {
-                int id = getInt(in, "Enter the row ID");
-                if (id == -1)
-                    continue;
-                Database.RowData res = db.selectOne(id);
-                if (res != null) {
-                    System.out.println("  [" + res.mId + "] " + res.mSubject);
-                    System.out.println("  --> " + res.mMessage);
-                }
-            } else if (action == '*') {
-                ArrayList<Database.RowData> res = db.selectAll();
-                if (res == null)
-                    continue;
-                System.out.println("  Current Database Contents");
-                System.out.println("  -------------------------");
-                for (Database.RowData rd : res) {
-                    System.out.println("  [" + rd.mId + "] " + rd.mSubject);
-                }
-            } else if (action == '-') {
-                int id = getInt(in, "Enter the row ID");
-                if (id == -1)
-                    continue;
-                int res = db.deleteRow(id);
-                if (res == -1)
-                    continue;
-                System.out.println("  " + res + " rows deleted");
-            } else if (action == '+') {
-                String subject = getString(in, "Enter the subject");
-                String message = getString(in, "Enter the message");
-                if (subject.equals("") || message.equals(""))
-                    continue;
-                int res = db.insertRow(subject, message);
-                System.out.println(res + " rows added");
-            } else if (action == '~') {
-                int id = getInt(in, "Enter the row ID :> ");
-                if (id == -1)
-                    continue;
-                String newMessage = getString(in, "Enter the new message");
-                int res = db.updateOne(id, newMessage);
-                if (res == -1)
-                    continue;
-                System.out.println("  " + res + " rows updated");
+            }else if(option.compareTo("?")==0){
+                menu();
+            }else if(option.compareTo("s")!=0){
+                System.out.println("Invalid option, re-enter");
+                continue;
             }
+            int inputInt;
+            while(true){
+               try{
+                   inputInt=getInt(in, "Select a number");
+                   if(inputInt<=numOfTable){
+                       break;
+                   }else{
+                       System.out.println("Invalid number, re-enter please");
+                       continue;
+                   }
+                }catch(NumberFormatException e){
+                   System.out.println("Not a number, re-enter a number please:");
+                   continue;
+                }
+            }
+            
+            char action=' ';
+            do{
+              switch(inputInt){
+                  case 1:
+                      //inner_menu("IDEAS");
+                      action = prompt(in);
+                      if (action == '?') {
+                          inner_menu("IDEAS");
+                      } else if (action == 'T') {
+                          db.mIdeaTable.createTable();
+                      } else if (action == 'D') {
+                          db.mIdeaTable.dropTable();
+                      } else if (action == '1') {
+                          int id = getInt(in, "Enter the row ID");
+                          if (id == -1)
+                              continue;
+                          IdeaTable.Idea res = db.mIdeaTable.selectOneIdea(id);
+                          if (res != null) {
+                              System.out.println("  [" + res.id + "] " + res.title);
+                              System.out.println("  --> " + res.massage);
+                          }
+                      } else if (action == '*') {
+                          ArrayList<IdeaTable.Idea> res = db.mIdeaTable.selectAllIdeas();
+                          if (res == null)
+                              continue;
+                          System.out.println("  Current Database Contents");
+                          System.out.println("  -------------------------");
+                          for (IdeaTable.Idea rd : res) {
+                              System.out.println("  [" + rd.id + "] " + rd.title);
+                          }
+                      } else if (action == '-') {
+                          int id = getInt(in, "Enter the row ID");
+                          if (id == -1)
+                              continue;
+                          int res = db.mIdeaTable.deleteIdea(id);
+                          if (res == -1)
+                              continue;
+                          System.out.println("  " + res + " rows deleted");
+                      } else if (action == '+') {
+                          String subject = getString(in, "Enter the subject");
+                          String message = getString(in, "Enter the message");
+                          if (subject.equals("") || message.equals(""))
+                              continue;
+                          int res = db.mIdeaTable.insertIdea(subject, message);
+                          System.out.println(res + " rows added");
+                      } else if (action == '~') {
+                          int id = getInt(in, "Enter the row ID :> ");
+                          if (id == -1)
+                              continue;
+                          String newMessage = getString(in, "Enter the new message");
+                          String newTitle = getString(in, "Enter the new title");
+                          int res = db.mIdeaTable.updateIdea(id, newTitle, newMessage);
+                          if (res == -1)
+                              continue;
+                          System.out.println("  " + res + " rows updated");
+                      } else if(action == '<'){
+                           
+                      }
+                      break;
+                      //case 2; case 3;.......
+              }
+            }while(action != '<');
         }
+
+
+      
         // Always remember to disconnect from the database when the program 
         // exits
         db.disconnect();
