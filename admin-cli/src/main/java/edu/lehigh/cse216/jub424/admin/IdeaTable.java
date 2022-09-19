@@ -122,7 +122,11 @@ class IdeaTable{
         }
 
     }
+
     
+    /**
+    * Create the IDEAS table
+    */
     void createTable() {
         try {
             mCreateTable.execute();
@@ -130,7 +134,9 @@ class IdeaTable{
             e.printStackTrace();
         }
     }
-
+    /**
+    * Drop the IDEAS table
+    */
     void dropTable() {
         try {
             mDropTable.execute();

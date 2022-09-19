@@ -14,8 +14,8 @@ import java.util.concurrent.ExecutionException;
  */
 public class App {
 
-    /**
-     * Print the menu for our program
+     /**
+     * Print the main menu for our program
      */
     
     static void menu() {
@@ -26,6 +26,9 @@ public class App {
         System.out.println("    1. IDEAS");
         //There is only one tables called IDEAS for now, other tables could be added to the menu later when needed
     }
+    /**
+     * Print the inner menu for our program
+     */
     static void inner_menu(String tableName){
         System.out.println("  [T] Create "+tableName);
         System.out.println("  [D] Drop "+tableName);
@@ -133,8 +136,12 @@ public class App {
         // Number of Tables: a variable that stores the total number of tables in the database
         int numOfTable=1;
 
+
+        //print the menu when the program start
         menu();
+
         while(true){
+            //check whether the input option for main menu is correct, if not, ask for input again
             String option=getString(in, "Enter an option [q?s]");
             if(option.compareTo("q")==0){
                 break;
@@ -144,6 +151,7 @@ public class App {
                 System.out.println("Invalid option, re-enter");
                 continue;
             }
+            //select a table need to be changed, check if input is valid
             int inputInt;
             while(true){
                try{
@@ -160,6 +168,7 @@ public class App {
                 }
             }
             
+            //create/drop/update/delete/read/insert... from table
             char action=' ';
             do{
               switch(inputInt){
@@ -219,7 +228,7 @@ public class App {
                            
                       }
                       break;
-                      //case 2; case 3;.......
+                      //case 2; case 3;....... for future needed
               }
             }while(action != '<');
         }
