@@ -15,44 +15,9 @@ public class Database {
      * The connection to the database.  When there is no connection, it should
      * be null.  Otherwise, there is a valid open connection
      */
-    private Connection mConnection;
+    public Connection mConnection;
 
     public IdeaTable mIdeaTable;
-
-    /**
-     * A prepared statement for getting all data in the database
-     */
-    private PreparedStatement mSelectAll;
-
-    /**
-     * A prepared statement for getting one row from the database
-     */
-    private PreparedStatement mSelectOne;
-
-    /**
-     * A prepared statement for deleting a row from the database
-     */
-    private PreparedStatement mDeleteOne;
-
-    /**
-     * A prepared statement for inserting into the database
-     */
-    private PreparedStatement mInsertOne;
-
-    /**
-     * A prepared statement for updating a single row in the database
-     */
-    private PreparedStatement mUpdateOne;
-
-    /**
-     * A prepared statement for creating the table in our database
-     */
-    private PreparedStatement mCreateTable;
-
-    /**
-     * A prepared statement for dropping the table in our database
-     */
-    private PreparedStatement mDropTable;
 
     /**
      * RowData is like a struct in C: we use it to hold data, and we allow 

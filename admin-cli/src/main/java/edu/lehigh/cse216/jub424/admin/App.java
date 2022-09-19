@@ -30,8 +30,8 @@ public class App {
      * Print the inner menu for our program
      */
     static void inner_menu(String tableName){
-        System.out.println("  [T] Create "+tableName);
-        System.out.println("  [D] Drop "+tableName);
+        System.out.println("  [T] Create Table"+tableName);
+        System.out.println("  [D] Drop Table"+tableName);
         System.out.println("  [1] Query for a specific row");
         System.out.println("  [*] Query for all rows");
         System.out.println("  [-] Delete a row");
@@ -147,6 +147,7 @@ public class App {
                 break;
             }else if(option.compareTo("?")==0){
                 menu();
+                continue;
             }else if(option.compareTo("s")!=0){
                 System.out.println("Invalid option, re-enter");
                 continue;
