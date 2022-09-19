@@ -73,7 +73,7 @@ public class IdeaTableManager {
                 "UPDATE ideas SET likecount = (SELECT likecount from ideas WHERE id = ?) + 1 WHERE id = ?");
         mGetDislike = mConnection.prepareStatement("SELECT dislikecount from ideas WHERE id=?");
         mDislike = mConnection.prepareStatement(
-                "UPDATE ideas SET likecount = (SELECT dislikecount from ideas WHERE id = ?) + 1 WHERE id = ?");
+                "UPDATE ideas SET dislikecount = (SELECT dislikecount from ideas WHERE id = ?) + 1 WHERE id = ?");
     }
 
     /**
