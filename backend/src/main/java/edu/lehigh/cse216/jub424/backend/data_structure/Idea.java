@@ -30,49 +30,15 @@ public class Idea {
     public String massage;
 
     /**
-     * the like counter of the idea
-     */
-    public int like;
-
-    /**
-     * the dislike counter of the idea
-     */
-    public int dislike;
-
-    /**
      * The creation date for this row of data. Once it is set, it cannot be
      * changed
      */
     public final Date createdDate;
 
     /**
-     * Create a new Idea with the provided id, title, massage, like and dislike. And
-     * a creation date based on the system clock at the time the constructor was
-     * called
-     * 
-     * @param id id to the idea, which is unique for the whole time
-     * 
-     * @title The title of this idea
-     * 
-     * @param massage massage of the idea
-     * 
-     * @param like    like count
-     * 
-     * @param dislike The dislike count
-     */
-    public Idea(int id, String title, String massage, int like, int dislike) {
-        this.id = id;
-        this.title = title;
-        this.massage = massage;
-        this.like = like;
-        this.dislike = dislike;
-        createdDate = new Date();
-    }
-
-    /**
      * Create a new Idea with the provided id, title and massage. And a
      * creation date based on the system clock at the time the constructor was
-     * called. the like and dislike will be 0
+     * called.
      * 
      * @param id id to the idea, which is unique for the whole time
      * 
@@ -84,8 +50,7 @@ public class Idea {
         this.id = id;
         this.title = title;
         this.massage = massage;
-        this.like = 0;
-        this.dislike = 0;
+
         createdDate = new Date();
     }
 
