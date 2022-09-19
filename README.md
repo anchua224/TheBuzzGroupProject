@@ -18,11 +18,11 @@ https://trello.com/invite/b/MEsnAxxj/0745274807676a41afc93408ecbc6a7e/team-fourt
 
 # Artifacts
 ## System Architecture Diagram
-
+![image](markdown_images/SystemDiagram.png)
 ## Routes
-
+![image](markdown_images/Routes.png)
 ## Entity Diagram
-
+![image](markdown_images/EntityDiagram.png)
 ## User Stories
 - Anonymous User
 	- As a user, I want to create and save posts, so that I can share my ideas
