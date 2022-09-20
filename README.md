@@ -34,5 +34,7 @@ https://trello.com/invite/b/MEsnAxxj/0745274807676a41afc93408ecbc6a7e/team-fourt
 	- As an admin, I want to create and drop a table, so that I can manage posts
 	- As an admin, I want a command-line interface, so that I can interact with and manage ideas
 	- As an admin, I want to create other routes, so that I can send data to the front-end
+## User State Machine
+![image](markdown_images/UserStateMachine.png)
 	
 
