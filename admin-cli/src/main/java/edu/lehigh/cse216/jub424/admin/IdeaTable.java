@@ -62,22 +62,24 @@ class IdeaTable{
         // CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,
         // message VARCHAR(500) NOT NULL,likecount INT NOT NULL, dislikecount INT not
         // NULL)
+
+
         mCreateTable = mConnection.prepareStatement(
-            "CREATE TABLE IDEAS (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,"+
-             "message VARCHAR(500) NOT NULL,likecount INT NOT NULL, dislikecount INT NOT "+
-             "NULL)");
+            "CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,"+
+            "message VARCHAR(500) NOT NULL)"
+        );        
         mDropTable = mConnection.prepareStatement("DROP TABLE IDEAS");     
         mSelectAll = mConnection.prepareStatement("SELECT * FROM ideas ORDER BY id DESC");
         mSelectOne = mConnection.prepareStatement("SELECT * from ideas WHERE id=?");
         mDeleteOne = mConnection.prepareStatement("DELETE FROM ideas WHERE id = ?");
-        mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?, 0, 0)");
+        mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?)");
         mUpdateOne = mConnection.prepareStatement("UPDATE ideas SET subject = ?, message = ? WHERE id = ?");
-        mGetLike = mConnection.prepareStatement("SELECT likecount from ideas WHERE id=?");
-        mLike = mConnection.prepareStatement(
-                "UPDATE ideas SET likecount = (SELECT likecount from ideas WHERE id = ?) + 1 WHERE id = ?");
-        mGetDislike = mConnection.prepareStatement("SELECT dislikecount from ideas WHERE id=?");
-        mDislike = mConnection.prepareStatement(
-                "UPDATE ideas SET dislikecount = (SELECT dislikecount from ideas WHERE id = ?) + 1 WHERE id = ?");
+        // mGetLike = mConnection.prepareStatement("SELECT likecount from ideas WHERE id=?");
+        // mLike = mConnection.prepareStatement(
+        //         "UPDATE ideas SET likecount = (SELECT likecount from ideas WHERE id = ?) + 1 WHERE id = ?");
+        // mGetDislike = mConnection.prepareStatement("SELECT dislikecount from ideas WHERE id=?");
+        // mDislike = mConnection.prepareStatement(
+        //         "UPDATE ideas SET dislikecount = (SELECT dislikecount from ideas WHERE id = ?) + 1 WHERE id = ?");
     }
 
     //inner class Idea, holds information of one row in the idea table
@@ -109,46 +111,44 @@ class IdeaTable{
 
 
          /**
-     * Create a new Idea with the provided id, title and massage. And a
-     * creation date based on the system clock at the time the constructor was
-     * called. the like and dislike will be 0
-     * 
-     * @param id id to the idea, which is unique for the whole time
-     * 
-     * @title The title of this idea
-     * 
-     * @param massage massage of the idea
-     */
+        * Create a new Idea with the provided id, title and massage. And a
+        * creation date based on the system clock at the time the constructor was
+        * called. 
+        * 
+        * @param id id to the idea, which is unique for the whole time
+        * 
+        * @title The title of this idea
+        * 
+        * @param massage massage of the idea
+        */
         public Idea(int id, String title, String massage){
             this.id = id;
             this.title = title;
             this.massage = massage;
-            this.like = 0;
-            this.dislike = 0;
         }
 
-    /**
-     * Create a new Idea with the provided id, title, massage, like and dislike. And
-     * a creation date based on the system clock at the time the constructor was
-     * called
-     * 
-     * @param id id to the idea, which is unique for the whole time
-     * 
-     * @title The title of this idea
-     * 
-     * @param massage massage of the idea
-     * 
-     * @param like    like count
-     * 
-     * @param dislike The dislike count
-     */
-        public Idea(int id, String title, String massage,int like, int dislike){
-            this.id = id;
-            this.title = title;
-            this.massage = massage;
-            this.like = like;
-            this.dislike = dislike;
-        }
+        // /**
+        // * Create a new Idea with the provided id, title, massage, like and dislike. And
+        // * a creation date based on the system clock at the time the constructor was
+        // * called
+        // * 
+        // * @param id id to the idea, which is unique for the whole time
+        // * 
+        // * @title The title of this idea
+        // * 
+        // * @param massage massage of the idea
+        // * 
+        // * @param like    like count
+        // * 
+        // * @param dislike The dislike count
+        // */
+        // public Idea(int id, String title, String massage,int like, int dislike){
+        //     this.id = id;
+        //     this.title = title;
+        //     this.massage = massage;
+        //     //this.like = like;
+        //     //this.dislike = dislike;
+        // }
 
     }
 
@@ -214,9 +214,8 @@ class IdeaTable{
                 res = new Idea(
                         rs.getInt("id"),
                         rs.getString("subject"),
-                        rs.getString("message"),
-                        rs.getInt("likecount"),
-                        rs.getInt("dislikecount"));
+                        rs.getString("message")
+                        );
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -281,42 +280,42 @@ class IdeaTable{
         return res;
     }
 
-    /**
-     * Update the likecount for a row in the database let it + 1
-     * 
-     * @param id The id of the row to update
-     *
-     * @return The number of rows that were updated. -1 indicates an error.
-     */
-    public int likeIdea(int id) {
-        int res = -1;
-        try {
-            mLike.setInt(1, id);
-            mLike.setInt(2, id);
-            res = mLike.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return res;
-    }
+    // /**
+    //  * Update the likecount for a row in the database let it + 1
+    //  * 
+    //  * @param id The id of the row to update
+    //  *
+    //  * @return The number of rows that were updated. -1 indicates an error.
+    //  */
+    // public int likeIdea(int id) {
+    //     int res = -1;
+    //     try {
+    //         mLike.setInt(1, id);
+    //         mLike.setInt(2, id);
+    //         res = mLike.executeUpdate();
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return res;
+    // }
 
-    /**
-     * Update the dislikecount for a row in the database let it + 1
-     * 
-     * @param id The id of the row to update
-     *
-     */
-    public int dislikeIdea(int id) {
-        int res = -1;
-        try {
-            mDislike.setInt(1, id);
-            mDislike.setInt(2, id);
-            res = mDislike.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return res;
-    }
+    // /**
+    //  * Update the dislikecount for a row in the database let it + 1
+    //  * 
+    //  * @param id The id of the row to update
+    //  *
+    //  */
+    // public int dislikeIdea(int id) {
+    //     int res = -1;
+    //     try {
+    //         mDislike.setInt(1, id);
+    //         mDislike.setInt(2, id);
+    //         res = mDislike.executeUpdate();
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return res;
+    // }
 
 
 

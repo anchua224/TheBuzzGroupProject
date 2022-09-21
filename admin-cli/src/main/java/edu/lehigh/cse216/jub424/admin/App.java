@@ -24,26 +24,43 @@ public class App {
         System.out.println("  [?] Help");
         System.out.println("  [s] Select a table you want to make change: ");
         System.out.println("    1. IDEAS");
+        System.out.println("    2. LIKES");
         //There is only one tables called IDEAS for now, other tables could be added to the menu later when needed
     }
     /**
-     * Print the inner menu for our program
+     * Print the inner menus for our program
+     * 
+     * @param the name of table
      */
+
     static void inner_menu(String tableName){
-        System.out.println("  [T] Create Table"+tableName);
-        System.out.println("  [D] Drop Table"+tableName);
-        System.out.println("  [1] Query for a specific row");
-        System.out.println("  [*] Query for all rows");
-        System.out.println("  [-] Delete a row");
-        System.out.println("  [+] Insert a new row");
-        System.out.println("  [~] Update a row");
-        
-        System.out.println("  [l] Quit Program");
-        System.out.println("  [n] Quit Program");
-        
-        //System.out.println("  [q] Quit Program");
-        System.out.println("  [?] Help (this message)");
-        System.out.println("  [<] Return to main memu");
+        switch(tableName){
+            case "IDEAS":
+                System.out.println("  [T] Create Table "+tableName);
+                System.out.println("  [D] Drop Table "+tableName);
+                System.out.println("  [1] Query for a specific row");
+                System.out.println("  [*] Query for all rows");
+                System.out.println("  [-] Delete a row");
+                System.out.println("  [+] Insert a new row");
+                System.out.println("  [~] Update a row");
+            
+                //System.out.println("  [l] like an idea");
+                //System.out.println("  [n] dislike an idea");
+            
+                //System.out.println("  [q] Quit Program");
+                System.out.println("  [?] Help (this message)");
+                System.out.println("  [<] Return to main memu");
+                break;
+            case "LIKES":
+                System.out.println("  [T] Create Table "+tableName);
+                System.out.println("  [D] Drop Table "+tableName);
+                System.out.println("  [-] Cancel like an idea");
+                System.out.println("  [+] Like an idea");
+                System.out.println("  [0] delete all the rows(likes) related to a certain idea");
+                System.out.println("  [?] Help (this message)");
+                System.out.println("  [<] Return to main memu");
+                break;    
+        }
     }
 
     /**
@@ -51,12 +68,14 @@ public class App {
      * 
      * @param in A BufferedReader, for reading from the keyboard
      * 
+     * @param actions A String contains all valid actions to a certain table
+     * 
      * @return The character corresponding to the chosen menu option
      */
-    static char prompt(BufferedReader in) {
+    static char prompt(BufferedReader in, String actions) {
         // The valid actions:
-        String actions = "TD1*-+~ln?<";
-
+        // String actions = "TD1*-+~?<";
+        
         // We repeat until a valid single-character option is selected        
         while (true) {
             System.out.print("[" + actions + "] :> ");
@@ -138,7 +157,7 @@ public class App {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
        
         // Number of Tables: a variable that stores the total number of tables in the database
-        int numOfTable=1;
+        int numOfTable=2;
 
 
         //print the menu when the program start
@@ -179,7 +198,7 @@ public class App {
               switch(inputInt){
                   case 1:
                       //inner_menu("IDEAS");
-                      action = prompt(in);
+                      action = prompt(in, "TD1*-+~?<");
                       if (action == '?') {
                           inner_menu("IDEAS");
                       } else if (action == 'T') {
@@ -229,7 +248,7 @@ public class App {
                           if (res == -1)
                               continue;
                           System.out.println("  " + res + " rows updated");
-                      } else if(action == 'l'){
+                      } /*else if(action == 'l'){
                           int id = getInt(in, "Enter the row ID ");
                           if (id == -1)
                               continue;
@@ -241,8 +260,38 @@ public class App {
                               continue;
                           int res = db.mIdeaTable.dislikeIdea(id);
                           System.out.println(res + " idea disliked");
-                      }
+                      }*/
                       break;
+                  case 2:
+                        action = prompt(in,"TD-+0?<");
+                        if (action == '?') {
+                            inner_menu("LIKES");
+                        } else if (action == 'T') {
+                            db.mLikesTable.createTable();
+                        } else if (action == 'D') {
+                            db.mLikesTable.dropTable();
+                        } else if (action == '-') {
+                            int id = getInt(in, "Enter the row ID");
+                            if (id == -1)
+                                continue;
+                            int res = db.mLikesTable.cancelLikeIdea(id);
+                            if (res == -1)
+                                continue;
+                            System.out.println("  " + res + " rows deleted");
+                        } else if (action == '+') {
+                            int id = getInt(in, "Enter the row ID");
+                            if (id == -1)
+                                continue;
+                            int res = db.mLikesTable.likeIdea(id);
+                            System.out.println(res + " rows added");
+                        } else if (action == '0'){
+                            int id = getInt(in, "Enter the row ID");
+                            if (id == -1)
+                                continue;
+                            int res=db.mLikesTable.deleteLikeIdea(id);
+                            System.out.println(res + " rows deleted");    
+                        }
+                        break;
                       //case 2; case 3;....... for future needed
               }
             }while(action != '<');

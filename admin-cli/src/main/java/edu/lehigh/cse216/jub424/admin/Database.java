@@ -18,7 +18,8 @@ public class Database {
     public Connection mConnection;
 
     public IdeaTable mIdeaTable;
-
+    
+    public LikesTable mLikesTable;
  
     /**
      * The Database constructor is private: we only create Database objects 
@@ -73,7 +74,7 @@ public class Database {
         try {
 
             db.mIdeaTable = new IdeaTable(db.mConnection);
-
+            db.mLikesTable = new LikesTable(db.mConnection);
         } catch (SQLException e) {
             System.err.println("Error creating prepared statement");
             e.printStackTrace();
