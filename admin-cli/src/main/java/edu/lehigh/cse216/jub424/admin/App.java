@@ -25,7 +25,7 @@ public class App {
         System.out.println("  [s] Select a table you want to make change: ");
         System.out.println("    1. IDEAS");
         System.out.println("    2. LIKES");
-        //There is only one tables called IDEAS for now, other tables could be added to the menu later when needed
+        //Other tables could be added to the menu later when needed
     }
     /**
      * Print the inner menus for our program
@@ -192,12 +192,12 @@ public class App {
                 }
             }
             
-            //create/drop/update/delete/read/insert... from table
+            //create/drop/update/delete/read/insert... from tables
             char action=' ';
             do{
               switch(inputInt){
+                  //Table IDEAS
                   case 1:
-                      //inner_menu("IDEAS");
                       action = prompt(in, "TD1*-+~?<");
                       if (action == '?') {
                           inner_menu("IDEAS");
@@ -262,6 +262,8 @@ public class App {
                           System.out.println(res + " idea disliked");
                       }*/
                       break;
+
+                  //Table LIKES    
                   case 2:
                         action = prompt(in,"TD-+g0?<");
                         if (action == '?') {
