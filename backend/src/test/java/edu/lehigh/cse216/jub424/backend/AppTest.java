@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.Map;
 
-
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 import edu.lehigh.cse216.jub424.backend.data_manager.*;
 import junit.framework.Test;
@@ -15,25 +14,22 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
-{
+public class AppTest
+        extends TestCase {
     /**
      * Create the test case
      *
      * @param testName name of the test case
      */
-    public AppTest( String testName )
-    {
-        super( testName );
+    public AppTest(String testName) {
+        super(testName);
     }
 
     /**
      * @return the suite of tests being tested
      */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
+    public static Test suite() {
+        return new TestSuite(AppTest.class);
     }
 
     /**
@@ -44,22 +40,19 @@ public class AppTest
         int id = 1500;
         String title = "Test Title";
         String content = "Test Content";
-        int like = 20;
-        int dislike = 6;
-        Idea idea = new Idea(id,title,content,like,dislike);
+        Idea idea = new Idea(id, title, content);
 
         assertTrue(idea.id == id);
         assertTrue(idea.title.equals(title));
         assertTrue(idea.massage.equals(content));
-        assertTrue(idea.like == like);
-        assertTrue(idea.dislike == dislike);
     }
 
     /**
      * test if it can connect to the heroku database by the DATABASE_URL
+     * 
      * @throws SQLException
      */
-    public void testConnection(){
+    public void testConnection() {
         Map<String, String> env = System.getenv();
         String db_url = env.get("DATABASE_URL");
         Connection conn = null;
@@ -87,11 +80,11 @@ public class AppTest
      * test to see if this can set all the manager ok
      * the set up of manager is in the getDatabase() function
      */
-    public void testManager(){
+    public void testManager() {
         Map<String, String> env = System.getenv();
         String db_url = env.get("DATABASE_URL");
         Database mDatabase = Database.getDatabase(db_url);
-        assert(mDatabase != null);
+        assert (mDatabase != null);
         try {
             mDatabase.mIdeaTableManager = new IdeaTableManager(mDatabase.mConnection);
         } catch (Exception e) {
@@ -104,11 +97,11 @@ public class AppTest
      * test to see if this can set all the routes ok
      * the set up of routes is in the getDatabase() function
      */
-    public void testRoutes(){
+    public void testRoutes() {
         Map<String, String> env = System.getenv();
         String db_url = env.get("DATABASE_URL");
         Database mDatabase = Database.getDatabase(db_url);
-        assert(mDatabase != null);
+        assert (mDatabase != null);
         try {
             DatabaseRoutes.ideasRoutes(mDatabase);
         } catch (Exception e) {

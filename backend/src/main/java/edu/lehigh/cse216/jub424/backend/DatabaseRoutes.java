@@ -76,8 +76,9 @@ public class DatabaseRoutes {
             response.type("application/json");
             // NB: we won't concern ourselves too much with the quality of the
             // message sent on a successful delete
+            int result_like = mDatabase.mLikeTableManager.deleteLikeIdea(idx);
             int result = mDatabase.mIdeaTableManager.deleteIdeas(idx);
-            if (result == -1) {
+            if (result == -1 || result_like == -1) {
                 return gson.toJson(new StructuredResponse("error", "unable to delete row " + idx, null));
             } else {
                 return gson.toJson(new StructuredResponse("ok", null, null));
@@ -102,63 +103,61 @@ public class DatabaseRoutes {
             }
         });
 
-        // GET route that returns like count for a single row in the ideas table.
-        Spark.get("/ideas/:id/like", (request, response) -> {
+    }
+
+    public static void likesRoutes(Database mDatabase) {
+        final Gson gson = new Gson();
+
+        // POST route for adding a new element to the Ideas table. This will read
+        // JSON from the body of the request, turn it into a SimpleIdeaRequest
+        // object, extract the title and message, insert them, and return the
+        // ID of the newly created row.
+        Spark.post("/likes/:id", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
-            int likecount = mDatabase.mIdeaTableManager.getLikeCount(idx);
-            if (likecount == -1) {
-                return gson.toJson(new StructuredResponse("error", idx + " not found", null));
+            response.status(200);
+            response.type("application/json");
+            // NB: createEntry checks for null title and message
+            int newId = mDatabase.mLikeTableManager.likeIdea(idx);
+            if (newId == -1) {
+                return gson.toJson(new StructuredResponse("error", "error performing insertion", null));
             } else {
-                return gson.toJson(new StructuredResponse("ok", null, likecount));
+                return gson.toJson(new StructuredResponse("ok", "" + newId, null));
             }
         });
 
-        // PUT route for updating like count of a row in the ideas tabel.
-        Spark.put("/ideas/:id/like", (request, response) -> {
-            // If we can't get an ID or can't parse the JSON, Spark will send
-            // a status 500
+        // GET route that returns number of like of a idea that id correspond
+        Spark.get("/likes/:id", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
-            int result = mDatabase.mIdeaTableManager.likeIdea(idx);
+            int number = mDatabase.mLikeTableManager.getLikeCount(idx);
+            if (number == -1) {
+                return gson.toJson(new StructuredResponse("error", idx + " not found",
+                        null));
+            } else {
+                return gson.toJson(new StructuredResponse("ok", null, number));
+            }
+        });
+
+        // DELETE route for removing a like for a idea that with a id
+        // this only remove one like
+        Spark.delete("/likes/:id", (request, response) -> {
+            // If we can't get an ID, Spark will send a status 500
+            int idx = Integer.parseInt(request.params("id"));
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            // NB: we won't concern ourselves too much with the quality of the
+            // message sent on a successful delete
+            int result = mDatabase.mLikeTableManager.cancelLikeIdea(idx);
             if (result == -1) {
-                return gson.toJson(new StructuredResponse("error", "unable to update row " + idx, null));
+                return gson.toJson(new StructuredResponse("error", "unable to delete row " + idx, null));
             } else {
-                return gson.toJson(new StructuredResponse("ok", null, result));
-            }
-        });
-
-        // GET route that returns dislike count for a single row in the ideas table.
-        Spark.get("/ideas/:id/dislike", (request, response) -> {
-            int idx = Integer.parseInt(request.params("id"));
-            // ensure status 200 OK, with a MIME type of JSON
-            response.status(200);
-            response.type("application/json");
-            int dislikecount = mDatabase.mIdeaTableManager.getDislikeCount(idx);
-            if (dislikecount == -1) {
-                return gson.toJson(new StructuredResponse("error", idx + " not found", null));
-            } else {
-                return gson.toJson(new StructuredResponse("ok", null, dislikecount));
-            }
-        });
-
-        // PUT route for updating dislike count of a row in the ideas tabel.
-        Spark.put("/ideas/:id/dislike", (request, response) -> {
-            // If we can't get an ID or can't parse the JSON, Spark will send
-            // a status 500
-            int idx = Integer.parseInt(request.params("id"));
-            // ensure status 200 OK, with a MIME type of JSON
-            response.status(200);
-            response.type("application/json");
-            int result = mDatabase.mIdeaTableManager.dislikeIdea(idx);
-            if (result == -1) {
-                return gson.toJson(new StructuredResponse("error", "unable to update row " + idx, null));
-            } else {
-                return gson.toJson(new StructuredResponse("ok", null, result));
+                return gson.toJson(new StructuredResponse("ok", null, null));
             }
         });
     }

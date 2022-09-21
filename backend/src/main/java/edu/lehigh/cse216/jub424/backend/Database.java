@@ -15,6 +15,8 @@ public class Database {
 
     public IdeaTableManager mIdeaTableManager;
 
+    public LikeTableManager mLikeTableManager;
+
     /**
      * The Database constructor is private: we only create Database objects
      * through the getDatabase() method.
@@ -66,6 +68,7 @@ public class Database {
         // fail, the whole getDatabase() call should fail
         try {
             db.mIdeaTableManager = new IdeaTableManager(db.mConnection);
+            db.mLikeTableManager = new LikeTableManager(db.mConnection);
         } catch (SQLException e) {
             System.err.println("Error creating prepared statement");
             e.printStackTrace();
