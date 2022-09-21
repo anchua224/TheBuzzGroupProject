@@ -46,8 +46,7 @@ public class App {
             
                 //System.out.println("  [l] like an idea");
                 //System.out.println("  [n] dislike an idea");
-            
-                //System.out.println("  [q] Quit Program");
+
                 System.out.println("  [?] Help (this message)");
                 System.out.println("  [<] Return to main memu");
                 break;
@@ -56,6 +55,7 @@ public class App {
                 System.out.println("  [D] Drop Table "+tableName);
                 System.out.println("  [-] Cancel like an idea");
                 System.out.println("  [+] Like an idea");
+                System.out.println("  [g] Get the count of likes related to a certain idea");
                 System.out.println("  [0] delete all the rows(likes) related to a certain idea");
                 System.out.println("  [?] Help (this message)");
                 System.out.println("  [<] Return to main memu");
@@ -263,7 +263,7 @@ public class App {
                       }*/
                       break;
                   case 2:
-                        action = prompt(in,"TD-+0?<");
+                        action = prompt(in,"TD-+g0?<");
                         if (action == '?') {
                             inner_menu("LIKES");
                         } else if (action == 'T') {
@@ -288,17 +288,21 @@ public class App {
                             int id = getInt(in, "Enter the row ID");
                             if (id == -1)
                                 continue;
-                            int res=db.mLikesTable.deleteLikeIdea(id);
+                            int res = db.mLikesTable.deleteLikeIdea(id);
                             System.out.println(res + " rows deleted");    
+                        } else if (action == 'g'){
+                            int id = getInt(in, "Enter the row ID");
+                            if (id == -1)
+                                continue;
+                            int count = db.mLikesTable.getLikeCount(id);
+                            System.out.println(count+" likes related to idea "+id);
                         }
                         break;
-                      //case 2; case 3;....... for future needed
+                      //case 3; case 4;....... for future needed
               }
             }while(action != '<');
         }
 
-
-      
         // Always remember to disconnect from the database when the program 
         // exits
         db.disconnect();

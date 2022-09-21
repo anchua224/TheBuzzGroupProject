@@ -125,5 +125,25 @@ class LikesTable{
         return res;
     }
 
+    /**
+     * get the likecount of an ideas of specific id
+     * 
+     * @param id The id of the row to get like count
+     * 
+     * @return The number of like count of the row. -1 indicates an error.
+     */
+    public int getLikeCount(int id) {
+        int res = -1;
+        try {
+            mGetLike.setInt(1, id);
+            ResultSet rs = mGetLike.executeQuery();
+            if (rs.next()) {
+                res = rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
 
 }
