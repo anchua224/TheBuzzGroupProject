@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'dart:developer' as developer;
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'The Buzz',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.brown,
+        primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'The Buzz'),
     );
@@ -45,7 +47,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -54,7 +55,6 @@ class MyHomePage extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
-
   final String title;
 
   @override
@@ -73,25 +73,27 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.title), centerTitle: true,
       ),
       body: const Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: HttpReqWords(),
+
+        child: ListofIdeas(),
+        //child: HttpReqWords(),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
 
-class HttpReqWords extends StatefulWidget {
-  const HttpReqWords({super.key});
+class ListofIdeas extends StatefulWidget {
+  const ListofIdeas({super.key});
 
   @override
-  State<HttpReqWords> createState() => _HttpReqWordsState();
+  State<ListofIdeas> createState() => _ListofIdeasState();
 }
 
-class _HttpReqWordsState extends State<HttpReqWords> {
+class _ListofIdeasState extends State<ListofIdeas> {
   late Future<List<NumberWordPair>> _future_list_numword_pairs;
 
   final _biggerFont = const TextStyle(fontSize: 18);
@@ -251,5 +253,112 @@ Future<List<NumberWordPair>> fetchNumberWordPairs() async {
     // If the server did not return a 200 OK response,
     // then throw an exception.
     throw Exception('Did not receive success status code from request.');
+  }
+}
+
+//The concept of this class would be used to add an idea to the app.
+//The button for it is present and clickable but I need to be able to add
+//an action as soon as the button is pressed that would take you to another
+//page which will maove you to a different state
+class AddanIdea extends StatelessWidget {
+  const AddanIdea({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('FloatingActionButton Sample'),
+      ),
+      body: const Center(child: Text('Press the button below!')),
+      // An example of the floating action button.
+      //
+      // https://m3.material.io/components/floating-action-button/specs
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add your onPressed code here!
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+//The class LikeIdea would be used to like an idea when you are currently
+//viewing that post. Once the button is clicked it would be clickable again
+//but instead remove the like from the post
+class LikeIdea extends StatelessWidget {
+  const LikeIdea({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('FloatingActionButton Sample'),
+      ),
+      body: const Center(
+        child: Text('Press the button with a label below!'),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Add your onPressed code here!
+        },
+        label: const Text('Approve'),
+        icon: const Icon(Icons.thumb_up),
+        backgroundColor: Colors.pink,
+      ),
+    );
+  }
+}
+
+//The class FirstRoute is just a test class for testing whether I am able
+//to move between states using widgets. THe concept of this would be used
+//to be able to clikc on a post and take you to a state where you can directly
+//read the entire post and actions that can be taken from there
+class FirstRoute extends StatelessWidget {
+  const FirstRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('First Route'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+            child: const Text('Open route'),
+            // Within the `FirstRoute` widget
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SecondRoute()),
+              );
+            }),
+      ),
+    );
+  }
+}
+
+//The secondRoute class would be the state of the app once you are in the post
+//and is a test class t see how you can return to the previous state with information
+//that has been saved without changing any of the older information
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Second Route'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Navigate back to first route when tapped.
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
+        ),
+      ),
+    );
   }
 }
