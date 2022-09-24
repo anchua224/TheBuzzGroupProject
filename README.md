@@ -2,19 +2,18 @@
 This is Team Fourteam's repository. It is intended for use during phase 1.
 
 ## Details
-- Semester: Fall 2022
-- Student ID: jub424
+- Application Name: The Buzz
 - Bitbucket Repository: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/README.md?mode=edit&at=master
 
 ## Trello invitation link
 https://trello.com/invite/b/MEsnAxxj/0745274807676a41afc93408ecbc6a7e/team-fourteam-phase-1
 
 ## Contributors
-1. Junchen Bao
-2. Ala Chua
-3. Na Chen
-4. Gerardo Hernandez Macoto
-5. Alex Guataipu
+1. Junchen Bao (jub424@lehigh.edu)
+2. Ala Chua (anc224@lehigh.edu)
+3. Na Chen (nac324@lehigh.edu)
+4. Gerardo Hernandez Macoto (geh223@lehigh.edu)
+5. Alex Guataipu (alg223@lehigh.edu)
 
 # Artifacts
 ## System Architecture Diagram
