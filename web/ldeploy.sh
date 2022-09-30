@@ -17,8 +17,8 @@ npm update
 
 # step 3: copy static html, css, and JavaScript files
 cp index_simple.html $TARGETFOLDER/index.html
-cp todo.js todo.css $TARGETFOLDER
-cp -r src $TARGETFOLDER/src
+# cp todo.js todo.css $TARGETFOLDER
+# cp -r src $TARGETFOLDER/src
 cp app.css $TARGETFOLDER
 
 # step 4: compile TypeScript files

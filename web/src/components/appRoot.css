@@ -1,21 +1,25 @@
 /* Style the outermost level of the component */
-main {
+/* main { */
     /* Use flex styling, in column mode, so items stack vertically */
-    display: flex;
-    flex-direction: column;
+    /* display: flex; */
+    /* flex-direction: column; */
     /* Center everything */
-    align-items: center;
+    /* align-items: center; */
     /* 100% of viewport width */
-    width: 100vw;
-}
+    /* width: 100vw; */
+    /* shadow */
+    /* box-shadow: 12px 12px 2px 1px rgba(254, 126, 126, 0.2); */
+/* } */
 
 /* Style the button */
-button {
+/* button { */
     /* Make it a rounded square */
-    width: 40px;
-    height: 40px;
-    border-radius: 5px;
-    border-style: none;
+    /* width: 40px; */
+    /* height: 40px; */
+    /* border-radius: 5px; */
+    /* border-style: none; */
     /* Make the font a little bigger */
-    font-size: 1.4rem;
-}
+    /* font-size: 1.4rem; */
+    /* have a shadow */
+    /* box-shadow: 12px 12px 2px 1px rgba(65, 65, 65, .2); */
+/* } */

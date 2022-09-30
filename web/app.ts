@@ -11,7 +11,8 @@ var newEntryForm: NewEntryForm;
 
 
 // This constant indicates the path to our backend server (change to your own)
-const backendUrl = "https://cse216-fl22-team14.herokuapp.com/";
+// const backendUrl = "https://desolate-bastion-93856.herokuapp.com/";
+const backendUrl = "https://cse216-fl22-team14.herokuapp.com/"
 
 /**
  * NewEntryForm encapsulates all of the code for the form for adding an entry
@@ -32,16 +33,12 @@ class NewEntryForm {
     clearForm() {
         (<HTMLInputElement>document.getElementById("newTitle")).value = "";
         (<HTMLInputElement>document.getElementById("newMessage")).value = "";
-        // reset the UI
-        (<HTMLElement>document.getElementById("editElement")).style.display = "none";
-        (<HTMLElement>document.getElementById("addElement")).style.display = "none";
-        (<HTMLElement>document.getElementById("showElements")).style.display = "block"; 
     }
 
-     /**
+    /**
      * Check if the input fields are both valid, and if so, do an AJAX call.
      */
-    submitForm() {
+     submitForm() {
         window.alert("Submit form called.");
         // get the values of the two fields, force them to be strings, and check 
         // that neither is empty
@@ -55,7 +52,7 @@ class NewEntryForm {
         // set up an AJAX POST. 
         // When the server replies, the result will go to onSubmitResponse
         const doAjax = async () => {
-            await fetch(`${backendUrl}/messages`, {
+            await fetch("https://cse216-fl22-team14.herokuapp.com/ideas", {
                 method: 'POST',
                 body: JSON.stringify({
                     mTitle: title,
@@ -108,8 +105,11 @@ class NewEntryForm {
             window.alert("Unspecified error");
         }
     }
-    
 } // end class NewEntryForm
+
+
+
+
 
 // a global for the main ElementList of the program.  See newEntryForm for 
 // explanation
@@ -125,7 +125,7 @@ class ElementList {
     refresh() {
         // Issue an AJAX GET and then pass the result to update(). 
         const doAjax = async () => {
-            await fetch(`${backendUrl}/messages`, {
+            await fetch("https://cse216-fl22-team14.herokuapp.com/ideas", {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8'
@@ -151,6 +151,9 @@ class ElementList {
 
         // make the AJAX post and output value or error message to console
         doAjax().then(console.log).catch(console.log);
+
+
+        
     }
 
     private update(data: any) {
@@ -160,72 +163,51 @@ class ElementList {
             elem_messageList.innerHTML = "";
 
             let fragment = document.createDocumentFragment();
-            let table = document.createElement('table');
 
+            let table = document.createElement('table');
+            
             for (let i = 0; i < data.mData.length; ++i) {
                 let tr = document.createElement('tr');
                 let td_title = document.createElement('td');
-                let td_id = document.createElement('td');
-                td_title.innerHTML = data.mData[i].mTitle;
-                td_id.innerHTML = data.mData[i].mId;
-                tr.appendChild(td_id);
+                let td_massage = document.createElement('td');
+                td_title.innerHTML = data.mData[i].title;
+                td_massage.innerHTML = data.mData[i].massage;
                 tr.appendChild(td_title);
-                tr.appendChild( this.buttons(data.mData[i].mId) );
+                tr.appendChild(td_massage);
+                tr.appendChild( this.buttons(data.mData[i].id) );
                 table.appendChild(tr);
             }
+            
             fragment.appendChild(table);
 
             elem_messageList.appendChild(fragment);
-        }     
-         // Find all of the delete buttons, and set their behavior
-         const all_delbtns = (<HTMLCollectionOf<HTMLInputElement>>document.getElementsByClassName("delbtn"));
-         for (let i = 0; i < all_delbtns.length; ++i) {
-             all_delbtns[i].addEventListener("click", (e) => {mainList.clickDelete( e );});
-         }  
-
+            
+        }
+        // Find all of the delete buttons, and set their behavior
+        const all_delbtns = (<HTMLCollectionOf<HTMLInputElement>>document.getElementsByClassName("delbtn"));
+        for (let i = 0; i < all_delbtns.length; ++i) {
+            all_delbtns[i].addEventListener("click", (e) => {mainList.clickDelete( e );});
+        }
         // Find all of the edit buttons, and set their behavior
         const all_editbtns = (<HTMLCollectionOf<HTMLInputElement>>document.getElementsByClassName("editbtn"));
         for (let i = 0; i < all_editbtns.length; ++i) {
             all_editbtns[i].addEventListener("click", (e) => {mainList.clickEdit( e );});
         }
+        //adding in a Like button
+        const all_likebtns = (<HTMLCollectionOf<HTMLInputElement>>document.getElementsByClassName("likebtn"));
+        for(let i = 0; i < all_likebtns.length; ++i){
+            all_likebtns[i].addEventListener("click", (e) => {mainList.clickLike( e );});
+        }
     }
-
-    /**
-     * buttons() adds a 'delete' button and an 'edit' button to the HTML for each row
-     */
-    private buttons(id: string): DocumentFragment {
-        let fragment = document.createDocumentFragment();
-        let td = document.createElement('td');
-
-        // create edit button, add to new td, add td to returned fragment
-        let btn = document.createElement('button');
-        btn.classList.add("editbtn");
-        btn.setAttribute('data-value', id);
-        btn.innerHTML = 'Edit';
-        td.appendChild(btn);
-        fragment.appendChild(td);
-
-        // create delete button, add to new td, add td to returned fragment
-        td = document.createElement('td');
-        btn = document.createElement('button');
-        btn.classList.add("delbtn");
-        btn.setAttribute('data-value', id);
-        btn.innerHTML = 'Delete';
-        td.appendChild(btn);
-        fragment.appendChild(td);
-
-        return fragment;
-    }
-
      /**
     * clickDelete is the code we run in response to a click of a delete button
     */
-    private clickDelete(e: Event) {
+      private clickDelete(e: Event) {
         const id = (<HTMLElement>e.target).getAttribute("data-value");
 
         // Issue an AJAX DELETE and then invoke refresh()
         const doAjax = async () => {
-            await fetch(`${backendUrl}/messages/${id}`, {
+            await fetch(`${backendUrl}/ideas/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8'
@@ -254,17 +236,16 @@ class ElementList {
         //       think about refactoring and abstracting this boilerplate into something
         //       easier to reuse, if possible 
     }
-
     /**
-    * clickEdit is the code we run in response to a click of a delete button
+    * clickEdit is the code we run in response to a click of a edit button
     */
-    private clickEdit(e: Event) {
+     private clickEdit(e: Event) {
         // as in clickDelete, we need the ID of the row
         const id = (<HTMLElement>e.target).getAttribute("data-value");
-
+        
         // Issue an AJAX GET and then pass the result to editEntryForm.init()
         const doAjax = async () => {
-            await fetch(`${backendUrl}/messages/${id}`, {
+            await fetch(`https://cse216-fl22-team14.herokuapp.com/ideas/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8'
@@ -290,7 +271,111 @@ class ElementList {
         doAjax().then(console.log).catch(console.log);        
     }
 
+    //for clickLike 
+    // this does the POST and DELETE requests
+    // based on whether the like button has been clicked once or twice
+        //  
+        private clickLike(e: Event) {
+            
+            // as in clickLike, we need the ID of the row
+            const id = (<HTMLElement>e.target).getAttribute("data-value");
+            let isLiked = (<HTMLElement>e.target).getAttribute("isLiked");
+            let methodType = isLiked === "0" ? "POST": "DELETE";
+            
+            
+            // Issue an AJAX POST and then pass the result to 
+            const doAjax = async () => {
+
+                await fetch(`https://cse216-fl22-team14.herokuapp.com/likes/${id}`, {
+                    method: methodType,
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8'
+                    }
+                }).then( (response) => {
+                    if (response.ok) {
+                        return Promise.resolve( response.json() );
+                    }
+                    else{
+                        window.alert(`The server replied not ok: ${response.status}\n` + response.statusText);
+                    }
+                    return Promise.reject(response);
+                }).then( (data) => {
+                    // editEntryForm.init(data);
+                    
+                    console.log(data);
+                }).catch( (error) => {
+                    console.warn('Something went wrong.', error);
+                    window.alert("Unspecified error");
+                });
+            }
+            //ignore error lines
+            // isLiked = parseInt(isLiked);
+            // isLiked = ~isLiked;
+            // (<HTMLElement>e.target).setAttribute("isLiked", isLiked);
+            // btn.setAttribute("isLiked", "0");
+            const btnLike = document.getElementsByClassName("likebtn");
+            // const valLike = (<HTMLInputElement><unknown>document.getElementsByClassName("likebtn")).value;
+
+            // btnLike.addEventListener('click', function)    
+            if(methodType === "POST"){
+                (<HTMLElement>e.target).setAttribute("isLiked", "1");
+                
+                console.log("The value is 1 ==== POST REQUEST");
+                
+            }
+            else{
+                (<HTMLElement>e.target).setAttribute("isLiked", "0");
+                console.log("The value is 0 ==== DELETE REQUEST");
+            }
+            // make the AJAX post and output value or error message to console
+            doAjax().then(console.log).catch(console.log);     
+
+        }
+    
+     /**
+     * buttons() adds a 'delete' button and an 'edit' button to the HTML for each row
+     */
+    private buttons(id: string): DocumentFragment {
+        let fragment = document.createDocumentFragment();
+        let td = document.createElement('td');
+
+        // create edit button, add to new td, add td to returned fragment
+        let btn = document.createElement('button');
+        btn.classList.add("editbtn");
+        btn.setAttribute('data-value', id);
+        btn.innerHTML = 'Edit';
+        td.appendChild(btn);
+        fragment.appendChild(td);
+
+        // create delete button, add to new td, add td to returned fragment
+        td = document.createElement('td');
+        btn = document.createElement('button');
+        btn.classList.add("delbtn");
+        btn.setAttribute('data-value', id);
+        btn.innerHTML = 'Delete';
+        td.appendChild(btn);
+        fragment.appendChild(td);
+        
+        //create like button, add to new td, add td to returned fragment
+        td = document.createElement('td');
+        btn = document.createElement('button');
+        btn.classList.add("likebtn");
+        btn.setAttribute("isLiked", "0");
+        btn.setAttribute('data-value', id);
+        btn.innerHTML = 'Like';
+        
+        // btn.addEventListener('click', clickLike)
+        td.appendChild(btn);
+        fragment.appendChild(td);
+        
+
+
+        return fragment;
+    }
 } // end class ElementList
+
+
+
 
 
 // a global for the EditEntryForm of the program.  See newEntryForm for explanation
@@ -316,15 +401,18 @@ class EditEntryForm {
     init(data: any) {
         // If we get an "ok" message, fill in the edit form
         if (data.mStatus === "ok") {
-            (<HTMLInputElement>document.getElementById("editTitle")).value = data.mData.mTitle;
-            (<HTMLInputElement>document.getElementById("editMessage")).value = data.mData.mContent;
-            (<HTMLInputElement>document.getElementById("editId")).value = data.mData.mId;
-            (<HTMLInputElement>document.getElementById("editCreated")).value = data.mData.mCreated;
-
             // show the edit form
             (<HTMLElement>document.getElementById("editElement")).style.display = "block";
+            //Like Element
+            // (<HTMLElement>document.getElementById("likeElement")).style.display = "block";
+            
             (<HTMLElement>document.getElementById("addElement")).style.display = "none";
             (<HTMLElement>document.getElementById("showElements")).style.display = "none";
+
+            (<HTMLInputElement>document.getElementById("editTitle")).value = data.mData.title;
+            (<HTMLInputElement>document.getElementById("editMessage")).value = data.mData.massage;
+            (<HTMLInputElement>document.getElementById("editId")).value = data.mData.id;
+            (<HTMLInputElement>document.getElementById("editCreated")).value = data.mData.mCreated;
         }
         // Handle explicit errors with a detailed popup message
         else if (data.mStatus === "error") {
@@ -343,11 +431,7 @@ class EditEntryForm {
         (<HTMLInputElement>document.getElementById("editTitle")).value = "";
         (<HTMLInputElement>document.getElementById("editMessage")).value = "";        
         (<HTMLInputElement>document.getElementById("editId")).value = "";       
-        (<HTMLInputElement>document.getElementById("editCreated")).value = "";   
-        // reset the UI
-        (<HTMLElement>document.getElementById("editElement")).style.display = "none";
-        (<HTMLElement>document.getElementById("addElement")).style.display = "none";
-        (<HTMLElement>document.getElementById("showElements")).style.display = "block";    
+        (<HTMLInputElement>document.getElementById("editCreated")).value = "";      
     }
 
     /**
@@ -369,7 +453,7 @@ class EditEntryForm {
         // set up an AJAX PUT.
         // When the server replies, the result will go to onSubmitResponse
         const doAjax = async () => {
-            await fetch(`${backendUrl}/messages/${id}`, {
+            await fetch(`https://cse216-fl22-team14.herokuapp.com/ideas/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
                     mTitle: title,
@@ -411,7 +495,7 @@ class EditEntryForm {
      */
     private onSubmitResponse(data: any) {
         // If we get an "ok" message, clear the form and refresh the main 
-        // listing of messages
+        // listing of ideas
         if (data.mStatus === "ok") {
             editEntryForm.clearForm();
             mainList.refresh();
@@ -427,25 +511,73 @@ class EditEntryForm {
     }
 } // end class EditEntryForm
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Run some configuration code when the web page loads
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // set up initial UI state
+    (<HTMLElement>document.getElementById("editElement")).style.display = "none";
+    //like element
+    // (<HTMLElement>document.getElementById("likeElement")).style.display = "none";
+    // add click event for when the post is liked
+    
+    (<HTMLElement>document.getElementById("addElement")).style.display = "none";
+    (<HTMLElement>document.getElementById("showElements")).style.display = "block";
+    // set up the "Add Message" button
+    document.getElementById("showFormButton")?.addEventListener("click", (e) => {
+        (<HTMLElement>document.getElementById("addElement")).style.display = "block";
+        (<HTMLElement>document.getElementById("showElements")).style.display = "none";
+    });
+    // reset the UI
+    (<HTMLElement>document.getElementById("editElement")).style.display = "none";
+    // (<HTMLElement>document.getElementById("likeElement")).style.display = "none";
+    
+    (<HTMLElement>document.getElementById("addElement")).style.display = "none";
+    (<HTMLElement>document.getElementById("showElements")).style.display = "block"; 
+    
+    // Create the object that controls the "Edit Entry" form
+    editEntryForm = new EditEntryForm();
     // Create the object that controls the "New Entry" form
     newEntryForm = new NewEntryForm();
     // Create the object for the main data list, and populate it with data from the server
     mainList = new ElementList();
     mainList.refresh();
     window.alert('DOMContentLoaded');
-    // Create the object that controls the "Edit Entry" form
-    editEntryForm = new EditEntryForm();
-
-    // set up initial UI state
-    (<HTMLElement>document.getElementById("editElement")).style.display = "none";
-    (<HTMLElement>document.getElementById("addElement")).style.display = "none";
-    (<HTMLElement>document.getElementById("showElements")).style.display = "block";
-
-    // set up the "Add Message" button
-    document.getElementById("showFormButton")?.addEventListener("click", (e) => {
-        (<HTMLElement>document.getElementById("addElement")).style.display = "block";
-        (<HTMLElement>document.getElementById("showElements")).style.display = "none";
-    });
 }, false);
+
+
+
+
+
+
+
+
+
+
+
+

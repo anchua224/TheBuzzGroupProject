@@ -45,6 +45,7 @@ var $;
 // 'this' won't work correctly.
 var newEntryForm;
 // This constant indicates the path to our backend server (change to your own)
+// const backendUrl = "https://desolate-bastion-93856.herokuapp.com/";
 var backendUrl = "https://cse216-fl22-team14.herokuapp.com/";
 /**
  * NewEntryForm encapsulates all of the code for the form for adding an entry
@@ -65,14 +66,10 @@ var NewEntryForm = /** @class */ (function () {
     NewEntryForm.prototype.clearForm = function () {
         document.getElementById("newTitle").value = "";
         document.getElementById("newMessage").value = "";
-        // reset the UI
-        document.getElementById("editElement").style.display = "none";
-        document.getElementById("addElement").style.display = "none";
-        document.getElementById("showElements").style.display = "block";
     };
     /**
-    * Check if the input fields are both valid, and if so, do an AJAX call.
-    */
+     * Check if the input fields are both valid, and if so, do an AJAX call.
+     */
     NewEntryForm.prototype.submitForm = function () {
         var _this = this;
         window.alert("Submit form called.");
@@ -89,7 +86,7 @@ var NewEntryForm = /** @class */ (function () {
         var doAjax = function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch("".concat(backendUrl, "/messages"), {
+                    case 0: return [4 /*yield*/, fetch("https://cse216-fl22-team14.herokuapp.com/ideas", {
                             method: 'POST',
                             body: JSON.stringify({
                                 mTitle: title,
@@ -165,7 +162,7 @@ var ElementList = /** @class */ (function () {
         var doAjax = function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch("".concat(backendUrl, "/messages"), {
+                    case 0: return [4 /*yield*/, fetch("https://cse216-fl22-team14.herokuapp.com/ideas", {
                             method: 'GET',
                             headers: {
                                 'Content-type': 'application/json; charset=UTF-8'
@@ -205,12 +202,12 @@ var ElementList = /** @class */ (function () {
             for (var i = 0; i < data.mData.length; ++i) {
                 var tr = document.createElement('tr');
                 var td_title = document.createElement('td');
-                var td_id = document.createElement('td');
-                td_title.innerHTML = data.mData[i].mTitle;
-                td_id.innerHTML = data.mData[i].mId;
-                tr.appendChild(td_id);
+                var td_massage = document.createElement('td');
+                td_title.innerHTML = data.mData[i].title;
+                td_massage.innerHTML = data.mData[i].massage;
                 tr.appendChild(td_title);
-                tr.appendChild(this.buttons(data.mData[i].mId));
+                tr.appendChild(td_massage);
+                tr.appendChild(this.buttons(data.mData[i].id));
                 table.appendChild(tr);
             }
             fragment.appendChild(table);
@@ -226,29 +223,11 @@ var ElementList = /** @class */ (function () {
         for (var i = 0; i < all_editbtns.length; ++i) {
             all_editbtns[i].addEventListener("click", function (e) { mainList.clickEdit(e); });
         }
-    };
-    /**
-     * buttons() adds a 'delete' button and an 'edit' button to the HTML for each row
-     */
-    ElementList.prototype.buttons = function (id) {
-        var fragment = document.createDocumentFragment();
-        var td = document.createElement('td');
-        // create edit button, add to new td, add td to returned fragment
-        var btn = document.createElement('button');
-        btn.classList.add("editbtn");
-        btn.setAttribute('data-value', id);
-        btn.innerHTML = 'Edit';
-        td.appendChild(btn);
-        fragment.appendChild(td);
-        // create delete button, add to new td, add td to returned fragment
-        td = document.createElement('td');
-        btn = document.createElement('button');
-        btn.classList.add("delbtn");
-        btn.setAttribute('data-value', id);
-        btn.innerHTML = 'Delete';
-        td.appendChild(btn);
-        fragment.appendChild(td);
-        return fragment;
+        //adding in a Like button
+        var all_likebtns = document.getElementsByClassName("likebtn");
+        for (var i = 0; i < all_likebtns.length; ++i) {
+            all_likebtns[i].addEventListener("click", function (e) { mainList.clickLike(e); });
+        }
     };
     /**
    * clickDelete is the code we run in response to a click of a delete button
@@ -260,7 +239,7 @@ var ElementList = /** @class */ (function () {
         var doAjax = function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch("".concat(backendUrl, "/messages/").concat(id), {
+                    case 0: return [4 /*yield*/, fetch("".concat(backendUrl, "/ideas/").concat(id), {
                             method: 'DELETE',
                             headers: {
                                 'Content-type': 'application/json; charset=UTF-8'
@@ -293,7 +272,7 @@ var ElementList = /** @class */ (function () {
         //       easier to reuse, if possible 
     };
     /**
-    * clickEdit is the code we run in response to a click of a delete button
+    * clickEdit is the code we run in response to a click of a edit button
     */
     ElementList.prototype.clickEdit = function (e) {
         var _this = this;
@@ -303,7 +282,7 @@ var ElementList = /** @class */ (function () {
         var doAjax = function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch("".concat(backendUrl, "/messages/").concat(id), {
+                    case 0: return [4 /*yield*/, fetch("https://cse216-fl22-team14.herokuapp.com/ideas/".concat(id), {
                             method: 'GET',
                             headers: {
                                 'Content-type': 'application/json; charset=UTF-8'
@@ -332,6 +311,98 @@ var ElementList = /** @class */ (function () {
         // make the AJAX post and output value or error message to console
         doAjax().then(console.log).catch(console.log);
     };
+    //for clickLike 
+    // this does the POST and DELETE requests
+    // based on whether the like button has been clicked once or twice
+    //  
+    ElementList.prototype.clickLike = function (e) {
+        var _this = this;
+        // as in clickLike, we need the ID of the row
+        var id = e.target.getAttribute("data-value");
+        var isLiked = e.target.getAttribute("isLiked");
+        var methodType = isLiked === "0" ? "POST" : "DELETE";
+        // Issue an AJAX POST and then pass the result to 
+        var doAjax = function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch("https://cse216-fl22-team14.herokuapp.com/likes/".concat(id), {
+                            method: methodType,
+                            headers: {
+                                'Content-type': 'application/json; charset=UTF-8'
+                            }
+                        }).then(function (response) {
+                            if (response.ok) {
+                                return Promise.resolve(response.json());
+                            }
+                            else {
+                                window.alert("The server replied not ok: ".concat(response.status, "\n") + response.statusText);
+                            }
+                            return Promise.reject(response);
+                        }).then(function (data) {
+                            // editEntryForm.init(data);
+                            console.log(data);
+                        }).catch(function (error) {
+                            console.warn('Something went wrong.', error);
+                            window.alert("Unspecified error");
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        //ignore error lines
+        // isLiked = parseInt(isLiked);
+        // isLiked = ~isLiked;
+        // (<HTMLElement>e.target).setAttribute("isLiked", isLiked);
+        // btn.setAttribute("isLiked", "0");
+        var btnLike = document.getElementsByClassName("likebtn");
+        // const valLike = (<HTMLInputElement><unknown>document.getElementsByClassName("likebtn")).value;
+        // btnLike.addEventListener('click', function)    
+        if (methodType === "POST") {
+            e.target.setAttribute("isLiked", "1");
+            console.log("The value is 1 ==== POST REQUEST");
+        }
+        else {
+            e.target.setAttribute("isLiked", "0");
+            console.log("The value is 0 ==== DELETE REQUEST");
+        }
+        // make the AJAX post and output value or error message to console
+        doAjax().then(console.log).catch(console.log);
+    };
+    /**
+    * buttons() adds a 'delete' button and an 'edit' button to the HTML for each row
+    */
+    ElementList.prototype.buttons = function (id) {
+        var fragment = document.createDocumentFragment();
+        var td = document.createElement('td');
+        // create edit button, add to new td, add td to returned fragment
+        var btn = document.createElement('button');
+        btn.classList.add("editbtn");
+        btn.setAttribute('data-value', id);
+        btn.innerHTML = 'Edit';
+        td.appendChild(btn);
+        fragment.appendChild(td);
+        // create delete button, add to new td, add td to returned fragment
+        td = document.createElement('td');
+        btn = document.createElement('button');
+        btn.classList.add("delbtn");
+        btn.setAttribute('data-value', id);
+        btn.innerHTML = 'Delete';
+        td.appendChild(btn);
+        fragment.appendChild(td);
+        //create like button, add to new td, add td to returned fragment
+        td = document.createElement('td');
+        btn = document.createElement('button');
+        btn.classList.add("likebtn");
+        btn.setAttribute("isLiked", "0");
+        btn.setAttribute('data-value', id);
+        btn.innerHTML = 'Like';
+        // btn.addEventListener('click', clickLike)
+        td.appendChild(btn);
+        fragment.appendChild(td);
+        return fragment;
+    };
     return ElementList;
 }()); // end class ElementList
 // a global for the EditEntryForm of the program.  See newEntryForm for explanation
@@ -356,14 +427,16 @@ var EditEntryForm = /** @class */ (function () {
     EditEntryForm.prototype.init = function (data) {
         // If we get an "ok" message, fill in the edit form
         if (data.mStatus === "ok") {
-            document.getElementById("editTitle").value = data.mData.mTitle;
-            document.getElementById("editMessage").value = data.mData.mContent;
-            document.getElementById("editId").value = data.mData.mId;
-            document.getElementById("editCreated").value = data.mData.mCreated;
             // show the edit form
             document.getElementById("editElement").style.display = "block";
+            //Like Element
+            // (<HTMLElement>document.getElementById("likeElement")).style.display = "block";
             document.getElementById("addElement").style.display = "none";
             document.getElementById("showElements").style.display = "none";
+            document.getElementById("editTitle").value = data.mData.title;
+            document.getElementById("editMessage").value = data.mData.massage;
+            document.getElementById("editId").value = data.mData.id;
+            document.getElementById("editCreated").value = data.mData.mCreated;
         }
         // Handle explicit errors with a detailed popup message
         else if (data.mStatus === "error") {
@@ -382,10 +455,6 @@ var EditEntryForm = /** @class */ (function () {
         document.getElementById("editMessage").value = "";
         document.getElementById("editId").value = "";
         document.getElementById("editCreated").value = "";
-        // reset the UI
-        document.getElementById("editElement").style.display = "none";
-        document.getElementById("addElement").style.display = "none";
-        document.getElementById("showElements").style.display = "block";
     };
     /**
      * Check if the input fields are both valid, and if so, do an AJAX call.
@@ -408,7 +477,7 @@ var EditEntryForm = /** @class */ (function () {
         var doAjax = function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch("".concat(backendUrl, "/messages/").concat(id), {
+                    case 0: return [4 /*yield*/, fetch("https://cse216-fl22-team14.herokuapp.com/ideas/".concat(id), {
                             method: 'PUT',
                             body: JSON.stringify({
                                 mTitle: title,
@@ -453,7 +522,7 @@ var EditEntryForm = /** @class */ (function () {
      */
     EditEntryForm.prototype.onSubmitResponse = function (data) {
         // If we get an "ok" message, clear the form and refresh the main 
-        // listing of messages
+        // listing of ideas
         if (data.mStatus === "ok") {
             editEntryForm.clearForm();
             mainList.refresh();
@@ -472,16 +541,11 @@ var EditEntryForm = /** @class */ (function () {
 // Run some configuration code when the web page loads
 document.addEventListener('DOMContentLoaded', function () {
     var _a;
-    // Create the object that controls the "New Entry" form
-    newEntryForm = new NewEntryForm();
-    // Create the object for the main data list, and populate it with data from the server
-    mainList = new ElementList();
-    mainList.refresh();
-    window.alert('DOMContentLoaded');
-    // Create the object that controls the "Edit Entry" form
-    editEntryForm = new EditEntryForm();
     // set up initial UI state
     document.getElementById("editElement").style.display = "none";
+    //like element
+    // (<HTMLElement>document.getElementById("likeElement")).style.display = "none";
+    // add click event for when the post is liked
     document.getElementById("addElement").style.display = "none";
     document.getElementById("showElements").style.display = "block";
     // set up the "Add Message" button
@@ -489,4 +553,17 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("addElement").style.display = "block";
         document.getElementById("showElements").style.display = "none";
     });
+    // reset the UI
+    document.getElementById("editElement").style.display = "none";
+    // (<HTMLElement>document.getElementById("likeElement")).style.display = "none";
+    document.getElementById("addElement").style.display = "none";
+    document.getElementById("showElements").style.display = "block";
+    // Create the object that controls the "Edit Entry" form
+    editEntryForm = new EditEntryForm();
+    // Create the object that controls the "New Entry" form
+    newEntryForm = new NewEntryForm();
+    // Create the object for the main data list, and populate it with data from the server
+    mainList = new ElementList();
+    mainList.refresh();
+    window.alert('DOMContentLoaded');
 }, false);
