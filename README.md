@@ -4,9 +4,7 @@ This is Team Fourteam's repository. It is intended for use during phase 1.
 ## Details
 - Application Name: The Buzz
 - Bitbucket Repository: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/README.md?mode=edit&at=master
-
-## Trello invitation link
-https://trello.com/invite/b/MEsnAxxj/0745274807676a41afc93408ecbc6a7e/team-fourteam-phase-1
+- Trello Invitation Link: https://trello.com/invite/b/MEsnAxxj/0745274807676a41afc93408ecbc6a7e/team-fourteam-phase-1
 
 ## Contributors
 1. Junchen Bao (jub424@lehigh.edu)
@@ -14,6 +12,32 @@ https://trello.com/invite/b/MEsnAxxj/0745274807676a41afc93408ecbc6a7e/team-fourt
 3. Na Chen (nac324@lehigh.edu)
 4. Gerardo Hernandez Macoto (geh223@lehigh.edu)
 5. Alex Guataipu (alg223@lehigh.edu)
+
+## Functionality 
+Phase 1 Release:
+- A single anonymous user can:
+	- Get ideas stored on database
+	- Post ideas to database
+	- Edit ideas, changes updated to database
+	- Delete idea from database
+	- Like ideas and remove likes from ideas
+- The server admin can:
+	- Create table for database
+	- Manage posts using an ID
+	- Manage likes on posts using an ID
+
+## Building & Running Application
+- Backend
+	- $ mvn package
+	- $ mvn heroku:deploy
+- Mobile
+	- $ flutter run
+- Admin
+	- $ mvn package
+	- $ DATABASE_URL=postgres://epyqfjqcxwfqev:5592fc974fab7f2e1482fab5391b99a39f085e06aff092e5f9c064e00fc27c8d@ec2-3-216-167-65.compute-1.amazonaws.com:5432/da1nea8nc5r1r mvn:exec java
+- Web
+	- Deploy to localhost
+
 
 # Artifacts
 ## System Architecture Diagram
