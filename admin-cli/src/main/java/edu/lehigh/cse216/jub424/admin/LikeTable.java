@@ -30,11 +30,21 @@ class LikesTable{
      */
     private static PreparedStatement mDeleteIdea;
 
+    /**
+     * create the LIKES table
+     */
     private static PreparedStatement mCreateTable;
      
+    /**
+     * drop the LIKES table
+     */
     private static PreparedStatement mDropTable;
 
 
+    /**
+     * for prepared statement
+     * @param take in the connection object
+     */
     public LikesTable(Connection mConnection) throws SQLException {
         
         mCreateTable = mConnection.prepareStatement(

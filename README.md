@@ -14,6 +14,7 @@ This is Team Fourteam's repository. It is intended for use during phase 1.
 5. Alex Guataipu (alg223@lehigh.edu)
 
 ## Functionality 
+<<<<<<< HEAD
 - Phase 1 Release:
 	- A single anonymous user can:
 		- Get ideas stored on database
@@ -25,6 +26,19 @@ This is Team Fourteam's repository. It is intended for use during phase 1.
 		- Create table for database
 		- Manage posts using an ID
 		- Manage likes on posts using an ID
+=======
+Phase 1 Release:
+- A single anonymous user can:
+	- Get ideas stored on database
+	- Post ideas to database
+	- Edit ideas, changes updated to database
+	- Delete idea from database
+	- Like ideas and remove likes from ideas
+- The server admin can:
+	- Create table for database
+	- Manage posts using an ID
+	- Manage likes on posts using an ID
+>>>>>>> pre_master
 
 ## Building & Running Application
 - Backend

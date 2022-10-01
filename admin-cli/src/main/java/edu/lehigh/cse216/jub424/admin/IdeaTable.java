@@ -38,26 +38,6 @@ class IdeaTable{
      */
     private static PreparedStatement mUpdateOne;
 
-    /**
-     * A prepared statement for get like count
-     */
-    private static PreparedStatement mGetLike;
-
-    /**
-     * A prepared statement for updating a single row add like
-     */
-    private static PreparedStatement mLike;
-
-    /**
-     * A prepared statement for get like count
-     */
-    private static PreparedStatement mGetDislike;
-
-    /**
-     * A prepared statement for updating a single row add dislike
-     */
-    private static PreparedStatement mDislike;
-
     public IdeaTable(Connection mConnection) throws SQLException {
         // CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,
         // message VARCHAR(500) NOT NULL,likecount INT NOT NULL, dislikecount INT not
