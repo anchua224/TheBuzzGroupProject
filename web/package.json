@@ -1,14 +1,14 @@
 {
-  "name": "web",
+  "name": "web-bridge-tutorial",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "todo.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "typescript": "^4.8.3"
   },

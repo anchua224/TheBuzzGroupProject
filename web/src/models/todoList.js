@@ -18,55 +18,55 @@
  * methods.  This means it is something of a singleton pattern, albeit without
  * any nice language mechanisms to enforce protection.
  */
- export class TodoList {
+//  export class TodoList {
     /** The array of {id, data, complete} tuples */
-    static #State = [];
+    // static #State = [];
 
     /** A strictly monotomically increasing counter, for Ids */
-    static #IdGenerator = 0;
+    // static #IdGenerator = 0;
 
     /** 
      * Add a new item to the Todo List by providing its id, data, and completion
      * status 
      */
-    static CreateItem() {
-        let id = this.#IdGenerator++;
-        let complete = false;
-        let data = "Task " + id;
-        // Note this syntax: we don't have to say `{id : id, data: data,
-        // complete: complete}`, because the variable names for the content of
-        // each field match the field names.
-        let res = { id, data, complete };
-        this.#State.push(res);
-        return res;
-    }
+    // static CreateItem() {
+    //     let id = this.#IdGenerator++;
+    //     let complete = false;
+    //     let data = "Task " + id;
+    //     // Note this syntax: we don't have to say `{id : id, data: data,
+    //     // complete: complete}`, because the variable names for the content of
+    //     // each field match the field names.
+    //     let res = { id, data, complete };
+    //     this.#State.push(res);
+    //     return res;
+    // }
 
     /** Get and return the item from the todo list with matching `id` */
-    static ReadItem(id) {
-        return this.#State.find(t => t.id == id);
-    }
+    // static ReadItem(id) {
+    //     return this.#State.find(t => t.id == id);
+    // }
 
     /** Overwrite the data for the Todo List item whose id matches `id` */
-    static UpdateData(id, data) {
-        if (!data) return false; // reject if the data would become empty
-        let todoItem = this.#State.find(t => t.id == id);
-        if (!todoItem) return false;
-        todoItem.data = data;
-        return true;
-    }
+    // static UpdateData(id, data) {
+    //     if (!data) return false; // reject if the data would become empty
+    //     let todoItem = this.#State.find(t => t.id == id);
+    //     if (!todoItem) return false;
+    //     todoItem.data = data;
+    //     return true;
+    // }
 
     /** Set the 'completed' state of the item whose id matches `id` */
-    static UpdateCompleted(id, completed) {
-        let todoItem = this.#State.find(t => t.id == id);
-        if (!todoItem) return false;
-        todoItem.completed = completed;
-        return true;
-    }
+    // static UpdateCompleted(id, completed) {
+    //     let todoItem = this.#State.find(t => t.id == id);
+    //     if (!todoItem) return false;
+    //     todoItem.completed = completed;
+    //     return true;
+    // }
 
     /** Remove the Todo List item whose id matches `id` */
-    static DeleteItem(id) {
-        let s = this.#State.length;
-        this.#State = this.#State.filter((t) => t.id != id);
-        return this.#State.length == s - 1;
-    }
-}
+//     static DeleteItem(id) {
+//         let s = this.#State.length;
+//         this.#State = this.#State.filter((t) => t.id != id);
+//         return this.#State.length == s - 1;
+//     }
+// }
