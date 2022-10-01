@@ -84,8 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
-
 class HttpReqWords extends StatefulWidget {
   const HttpReqWords({super.key});
 
@@ -114,7 +112,8 @@ class _HttpReqWordsState extends State<HttpReqWords> {
   Widget build(BuildContext context) {
     var fb = FutureBuilder<List<NumberWordPair>>(
       future: _future_list_numword_pairs,
-      builder: (BuildContext context, AsyncSnapshot<List<NumberWordPair>> snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<List<NumberWordPair>> snapshot) {
         Widget child;
 
         if (snapshot.hasData) {
@@ -138,7 +137,8 @@ class _HttpReqWordsState extends State<HttpReqWords> {
                   ],
                 );
               });
-        } else if (snapshot.hasError) { // newly added
+        } else if (snapshot.hasError) {
+          // newly added
           child = Text('${snapshot.error}');
         } else {
           // awaiting snapshot data, return simple text widget
@@ -153,14 +153,14 @@ class _HttpReqWordsState extends State<HttpReqWords> {
   }
 }
 
-
 Future<List<String>> getWebData() async {
   developer.log('Making web request...');
-   //var url = Uri.http('www.cse.lehigh.edu', '~spear/courses.json');
+  var url = Uri.http('www.cse.lehigh.edu', '~spear/courses.json');
   //var url = Uri.parse('http://www.cse.lehigh.edu/~spear/courses.json'); // list of strings
   //var url = Uri.parse('http://www.cse.lehigh.edu/~spear/5k.json');      // list of maps
-  var url = Uri.parse('https://jsonplaceholder.typicode.com/albums/1'); // single map
-  var headers = {"Accept": "application/json"};  // <String,String>{};
+  // var url =
+  // Uri.parse('https://jsonplaceholder.typicode.com/albums/1'); // single map
+  var headers = {"Accept": "application/json"}; // <String,String>{};
 
   var response = await http.get(url, headers: headers);
 
@@ -174,16 +174,18 @@ Future<List<String>> getWebData() async {
     var res = jsonDecode(response.body);
     print('json decode: $res');
 
-    if( res is List ){
-      returnData = (res as List<dynamic>).map( (x) => x.toString() ).toList();
-    }else if( res is Map ){
-      returnData = <String>[(res as Map<String,dynamic>).toString()];
-    }else{
-      developer.log('ERROR: Unexpected json response type (was not a List or Map).');
+    if (res is List) {
+      returnData = (res as List<dynamic>).map((x) => x.toString()).toList();
+    } else if (res is Map) {
+      returnData = <String>[(res as Map<String, dynamic>).toString()];
+    } else {
+      developer
+          .log('ERROR: Unexpected json response type (was not a List or Map).');
       returnData = List.empty();
     }
-  }else{
-    throw Exception('Failed to retrieve web data (server returned ${response.statusCode})');
+  } else {
+    throw Exception(
+        'Failed to retrieve web data (server returned ${response.statusCode})');
   }
 
   return returnData;
@@ -200,11 +202,11 @@ Future<List<String>> simpleLongRunningCalculation() async {
   return ['x', 'y', 'z'];
 }
 
-
 /// Create object from data like: http://www.cse.lehigh.edu/~spear/5k.json
 class NumberWordPair {
   /// The string representation of the number
-  final String str; 
+  final String str;
+
   /// The int representation of the number
   final int num;
 
@@ -222,8 +224,8 @@ class NumberWordPair {
 }
 
 Future<List<NumberWordPair>> fetchNumberWordPairs() async {
-  final response = await http
-      .get(Uri.parse('http://www.cse.lehigh.edu/~spear/5k.json'));
+  final response =
+      await http.get(Uri.parse('http://www.cse.lehigh.edu/~spear/5k.json'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, then parse the JSON.
@@ -231,12 +233,17 @@ Future<List<NumberWordPair>> fetchNumberWordPairs() async {
     var res = jsonDecode(response.body);
     print('json decode: $res');
 
-    if( res is List ){
-      returnData = (res as List<dynamic>).map( (x) => NumberWordPair.fromJson(x) ).toList();
-    }else if( res is Map ){
-      returnData = <NumberWordPair>[NumberWordPair.fromJson(res as Map<String,dynamic>)];
-    }else{
-      developer.log('ERROR: Unexpected json response type (was not a List or Map).');
+    if (res is List) {
+      returnData = (res as List<dynamic>)
+          .map((x) => NumberWordPair.fromJson(x))
+          .toList();
+    } else if (res is Map) {
+      returnData = <NumberWordPair>[
+        NumberWordPair.fromJson(res as Map<String, dynamic>)
+      ];
+    } else {
+      developer
+          .log('ERROR: Unexpected json response type (was not a List or Map).');
       returnData = List.empty();
     }
     return returnData;
