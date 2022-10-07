@@ -5,6 +5,12 @@ import java.util.ArrayList;
 
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 
+/**
+ * IdeaTableManager all function interact with the ideas table
+ * @author Junchen Bao
+ * @version 1.0.0
+ * @since 2022-09-16
+ */
 public class IdeaTableManager {
     /**
      * A prepared statement for getting all data in the database
@@ -135,13 +141,13 @@ public class IdeaTableManager {
         return count;
     }
 
+    
     /**
      * Update the subject and message for a row in the database
      * 
-     * @param id      The id of the row to update
-     * 
+     * @param id The id of the row to update
+     * @param subject The subject for update
      * @param message The new message contents
-     * 
      * @return The number of rows that were updated. -1 indicates an error.
      */
     public int updateIdea(int id, String subject, String message) {

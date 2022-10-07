@@ -11,7 +11,6 @@ import java.util.Date;
  * not bother with having getters and setters... instead, we will allow code to
  * interact with the fields directly.
  */
-
 public class Idea {
 
     /**
@@ -42,7 +41,7 @@ public class Idea {
      * 
      * @param id id to the idea, which is unique for the whole time
      * 
-     * @title The title of this idea
+     * @param title The title of this idea
      * 
      * @param massage massage of the idea
      */
