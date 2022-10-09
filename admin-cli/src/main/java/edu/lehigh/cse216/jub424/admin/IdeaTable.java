@@ -1,4 +1,5 @@
 package edu.lehigh.cse216.jub424.admin;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -9,7 +10,12 @@ import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 
-class IdeaTable{
+/**
+ * IdeaTable All functions related to interact with idea table
+ * @author Na Chen
+ * @version 1.0.0
+ */
+ public class IdeaTable{
     private static PreparedStatement mCreateTable;
 
     private static PreparedStatement mDropTable;
@@ -63,6 +69,11 @@ class IdeaTable{
     }
 
     //inner class Idea, holds information of one row in the idea table
+    /**
+     * Idea A inner class inside IdeaTable that stores the attributes of one idea
+     * @author Na Chen
+     * @version 1.0.0
+     */
     class Idea{
         /**
         * id, which is the primary key of idea
@@ -225,89 +236,6 @@ class IdeaTable{
         }
         return res;
     }
-
-    // /**
-    //  * Update the likecount for a row in the database let it + 1
-    //  * 
-    //  * @param id The id of the row to update
-    //  *
-    //  * @return The number of rows that were updated. -1 indicates an error.
-    //  */
-    // public int likeIdea(int id) {
-    //     int res = -1;
-    //     try {
-    //         mLike.setInt(1, id);
-    //         mLike.setInt(2, id);
-    //         res = mLike.executeUpdate();
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return res;
-    // }
-
-    // /**
-    //  * Update the dislikecount for a row in the database let it + 1
-    //  * 
-    //  * @param id The id of the row to update
-    //  *
-    //  */
-    // public int dislikeIdea(int id) {
-    //     int res = -1;
-    //     try {
-    //         mDislike.setInt(1, id);
-    //         mDislike.setInt(2, id);
-    //         res = mDislike.executeUpdate();
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return res;
-    // }
-
-
-
-
-    
-
-    // /**
-    //  * get the likecount of an ideas of specific id
-    //  * 
-    //  * @param id The id of the row to get like count
-    //  * 
-    //  * @return The number of like count of the row. -1 indicates an error.
-    //  */
-    // public int getLikeCount(int id) {
-    //     int res = -1;
-    //     try {
-    //         mGetLike.setInt(1, id);
-    //         ResultSet rs = mGetLike.executeQuery();
-    //         if (rs.next()) {
-    //             res = rs.getInt("likecount");
-    //         }
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return res;
-    // }
-    // /**
-    //  * get the likecount of an ideas of specific id
-    //  * 
-    //  * @param id The id of the row to get like count
-    //  * 
-    //  * @return The number of like count of the row. -1 indicates an error.
-    //  */
-    // public int getDislikeCount(int id) {
-    //     int res = -1;
-    //     try {
-    //         mGetDislike.setInt(1, id);
-    //         ResultSet rs = mGetDislike.executeQuery();
-    //         if (rs.next()) {
-    //             res = rs.getInt("dislikecount");
-    //         }
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return res;
-    // }
 
 }
 
