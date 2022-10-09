@@ -10,6 +10,11 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 
+/**
+ * Database All functions related to database connection and disconnection
+ * @author Na Chen
+ * @version 1.0.0
+ */
 public class Database {
     /**
      * The connection to the database.  When there is no connection, it should
@@ -17,8 +22,14 @@ public class Database {
      */
     public Connection mConnection;
 
+    /**
+     * create an object of mIdeaTable 
+     */
     public IdeaTable mIdeaTable;
     
+    /**
+     * create an object of mLikesTable 
+     */
     public LikesTable mLikesTable;
  
     /**

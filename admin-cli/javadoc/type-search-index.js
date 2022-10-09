@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"edu.lehigh.cse216.jub424.admin","l":"App"},{"p":"edu.lehigh.cse216.jub424.admin","l":"Database"},{"p":"edu.lehigh.cse216.jub424.admin","l":"IdeaTable"},{"p":"edu.lehigh.cse216.jub424.admin","l":"LikesTable"}];updateSearchResults();

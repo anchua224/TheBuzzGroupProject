@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutionException;
 /**
  * App is our basic admin app.  For now, it is a demonstration of the six key 
  * operations on a database: connect, insert, update, query, delete, disconnect
+ * @author Na Chen
+ * @version 1.0.1
  */
 public class App {
 
@@ -130,9 +132,7 @@ public class App {
             i = Integer.parseInt(in.readLine());
         } catch (IOException e) {
             e.printStackTrace();
-        } /*catch (NumberFormatException e) {
-            e.printStackTrace();
-        }*/
+        } 
         return i;
     }
     
@@ -248,19 +248,7 @@ public class App {
                           if (res == -1)
                               continue;
                           System.out.println("  " + res + " rows updated");
-                      } /*else if(action == 'l'){
-                          int id = getInt(in, "Enter the row ID ");
-                          if (id == -1)
-                              continue;
-                          int res = db.mIdeaTable.likeIdea(id);
-                          System.out.println(res + " idea liked");
-                      } else if (action == 'n'){
-                          int id = getInt(in, "Enter the row ID ");
-                          if (id == -1)
-                              continue;
-                          int res = db.mIdeaTable.dislikeIdea(id);
-                          System.out.println(res + " idea disliked");
-                      }*/
+                      } 
                       break;
 
                   //Table LIKES    
