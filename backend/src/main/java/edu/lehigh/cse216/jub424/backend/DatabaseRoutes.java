@@ -8,7 +8,20 @@ import com.google.gson.*;
 import edu.lehigh.cse216.jub424.backend.data_request.*;
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 
+/**
+ * DatabaseRoutes is to use the database connection to set up the routes
+ * @author Junchen Bao
+ * @version 1.0.0
+ * @since 2022-09-16
+ */
 public class DatabaseRoutes {
+
+    /**
+     * set up all the routes for the ideas table
+     * /ideas get, post
+     * /ideas/:id get, put, delete
+     * @param mDatabase connection of the database
+     */
     public static void ideasRoutes(Database mDatabase) {
 
         final Gson gson = new Gson();
@@ -105,6 +118,11 @@ public class DatabaseRoutes {
 
     }
 
+    /**
+     * set up all the routes for the likes table
+     * /likes/:id get, post, delete
+     * @param mDatabase connection of the database
+     */
     public static void likesRoutes(Database mDatabase) {
         final Gson gson = new Gson();
 

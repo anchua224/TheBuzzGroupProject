@@ -7,9 +7,16 @@ import spark.Spark;
 import java.util.Map;
 
 /**
- * For now, our app creates an HTTP server that can only get and add data.
+ * For now, our app creates an HTTP server that can deal with the ideas and like
+ * @author Junchen Bao
+ * @version 1.0.0
+ * @since 2022-09-16
  */
 public class App {
+    /**
+     * this is the funtion to run the app of the backend
+     * @param args unsed
+     */
     public static void main(String[] args) {
 
         // gson provides us with a way to turn JSON into objects, and objects
