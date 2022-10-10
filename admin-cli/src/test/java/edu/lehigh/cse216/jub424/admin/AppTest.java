@@ -12,33 +12,11 @@ import java.util.Map;
 
 
 /**
-* Unit test for Admin 
-*/
-
-
-
-public class AppTest 
-    extends TestCase
-{
-    // /**
-    //  * Create the test case
-    //  *
-    //  * @param testName name of the test case
-    //  */
-    // public AppTest( String testName )
-    // {
-    //     super( testName );
-    // }
-
-    // /**
-    //  * @return the suite of tests being tested
-    //  */
-    // public static Test suite()
-    // {
-    //     return new TestSuite( AppTest.class );
-    // }
-
-
+ * AppTest Unit tests for Admin
+ * @author Na Chen
+ * @version 1.0.0
+ */
+public class AppTest extends TestCase{
     /**
      *  Test program for insert a row to the ideas table
      */

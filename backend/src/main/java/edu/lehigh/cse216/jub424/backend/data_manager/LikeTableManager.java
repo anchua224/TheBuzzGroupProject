@@ -2,6 +2,12 @@ package edu.lehigh.cse216.jub424.backend.data_manager;
 
 import java.sql.*;
 
+/**
+ * LikeTableManager are all function interact with the likes table
+ * @author Junchen Bao
+ * @version 1.0.0
+ * @since 2022-09-16
+ */
 public class LikeTableManager {
 
     /**
@@ -24,6 +30,12 @@ public class LikeTableManager {
      */
     private static PreparedStatement mDeleteIdea;
 
+    /**
+     * This constructer set up all the sql query for the likes table use the
+     * mConnection
+     * @param mConnection the connection to the database
+     * @throws SQLException when things goes worng in sql
+     */
     public LikeTableManager(Connection mConnection) throws SQLException {
         // CREATE TABLE likes (like_id SERIAL PRIMARY KEY, id INT, FOREIGN KEY (id)
         // REFERENCES ideas(id))

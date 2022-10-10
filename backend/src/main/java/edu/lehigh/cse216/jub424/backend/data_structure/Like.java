@@ -12,6 +12,10 @@ package edu.lehigh.cse216.jub424.backend.data_structure;
 
 import java.util.Date;
 
+/**
+ * Like hold the like messsage of theidea
+ * each like id is unique and have a ideas id with them
+ */
 public class Like {
     /**
      * like_id, which is the primary key of like
@@ -34,11 +38,9 @@ public class Like {
      * creation date based on the system clock at the time the constructor was
      * called.
      * 
-     * @param id id to the idea, which is unique for the whole time
+     * @param like_id id to the like, which is unique for the whole time
      * 
-     * @title The title of this idea
-     * 
-     * @param massage massage of the idea
+     * @param idea_id id of the idea
      */
     public Like(int like_id, int idea_id) {
         this.like_id = like_id;

@@ -6,6 +6,12 @@ import java.sql.*;
 
 import edu.lehigh.cse216.jub424.backend.data_manager.*;
 
+/**
+ * Database is to setup the connectio of the database also set up the manager of each table
+ * @author Junchen Bao
+ * @version 1.0.0
+ * @since 2022-09-16
+ */
 public class Database {
     /**
      * The connection to the database. When there is no connection, it should
@@ -13,8 +19,14 @@ public class Database {
      */
     public Connection mConnection;
 
+    /**
+     * mIdeaTableManager deal with the ideas table
+     */
     public IdeaTableManager mIdeaTableManager;
 
+    /**
+     * mLikeTableManager deal with the likes table 
+     */
     public LikeTableManager mLikeTableManager;
 
     /**
