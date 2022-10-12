@@ -76,7 +76,7 @@ class NewEntryForm {
           else {
             window.alert(
               `The server replied not ok: ${response.status}\n` +
-                response.statusText
+              response.statusText
             );
           }
           return Promise.reject(response);
@@ -148,13 +148,13 @@ class ElementList {
           else {
             window.alert(
               `The server replied not ok: ${response.status}\n` +
-                response.statusText
+              response.statusText
             );
           }
           return Promise.reject(response);
         })
         .then((data) => {
-          
+
           mainList.update(data);
           console.log(data);
         })
@@ -165,9 +165,6 @@ class ElementList {
 
 
     };
-
-
-    
 
     /**
      * attempted to see if i could implement the GET request
@@ -184,22 +181,14 @@ class ElementList {
      */
 
 
-
-     
-
     // make the AJAX post and output value or error message to console
     doAjax().then(console.log).catch(console.log);
-  
+
   }
 
 
-  
-
-  
-  
-
   private update(data: any) {
-    
+
 
     let elem_messageList = document.getElementById("messageList");
 
@@ -222,7 +211,7 @@ class ElementList {
         tr.appendChild(td_massage);
         tr.appendChild(this.buttons(data.mData[i].id));
         // tr.appendChild(td_likeid);
-        
+
         table.appendChild(tr);
       }
 
@@ -252,20 +241,20 @@ class ElementList {
     const all_likebtns = <HTMLCollectionOf<HTMLInputElement>>(
       document.getElementsByClassName("likebtn")
     );
-    
+
     for (let i = 0; i < all_likebtns.length; ++i) {
       // all_likebtns[i]
       let clickCounter = 0;
       all_likebtns[i].addEventListener("click", (e) => {
         //get
-        mainList.clickLike(e); 
-        
-        
+        mainList.clickLike(e);
+
+
         clickCounter++;
-        if(clickCounter === 1){ 
+        if (clickCounter === 1) {
           mainList.clickLikePost(e, i);
         }
-        else if(clickCounter===2){
+        else if (clickCounter === 2) {
           mainList.clickLikeDelete(e, i);
 
           clickCounter = 0;
@@ -277,7 +266,7 @@ class ElementList {
       });
     }
   }
- 
+
   /**
    * clickDelete is the code we run in response to a click of a delete button
    */
@@ -298,7 +287,7 @@ class ElementList {
           } else {
             window.alert(
               `The server replied not ok: ${response.status}\n` +
-                response.statusText
+              response.statusText
             );
           }
           return Promise.reject(response);
@@ -341,7 +330,7 @@ class ElementList {
           } else {
             window.alert(
               `The server replied not ok: ${response.status}\n` +
-                response.statusText
+              response.statusText
             );
           }
           return Promise.reject(response);
@@ -359,11 +348,16 @@ class ElementList {
     // make the AJAX post and output value or error message to console
     doAjax().then(console.log).catch(console.log);
   }
-
+  /**
+   * Purpose:
+   * Do a GET request when clicking the like button and to display the like count
+   * 
+   * @param e The on click event
+   */
   private clickLike(e: Event) {
     // as in clickLike, we need the ID of the row
     const id = (<HTMLElement>e.target).getAttribute("data-value");
-                
+
     // Issue an AJAX POST and then pass the result to
     const doAjax = async () => {
       await fetch(`${backendUrl}/likes/${id}`, {
@@ -373,13 +367,13 @@ class ElementList {
         },
       })
         .then((response) => {
-          
+
           if (response.ok) {
             return Promise.resolve(response.json());
           } else {
             window.alert(
               `The server replied not ok: ${response.status}\n` +
-                response.statusText
+              response.statusText
             );
           }
           return Promise.reject(response);
@@ -388,18 +382,16 @@ class ElementList {
 
 
           console.log("Data: ", data.mData);
-          //how to display like number
-          // likeList
 
 
           let LikeList = document.getElementById("likeList");
-          if(LikeList !== null){
+          if (LikeList !== null) {
             LikeList.innerHTML = data.mData;
 
           }
 
           console.log("DATA: ", data);
-          
+
           console.log(data);
         })
         .catch((error) => {
@@ -407,15 +399,21 @@ class ElementList {
           window.alert("Unspecified error");
         });
     };
-        
+
     // make the AJAX post and output value or error message to console
     doAjax().then(console.log).catch(console.log);
   }
-
+  /**
+   * Purpose: 
+   * To do a POST request for liking a post
+   * 
+   * @param e  The on click event
+   * @param value The specific post whose liked is to be posted
+   */
   private clickLikePost(e: Event, value: number) {
     // as in clickLike, we need the ID of the row
     const id = (<HTMLElement>e.target).getAttribute("data-value");
-                
+
     // Issue an AJAX POST and then pass the result to
     const doAjax = async () => {
       await fetch(`${backendUrl}/likes/${id}`, {
@@ -425,22 +423,22 @@ class ElementList {
         },
       })
         .then((response) => {
-          
+
           if (response.ok) {
             return Promise.resolve(response.json());
           } else {
             window.alert(
               `The server replied not ok: ${response.status}\n` +
-                response.statusText
+              response.statusText
             );
           }
           return Promise.reject(response);
         })
         .then((data) => {
 
-          const getLikeBtnFunc = <HTMLCollectionOf<HTMLInputElement>>( document.getElementsByClassName("likebtn") );
-            getLikeBtnFunc[value].style.background = "lightgreen";
-                      
+          const getLikeBtnFunc = <HTMLCollectionOf<HTMLInputElement>>(document.getElementsByClassName("likebtn"));
+          getLikeBtnFunc[value].style.background = "lightgreen";
+
           // editEntryForm.init(data);
           console.log(data);
         })
@@ -449,15 +447,21 @@ class ElementList {
           window.alert("Unspecified error");
         });
     };
-        
+
     // make the AJAX post and output value or error message to console
     doAjax().then(console.log).catch(console.log);
   }
-
+  /***
+   * Purpose: 
+   * DELETE request for removing a like from a post/idea
+   * 
+   * @param e The onclick event
+   * @param value The specific post whose liked is to be removed
+   */
   private clickLikeDelete(e: Event, value: number) {
     // as in clickLike, we need the ID of the row
     const id = (<HTMLElement>e.target).getAttribute("data-value");
-                
+
     // Issue an AJAX POST and then pass the result to
     const doAjax = async () => {
       await fetch(`${backendUrl}/likes/${id}`, {
@@ -467,21 +471,21 @@ class ElementList {
         },
       })
         .then((response) => {
-          
+
           if (response.ok) {
 
             return Promise.resolve(response.json());
           } else {
             window.alert(
               `The server replied not ok: ${response.status}\n` +
-                response.statusText
+              response.statusText
             );
           }
           return Promise.reject(response);
         })
         .then((data) => {
-          const getLikeBtnFunc = <HTMLCollectionOf<HTMLInputElement>>( document.getElementsByClassName("likebtn") );
-            getLikeBtnFunc[value].style.background = "white";
+          const getLikeBtnFunc = <HTMLCollectionOf<HTMLInputElement>>(document.getElementsByClassName("likebtn"));
+          getLikeBtnFunc[value].style.background = "white";
           // editEntryForm.init(data);
           console.log(data);
         })
@@ -490,7 +494,7 @@ class ElementList {
           window.alert("Unspecified error");
         });
     };
-    
+
     // make the AJAX post and output value or error message to console
     doAjax().then(console.log).catch(console.log);
   }
@@ -524,7 +528,6 @@ class ElementList {
     td = document.createElement("td");
     btn = document.createElement("button");
     btn.classList.add("likebtn");
-    btn.setAttribute("isLiked", "0");
     btn.setAttribute("data-value", id);
     btn.innerHTML = "Like";
 
@@ -644,7 +647,7 @@ class EditEntryForm {
           else {
             window.alert(
               `The server replied not ok: ${response.status}\n` +
-                response.statusText
+              response.statusText
             );
           }
           // return response;
@@ -727,7 +730,7 @@ document.addEventListener(
     // Create the object for the main data list, and populate it with data from the server
     mainList = new ElementList();
     mainList.refresh();
-    
+
     window.alert("DOMContentLoaded");
   },
   false

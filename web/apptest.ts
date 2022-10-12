@@ -2,6 +2,13 @@ var describe: any;
 var it: any;
 var expect: any;
 
+
+/**
+ * Test function in jasmine 
+ * 
+ * Add button testing
+ * Edit button testing
+ */
 describe("Tests of basic math functions", function() {
 
     it("Adding 1 should work", function() {
@@ -39,12 +46,7 @@ describe("Tests of basic math functions", function() {
 
     });
 
-    // it("Multiplication should work", function(){
-    //     let a = 23;
-    //     let b = 52;
-    //     let mult = a * b;
-    //     expect(mult).toEqual(1196);
-    // });
+    
 
 
 
