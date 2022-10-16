@@ -186,7 +186,10 @@ class ElementList {
 
   }
 
-
+/**
+ * 
+ * @param data Data passed from /ideas GET request
+ */
   private update(data: any) {
 
 

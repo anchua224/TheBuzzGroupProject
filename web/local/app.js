@@ -39,6 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 // "any", so that we can use it anywhere, and assume it has any fields or
 // methods, without the compiler producing an error.
 var $;
+var StoredId = [];
 // The 'this' keyword does not behave in JavaScript/TypeScript like it does in
 // Java.  Since there is only one NewEntryForm, we will save it to a global, so
 // that we can reference it from methods of the NewEntryForm in situations where
@@ -202,6 +203,19 @@ var ElementList = /** @class */ (function () {
                 }
             });
         }); };
+        /**
+         * attempted to see if i could implement the GET request
+         * through the refresh() function so that we are able to see
+         * the like count next to the like button
+         * However, I couldn't figure out how to implement it because
+         * I didn't know how to define the 'id'.
+         *
+         * The way I will have it work is based on the click event
+         * of the like button
+         * As soon as you click the like button, the like count will be
+         * displayed but unfortunately it will only be for an individual
+         * cell/row instead of the entire row of the table
+         */
         // make the AJAX post and output value or error message to console
         doAjax().then(console.log).catch(console.log);
     };
@@ -215,11 +229,14 @@ var ElementList = /** @class */ (function () {
                 var tr = document.createElement("tr");
                 var td_title = document.createElement("td");
                 var td_massage = document.createElement("td");
+                // let td_likeid = document.createElement("td");
                 td_title.innerHTML = data.mData[i].title;
                 td_massage.innerHTML = data.mData[i].massage;
+                // td_likeid.innerHTML = data.mData[i].idea_id;
                 tr.appendChild(td_title);
                 tr.appendChild(td_massage);
                 tr.appendChild(this.buttons(data.mData[i].id));
+                // tr.appendChild(td_likeid);
                 table.appendChild(tr);
             }
             fragment.appendChild(table);
@@ -241,10 +258,26 @@ var ElementList = /** @class */ (function () {
         }
         //adding in a Like button
         var all_likebtns = (document.getElementsByClassName("likebtn"));
-        for (var i = 0; i < all_likebtns.length; ++i) {
+        var _loop_1 = function (i) {
+            // all_likebtns[i]
+            var clickCounter = 0;
             all_likebtns[i].addEventListener("click", function (e) {
+                //get
+                mainList.clickLike(e);
+                clickCounter++;
+                if (clickCounter === 1) {
+                    mainList.clickLikePost(e, i);
+                }
+                else if (clickCounter === 2) {
+                    mainList.clickLikeDelete(e, i);
+                    clickCounter = 0;
+                }
+                // console.log("Button has been clicked: ", clickCounter);
                 mainList.clickLike(e);
             });
+        };
+        for (var i = 0; i < all_likebtns.length; ++i) {
+            _loop_1(i);
         }
     };
     /**
@@ -337,33 +370,22 @@ var ElementList = /** @class */ (function () {
         // make the AJAX post and output value or error message to console
         doAjax().then(console.log).catch(console.log);
     };
-    //for clickLike
-    // this does the POST and DELETE requests
-    // based on whether the like button has been clicked once or twice
-    //
     ElementList.prototype.clickLike = function (e) {
         var _this = this;
         // as in clickLike, we need the ID of the row
         var id = e.target.getAttribute("data-value");
-        var isLiked = e.target.getAttribute("isLiked");
-        var methodType = isLiked === "0" ? "POST" : "DELETE";
-        var btnLike = document.getElementsByClassName("likebtn");
-        var methodPOST = "POST";
-        var methodDELETE = "DELETE";
-        var btnClicked = (document.getElementsByClassName("likebtn"));
         // Issue an AJAX POST and then pass the result to
         var doAjax = function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, fetch("".concat(backendUrl, "/likes/").concat(id), {
-                            method: methodType,
+                            method: "GET",
                             headers: {
                                 "Content-type": "application/json; charset=UTF-8",
                             },
                         })
                             .then(function (response) {
                             if (response.ok) {
-                                // console.log("The method type inside the fetch func: ", methodType);
                                 return Promise.resolve(response.json());
                             }
                             else {
@@ -373,6 +395,56 @@ var ElementList = /** @class */ (function () {
                             return Promise.reject(response);
                         })
                             .then(function (data) {
+                            console.log("Data: ", data.mData);
+                            //how to display like number
+                            // likeList
+                            var LikeList = document.getElementById("likeList");
+                            if (LikeList !== null) {
+                                LikeList.innerHTML = data.mData;
+                            }
+                            console.log("DATA: ", data);
+                            console.log(data);
+                        })
+                            .catch(function (error) {
+                            console.warn("Something went wrong.", error);
+                            window.alert("Unspecified error");
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        // make the AJAX post and output value or error message to console
+        doAjax().then(console.log).catch(console.log);
+    };
+    ElementList.prototype.clickLikePost = function (e, value) {
+        var _this = this;
+        // as in clickLike, we need the ID of the row
+        var id = e.target.getAttribute("data-value");
+        // Issue an AJAX POST and then pass the result to
+        var doAjax = function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch("".concat(backendUrl, "/likes/").concat(id), {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8",
+                            },
+                        })
+                            .then(function (response) {
+                            if (response.ok) {
+                                return Promise.resolve(response.json());
+                            }
+                            else {
+                                window.alert("The server replied not ok: ".concat(response.status, "\n") +
+                                    response.statusText);
+                            }
+                            return Promise.reject(response);
+                        })
+                            .then(function (data) {
+                            var getLikeBtnFunc = (document.getElementsByClassName("likebtn"));
+                            getLikeBtnFunc[value].style.background = "lightgreen";
                             // editEntryForm.init(data);
                             console.log(data);
                         })
@@ -386,32 +458,49 @@ var ElementList = /** @class */ (function () {
                 }
             });
         }); };
-        //ignore error lines
-        isLiked = parseInt(isLiked);
-        isLiked = ~isLiked;
-        e.target.setAttribute("isLiked", isLiked);
-        // btn.setAttribute("isLiked", "0");
-        // const getLikeBtnFunc = <HTMLCollectionOf<HTMLInputElement>>( document.getElementsByClassName("likebtn") );
-        // if (methodType === "POST") {
-        //     for (let i = 0; i < getLikeBtnFunc.length; ++i) {
-        //       getLikeBtnFunc[i].addEventListener("click", (event) => {
-        //         getLikeBtnFunc[i].style.backgroundColor = "lightgreen";
-        //       });
-        //     }
-        //     (<HTMLElement>e.target).setAttribute("isLiked", "0");
-        //     console.log("The value is 1 ==== POST REQUEST");
-        //   }
-        //  else if (methodType === "DELETE") {
-        //     for (let i = 0; i < getLikeBtnFunc.length; ++i) {
-        //       getLikeBtnFunc[i].addEventListener("click", (event) => {
-        //         getLikeBtnFunc[i].style.backgroundColor = "white";
-        //       });
-        //     }
-        //     (<HTMLElement>e.target).setAttribute("isLiked", "1");
-        //     console.log("The value is 0 ==== DELETE REQUEST");
-        //   } 
-        // const valLike = (<HTMLInputElement><unknown>document.getElementsByClassName("likebtn")).value;
-        // btnLike.addEventListener('click', function)
+        // make the AJAX post and output value or error message to console
+        doAjax().then(console.log).catch(console.log);
+    };
+    ElementList.prototype.clickLikeDelete = function (e, value) {
+        var _this = this;
+        // as in clickLike, we need the ID of the row
+        var id = e.target.getAttribute("data-value");
+        // Issue an AJAX POST and then pass the result to
+        var doAjax = function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch("".concat(backendUrl, "/likes/").concat(id), {
+                            method: "DELETE",
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8",
+                            },
+                        })
+                            .then(function (response) {
+                            if (response.ok) {
+                                return Promise.resolve(response.json());
+                            }
+                            else {
+                                window.alert("The server replied not ok: ".concat(response.status, "\n") +
+                                    response.statusText);
+                            }
+                            return Promise.reject(response);
+                        })
+                            .then(function (data) {
+                            var getLikeBtnFunc = (document.getElementsByClassName("likebtn"));
+                            getLikeBtnFunc[value].style.background = "white";
+                            // editEntryForm.init(data);
+                            console.log(data);
+                        })
+                            .catch(function (error) {
+                            console.warn("Something went wrong.", error);
+                            window.alert("Unspecified error");
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); };
         // make the AJAX post and output value or error message to console
         doAjax().then(console.log).catch(console.log);
     };
