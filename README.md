@@ -46,23 +46,31 @@ Phase 1 Release:
 ## System Architecture Diagram
 ![image](markdown_images/SystemDiagram.png)
 ## Routes
-![image](markdown_images/Routes.png)
+![image](markdown_images/BackendRoutes_v2.png)
 ## Entity Diagram
 ![image](markdown_images/EntityDiagram.png)
 ## User Stories
-- Anonymous User
+- Lehigh Current User
 	- As a user, I want to create and save posts, so that I can share my ideas
 	- As a user, I want to interact with other posts, so that I can like and dislike ideas
 	- As a user, I want to see other posts, so that I can view other users' ideas
 	- As a user, I want to post on mobile or web, so that I can access data on different platforms
 	- As a user, I want to edit a post, so that I can change my idea
+	- As a user, I want to login, so that I can save information and read all the posts
+	- As a user, i want to save my profile, so that i can express myself
+	- As a user, i want to comment on a idea, so that I can comment
+	- As a user, I want to edit my comment, so that i can change my opinion
+	- As a user, I want to logout, so that my info is safe remove "edit post"
+
 - Admin
 	- As an admin, I want to create and drop a table, so that I can manage posts
 	- As an admin, I want a command-line interface, so that I can interact with and manage ideas
 	- As an admin, I want to create other routes, so that I can send data to the front-end
+	- As an admin, i want to view all profiles, so that i can manage the app
+
 ## User State Machine
 ### Mobile
-![image](markdown_images/Mobile_StateMachine.png)
+![image](markdown_images/StateMachineDiagram_v2.png)
 ### Web
 ![image](markdown_images/Web_StateMachine.png)
 ## User Interfaces
