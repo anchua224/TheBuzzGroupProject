@@ -116,5 +116,35 @@ Phase 2 Release:
 		- Dislikes: Store dislikes related to each idea
 	- Authentication related to logins:
 		- OAuth: token with the expiration date, session key for each user.
+- Admin:
+	- Functionality:
+		- Create new tables based on the ERD diagrams
+		- Populate tables with items for testing
+		- Invalidate ideas because its appropriate or redundant
+		- Invalidate a user for not being logged in
+		- Help PM once done
+- Web
+	- Functionality:
+		- Fix unit testing to be deployed locally
+		- Get request works but only when a specific post is liked
+		- Implement up-votes
+		- Implement down-votes
+		- Support text-only comments on ideas
+			- Using new JSON formats and new REST routes	
+		- Ideas cannot be edited or deleted
+		- Comments cannot be deleted, only edited 
+		- Add a profile page and must include: 
+			- User name
+			- User email
+			- User sexual identity
+			- Gender orientation 
+			- Note about the user
+				- Note should be editable
+		- Clicking on name of the person who posts a message or who makes a comment should redirect to the users profile page (SO & GI should not be shown)
+		- Main profile page should be included in the "navbar" at the top of the page 
+	- Login:
+		- login page via OAuth
+	
+		
 
-
+	
