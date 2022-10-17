@@ -1,10 +1,10 @@
 # CSE 216
-This is Team Fourteam's repository. It is intended for use during phase 1.
+This is Team Fourteam's repository. It is intended for use during phase 2.
 
 ## Details
 - Application Name: The Buzz
 - Bitbucket Repository: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/README.md?mode=edit&at=master
-- Trello Invitation Link: https://trello.com/invite/b/MEsnAxxj/0745274807676a41afc93408ecbc6a7e/team-fourteam-phase-1
+- Trello Invitation Link: https://trello.com/invite/b/fhnnq6Xk/ATTI5d0396502798efd62e290716a105e707263AFF23/team-fourteam-phase-2
 
 ## Contributors
 1. Junchen Bao (jub424@lehigh.edu)
@@ -26,6 +26,28 @@ Phase 1 Release:
 	- Manage posts using an ID
 	- Manage likes on posts using an ID
 
+Phase 2 Release:
+- A single anonymous user can:
+	- Get ideas stored on database
+	- Get the number of likes and dislikes
+	- Get comments on ideas from database 
+	- Get login information from database 
+	- Get profile info from database
+	- Post new ideas to database
+	- Post token to the backend
+	- Like and remove like from ideas
+	- Delete likes and dislikes
+	- Edit new comments under ideas
+	- Edit profile info
+- The server admin can:
+	- Create all the tables based on the ERD created
+	- Invalidate an idea
+		- In the case it is inappropriate or redundant
+	- Invalidate a user
+		- In the case when they use the app inappropriately
+	- Ensure invalidated idea does not display
+	- Ensure an invalidated user is not allowed to log in
+
 ## Building & Running Application
 - Backend
 	- $ mvn package
@@ -36,7 +58,7 @@ Phase 1 Release:
 	- $ mvn package
 	- $ DATABASE_URL=postgres://epyqfjqcxwfqev:5592fc974fab7f2e1482fab5391b99a39f085e06aff092e5f9c064e00fc27c8d@ec2-3-216-167-65.compute-1.amazonaws.com:5432/da1nea8nc5r1r mvn:exec java
 - Web
-	- Deploy to localhost
+	- Deploy to localhost (sh ldeploy.sh)
 
 ## Code Documentation
 - [Backend](backend/javadocs)
@@ -44,11 +66,12 @@ Phase 1 Release:
 
 # Project Design and Planning Artifacts
 ## System Architecture Diagram
-![image](markdown_images/SystemDiagram.png)
+![image](markdown_images/SystemDiagram_v2.png)
 ## Routes
 ![image](markdown_images/BackendRoutes_v2.png)
 ## Entity Diagram
-![image](markdown_images/EntityDiagram.png)
+![image](markdown_images/ERD_v2.png)
+
 ## User Stories
 - Lehigh Current User
 	- As a user, I want to create and save posts, so that I can share my ideas
@@ -66,17 +89,32 @@ Phase 1 Release:
 	- As an admin, I want to create and drop a table, so that I can manage posts
 	- As an admin, I want a command-line interface, so that I can interact with and manage ideas
 	- As an admin, I want to create other routes, so that I can send data to the front-end
-	- As an admin, i want to view all profiles, so that i can manage the app
+	- As an admin, I want to view all profiles, so that i can manage the app
 
 ## User State Machine
-### Mobile
+### Mobile & Web
 ![image](markdown_images/StateMachineDiagram_v2.png)
-### Web
-![image](markdown_images/Web_StateMachine.png)
+
 ## User Interfaces
 ### Mobile
-![image](markdown_images/Mobile_UI.png)
+![image](markdown_images/Mobile_UI_v2.png)
 ### Web
-![image](markdown_images/Web_UI.png)
+![image](markdown_images/Web_UI_v2.png)
 	
+## Backlog Item List:
+- Mobile:
+	- Functionality for the like button
+	- Showing number of likes on a post
+- Backend:
+	- Functionality:
+		- Ability to leave comments
+		- Upvote an idea that is already being upvoted, downvoted, or not voting. Downvote an idea that is already being upvoted, downvoted, or not voted ideas.
+		- Login
+	- Add additional tables to the database corresponding to the updated ER diagram:
+		- Users table: Store user information (a profile with name, GI, SO, notes, user email address, user id)
+		- Comments table: Store comments (content and id)
+		- Dislikes: Store dislikes related to each idea
+	- Authentication related to logins:
+		- OAuth: token with the expiration date, session key for each user.
+
 
