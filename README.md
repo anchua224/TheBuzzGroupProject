@@ -14,7 +14,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 5. Alex Guataipu (alg223@lehigh.edu)
 
 ## Functionality 
-Phase 1 Release:
+## Phase 1 Release:
 - A single anonymous user can:
 	- Get ideas stored on database
 	- Post ideas to database
@@ -25,8 +25,7 @@ Phase 1 Release:
 	- Create table for database
 	- Manage posts using an ID
 	- Manage likes on posts using an ID
-
-Phase 2 Release:
+## Phase 2 Release:
 - A single anonymous user can:
 	- Get ideas stored on database
 	- Get the number of likes and dislikes
