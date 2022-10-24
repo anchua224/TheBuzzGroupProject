@@ -71,6 +71,7 @@ public class App {
 
         DatabaseRoutes.ideasRoutes(mDatabase);
         DatabaseRoutes.likesRoutes(mDatabase);
+        DatabaseRoutes.loginRoutes(mDatabase);
 
     }
 

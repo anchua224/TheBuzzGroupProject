@@ -29,6 +29,11 @@ public class Database {
      */
     public LikeTableManager mLikeTableManager;
 
+
+    public CommentsTableManager mCommentsTableManager;
+
+    public UsersTableManager mUsersTableManager;
+
     /**
      * The Database constructor is private: we only create Database objects
      * through the getDatabase() method.

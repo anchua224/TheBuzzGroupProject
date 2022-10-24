@@ -2,9 +2,13 @@
 package edu.lehigh.cse216.jub424.backend;
 
 import spark.Spark;
+
+import java.util.ArrayList;
+
 // Import Google's JSON library
 import com.google.gson.*;
 
+import edu.lehigh.cse216.jub424.backend.data_manager.OAuthManager;
 import edu.lehigh.cse216.jub424.backend.data_request.*;
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 
@@ -178,5 +182,51 @@ public class DatabaseRoutes {
                 return gson.toJson(new StructuredResponse("ok", null, null));
             }
         });
+    }
+
+    public static void loginRoutes(Database mDatabase){
+        final Gson gson = new Gson();
+        Spark.post("/login",(request, response) -> {
+            String tokenString = request.queryParams("token");
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            ArrayList<String> result = OAuthManager.OAuthHandling(tokenString);
+            if(result.get(1).contains("lehigh.edu")){
+                String sessionKey = result.get(7);
+                mDatabase.mUsersTableManager.insertOneUser(result.get(0),result.get(1),
+                result.get(2),null, null, null);
+                return gson.toJson(sessionKey);
+            }else{
+                return gson.toJson(new StructuredResponse("error", "User not from Lehigh", null));
+            }
+            
+        });
+    }
+
+    public static void commentsRoutes(Database mDatabase){
+        final Gson gson = new Gson();
+        Spark.get("/ideas/:id/comment", (request, response) -> {
+            int idx = Integer.parseInt(request.params("id"));
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            return gson.toJson(new StructuredResponse("ok", null,
+                    mDatabase.mCommentsTableManager.selectAllComUnderOneIdea(idx)));
+        });
+        /*Spark.post("/ideas/:id/comment?userid", (request, response) -> {
+            int idx = Integer.parseInt(request.params("id"));
+            String useridx = request.params("userid");//?
+            // NB: if gson.Json fails, Spark will reply with status 500 Internal
+            // Server Error
+            SimpleCommentRequest req = gson.fromJson(request.body(), SimpleCommentRequest.class);
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            int result = mDatabase.mCommentsTableManager.inserOneComment(idx, null, null);
+
+        });*/
+        
+
     }
 }
