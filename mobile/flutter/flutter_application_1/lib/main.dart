@@ -1,9 +1,15 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import 'api/google_signin_api.dart';
+import 'page/logged_in_page.dart';
+
 
 // To the next person writing flutter code. flutter.io and geeksforgeeks is your
 // best friend. Flutter.io to see sample code on how each individual widget works
@@ -24,10 +30,101 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      home: const MyHomePage(title: 'The Buzz'),
+      // TODO: make home page login/sign-up screen
+      home: const MyLoginPage(title: 'The Buzz'),
+      //home: const MyHomePage(title: 'The Buzz'),
     );
   }
 }
+class MyLoginPage extends StatefulWidget {
+  const MyLoginPage({super.key, required this.title});
+
+  final String title;
+  @override
+  State<MyLoginPage> createState() => _MyLoginPage();
+}
+
+class _MyLoginPage extends State<MyLoginPage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        centerTitle: true,
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            // decoration: BoxDecoration (
+            //   borderRadius: BorderRadius.horizontal(), 
+            //   color: Colors.blue
+            // ),
+            // child: const Padding (
+            //   padding: EdgeInsets.all(8.0),
+            //   child: Text(
+            //     "Sign In",
+            //     style: TextStyle(
+            //       color: Colors.white, 
+            //       fontSize: 25
+            //     ),
+            //   ),
+
+            // )
+            child: Padding(
+              padding: EdgeInsets.all(100.0),
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.pink,
+                  foregroundColor: Colors.white,
+                  fixedSize: const Size(240, 80), 
+                  minimumSize: Size(double.infinity, 50),
+                ),
+                icon: Image.asset(
+                  'assets/images/google_icon.png',
+                  height: 32,
+                  width: 32
+                  ),
+                label: Text('Sign-in with Google'),
+                onPressed: signin, //signin method
+                ),
+              )
+
+          ),
+        ]
+        // ElevatedButton.icon(
+        //   style: ElevatedButton.styleFrom(
+        //     primary: Colors.white,
+        //     onPrimary: Colors.black,
+        //     minimumSize: Size(double.infinity,50),
+        //   ),
+        //   icon: FaIcon(
+        //     FontAwesomeIcons.google,
+        //     color: Colors.red,
+        //   ),
+        //   lable: Text('Sign In with Google'),
+        //   onPressed: signIn,
+        // ),
+      ),
+    );
+  }
+  Future signin() async {
+  final user = await GoogleSignInApi.login();
+  var snackBar = SnackBar(content: Text('Sign in Failed'));
+
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => LoggedInPage(user: user),
+      ));
+    }
+  }
+}
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -40,10 +137,10 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+
 
 class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 0;
@@ -87,6 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
+        // ******************** REVIEW ********************
         onPressed: () {
           //This will take me to the page where I can make a post
           Navigator.push(
@@ -118,8 +216,9 @@ class _ListofIdeasState extends State<ListofIdeas> {
 
   @override
   Widget build(BuildContext context) {
-    // boolean baraible stating that the likes icon should be white
-    bool postLiked = false;
+    // boolean varaible stating that the likes icon should be white
+    // FIXME: create an enabled and disabled button color and functionality
+    bool postLiked = false; // Default State
     var fb = FutureBuilder<List<Idea>>(
       future: fetchIdeas(),
       builder: (BuildContext context, AsyncSnapshot<List<Idea>> snapshot) {
@@ -133,18 +232,19 @@ class _ListofIdeasState extends State<ListofIdeas> {
                 return Column(
                   children: <Widget>[
                     ListTile(
+                        // FIXME:
                         // This is supposed to remove a like
                         onLongPress: () {
-                          //updateLike()
+                          updateLike(i);
                         },
                         title: Text(
                           snapshot.data![i].title,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(snapshot.data![i].message),
-                        tileColor: const Color.fromARGB(200, 240, 128, 128),
+                        tileColor: const Color.fromARGB(200, 240, 128, 128), // Message Color
                         trailing: GestureDetector(
-                          onTap: () {
+                          onDoubleTap: () {
                             setState(() {
                               //pass in snapshot.data.id
                               postLiked = !postLiked;
@@ -213,8 +313,7 @@ Future<List<Idea>> fetchIdeas() async {
     throw Exception('Did not receive success status code from request.');
   }
 }
-
-// Likes class holds the num of likes of an individual idea
+// TODO: Add dislike button and functionality, connect to database
 class Likes {
   final int numLikes;
 
@@ -228,7 +327,7 @@ class Likes {
     );
   }
 }
-
+// FIXME:
 // fetchLikes method is supposed to fetch the like # for a specific id
 Future<List<Likes>> fetchLikes(int id) async {
   final response = await http
@@ -256,7 +355,7 @@ Future<List<Likes>> fetchLikes(int id) async {
     throw Exception('Did not receive success status code from request.');
   }
 }
-
+// FIXME:
 // updateLike method will post the like to the specific post with the specific id
 Future<Likes> updateLike(int id) async {
   final response = await http.put(
@@ -371,3 +470,6 @@ class _TextBoxState extends State<TextBox> {
     );
   }
 }
+
+
+
