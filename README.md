@@ -100,50 +100,20 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 ### Web
 ![image](markdown_images/Web_UI_v2.png)
 	
-## Backlog Item List:
+## Backlog Item List (Phase 2 Sprint 7):
 - Mobile:
-	- Functionality for the like button
-	- Showing number of likes on a post
+	- Showing user's profile picture if they have one
+	- Navigation bar to switch from profile to home page
+	- Showing number of likes/dislikes for posts
 - Backend:
-	- Functionality:
-		- Ability to leave comments
-		- Upvote an idea that is already being upvoted, downvoted, or not voting. Downvote an idea that is already being upvoted, downvoted, or not voted ideas.
-		- Login
-	- Add additional tables to the database corresponding to the updated ER diagram:
-		- Users table: Store user information (a profile with name, GI, SO, notes, user email address, user id)
-		- Comments table: Store comments (content and id)
-		- Dislikes: Store dislikes related to each idea
-	- Authentication related to logins:
-		- OAuth: token with the expiration date, session key for each user.
+	- Much of the ERD implementations need to be incorporated for Mobile and Web to move forward.
 - Admin:
-	- Functionality:
-		- Create new tables based on the ERD diagrams
-		- Populate tables with items for testing
-		- Invalidate ideas because its appropriate or redundant
-		- Invalidate a user for not being logged in
-		- Help PM once done
-- Web
-	- Functionality:
-		- Fix unit testing to be deployed locally
-		- Get request works but only when a specific post is liked
-		- Implement up-votes
-		- Implement down-votes
-		- Support text-only comments on ideas
-			- Using new JSON formats and new REST routes	
-		- Ideas cannot be edited or deleted
-		- Comments cannot be deleted, only edited 
-		- Add a profile page and must include: 
-			- User name
-			- User email
-			- User sexual identity
-			- Gender orientation 
-			- Note about the user
-				- Note should be editable
-		- Clicking on name of the person who posts a message or who makes a comment should redirect to the users profile page (SO & GI should not be shown)
-		- Main profile page should be included in the "navbar" at the top of the page 
-	- Login:
-		- login page via OAuth
-	
-		
+	- Unit tests aren't working
+	- Method for invalidating a user and idea isn't ideal
+- Web 
+	- Add the session key to all put, post, and delete requests
+	- Add comment component
+	- Add profile
+	- Add web header	
 
 	
