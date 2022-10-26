@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import Comments from './Comments';
+import { getSessionKey } from '../Situation';
 
 export default function Idea(props) {
 
@@ -21,7 +22,7 @@ export default function Idea(props) {
     };
 
     const getDislike = async () => {
-        axios.get(`https://cse216-fl22-team14.herokuapp.com/ideas/${props.id}/dislike`)
+        axios.get(`https://cse216-fl22-team14.herokuapp.com/dislikes/${props.id}`)
             .then(response =>{
                 console.log(response);
                 setDislike(response.data.mData);
@@ -34,7 +35,10 @@ export default function Idea(props) {
     const handleLike = async(e) =>{
 
 
-        axios.post(`https://cse216-fl22-team14.herokuapp.com/likes/${props.id}`);
+        axios.post(`https://cse216-fl22-team14.herokuapp.com/likes/${props.id}?sessionKey=${getSessionKey()}`)
+            .catch(error => {
+                console.log(error.massage)
+            });
 
         getLike();
     }
@@ -42,7 +46,10 @@ export default function Idea(props) {
     const handleDisike = async(e) =>{
 
 
-        axios.post(`https://cse216-fl22-team14.herokuapp.com/dislikes/${props.id}`);
+        axios.post(`https://cse216-fl22-team14.herokuapp.com/dislikes/${props.id}?sessionKey=${getSessionKey()}`)
+            .catch(error => {
+                console.log(error.massage)
+            });
 
         getDislike();
     }
@@ -63,7 +70,9 @@ export default function Idea(props) {
             <button id={props.id}  onClick={(e) => handleDisike(e)}>
                 DisLike: {dislike}
             </button>
-            <Comments />
+            <Comments 
+                id={props.id}
+            />
         </div>
     )
 }

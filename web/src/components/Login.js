@@ -1,6 +1,8 @@
 import React,{useEffect, useState} from 'react';
 import jwt_decode from "jwt-decode";
 import axios from 'axios';
+import Situation, { getLogin, setSessionKey } from '../Situation';
+
 
 const Login = () => {
 
@@ -14,15 +16,11 @@ const Login = () => {
 
         document.getElementById("signInDiv").hidden = true;
 
-
-        console.log('https://cse216-fl22-team14.herokuapp.com/login/',response.credential);
-        axios.post('https://cse216-fl22-team14.herokuapp.com/login',{
-                params: {
-                    token: response.credential,
-                },
-            })
+        axios.post(`https://cse216-fl22-team14.herokuapp.com/login?token=${response.credential}`)
             .then(response =>{
-                console.log(response)
+                console.log(response.data);
+                setSessionKey(response.data);
+                console.log(getLogin());
             })
             .catch(error => {
                 console.log(error)
@@ -55,11 +53,11 @@ const Login = () => {
             {   Object.keys(user).length !== 0 && 
                 <button onClick={ (e) => handleSignOut} >Sign out</button>
             }
-            { user &&
+            {   Object.keys(user).length !== 0 &&
                 <div className='userInfor'>
-                    <img src={user.picture} alt="user image"></img>
+                    {/* <img src={user.picture} alt="user image"></img>
                     <h3>{user.name}</h3>
-                    <h3>{user.email}</h3>
+                    <h3>{user.email}</h3> */}
                 </div>
             }
         </div>
