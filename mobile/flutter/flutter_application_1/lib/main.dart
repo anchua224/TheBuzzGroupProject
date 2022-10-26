@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 
 import 'api/google_signin_api.dart';
 import 'page/profile_page.dart';
+import 'page/create_post_page.dart';
 
 
 // To the next person writing flutter code. flutter.io and geeksforgeeks is your
@@ -208,7 +209,8 @@ class _ListofIdeasState extends State<ListofIdeas> {
         Widget child;
         if (snapshot.hasData) {
           // create listview to show one row per array element of json response
-          child = ListView.builder(
+          child= Scrollbar(
+            child: ListView.builder(
               padding: const EdgeInsets.all(26.0),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, i) {
@@ -241,7 +243,7 @@ class _ListofIdeasState extends State<ListofIdeas> {
                     const Divider(height: 8.0),
                   ],
                 );
-              });
+              }));
         } else if (snapshot.hasError) {
           child = Text('${snapshot.error}');
         } else {
@@ -272,7 +274,7 @@ class Idea {
 // fetchIdeas cast is in charge of pulling the title and message from the database
 Future<List<Idea>> fetchIdeas() async {
   final response = await http
-      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com//ideas'));
+      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas'));
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, then parse the JSON.
     final List<Idea> returnData;
@@ -358,115 +360,5 @@ Future<Likes> updateLike(int id) async {
   }
 }
 
-// AddIdeaState class would be the state of the app once you are trying to post
-// an idea
-class AddIdeaState extends StatelessWidget {
-  final GoogleSignInAccount user;
-
-  const AddIdeaState({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Post'),
-      ),
-      body: Column(
-        children: <Widget>[TextBox(user: user,)],
-      ),
-    );
-  }
-}
-
-// createPost method is the method called in order to post an idea to the
-// database
-createPost(String title, String message) async {
-  final response = await http.post(
-    Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'mTitle': title,
-      'mMessage': message,
-    }),
-  );
-  if (response.statusCode == 200) {
-    // If the server did return a 200 CREATED response,
-    // then parse the JSON.
-  } else {
-    // If the server did not return a 200 CREATED response,
-    // then throw an exception.
-    throw Exception('Failed to create Post.');
-  }
-}
-
-class TextBox extends StatefulWidget {
-  final GoogleSignInAccount user;
-
-  const TextBox({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
-
-  @override
-  State<TextBox> createState() => _TextBoxState();
-}
-
-class _TextBoxState extends State<TextBox> {
-  GoogleSignInAccount? user;
-  // Create a text controller and use it to retrieve the current value
-  // of the TextField.
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  // The field in which users can text
-  final titleController = TextEditingController();
-  final messageController = TextEditingController();
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    titleController.dispose();
-    messageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TextField(
-          controller: titleController,
-          decoration: const InputDecoration(
-              hintText: 'Enter Title', border: OutlineInputBorder()),
-          autofocus: true,
-        ),
-        TextField(
-          controller: messageController,
-          decoration: const InputDecoration(
-              hintText: 'Enter Message', border: OutlineInputBorder()),
-        ),
-        ElevatedButton(
-            onPressed: () {
-               Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.user)),
-              );
-              setState(() {
-                createPost(titleController.text, messageController.text);
-              });
-            },
-            child: const Text('Create Post'))
-      ],
-    );
-  }
-}
 
 
