@@ -60,32 +60,32 @@ class EditProfileState extends State<EditProfilePage> {
   }
 }
 
+class AddUser extends StatelessWidget {
+  final String uid;
+  final String email;
+  final String displayName;
+  final String photoURL;
+  bool newUser = true;
 
-// class AddUser extends StatelessWidget {
-//   final String uid;
-//   final String email;
-//   final String displayName;
-//   final String photoURL;
-
-//   AddUser(this.uid, this.email, this.displayName, this.photoURL);
+  AddUser(this.uid, this.email, this.displayName, this.photoURL);
   
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     throw UnimplementedError();
-//   }
-//   Future<void> addUser() {
-//   // Call the user's CollectionReference to add a new user
-//   return users
-//       .add({
-//         'uid': uid,
-//         'displayName': displayName,
-//         'email': email,
-//         'photoURL': photoURL,
-//         'lastSeen': DateTime.now()
-//       })
-//       .then((value) => print("User Added"))
-//       .catchError((error) => print("Failed to add user: $error"));
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+  // Future<void> addUser() {
+  // // Call the user's CollectionReference to add a new user
+  // return users
+  //     .add({
+  //       'uid': uid,
+  //       'displayName': displayName,
+  //       'email': email,
+  //       'photoURL': photoURL,
+  //       'lastSeen': DateTime.now()
+  //     })
+  //     .then((value) => print("User Added"))
+  //     .catchError((error) => print("Failed to add user: $error"));
+  // }
+}
 

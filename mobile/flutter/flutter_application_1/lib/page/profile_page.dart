@@ -3,6 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_application_1/api/google_signin_api.dart';
 
 import '../main.dart';
+import 'create_post_page.dart';
 
 // States for the navigation bar
 enum NavState { home, profile}
@@ -31,24 +32,16 @@ class ProfilePage extends StatefulWidget {
   State<StatefulWidget> createState() => ProfileState();
 }
 
-//TODO: Create different profile page
 class ProfileState extends State<ProfilePage> {
   late final GoogleSignInAccount user;
-  String _contactText = '';
 
-  // Variables for switching between states using the navigation bar
-  // var _currentTab = NavState.profile;
-  // void _selectState(NavState state) {
-  //   setState(() => _currentTab = state);
-  // }
-
-  int selectedIndex = 1;
+  int selectedIndex = 1; // Navigation bar, shows profile is selected
   // This method will make it so the bottom navigation bar works and highlights
   // whatever tab ur supposed to be in
   void itemTapped(int index) {
     setState(() {
       selectedIndex = index;
-      if (selectedIndex == 0) {
+      if (selectedIndex == 0) { // When home icon is selected, push HomePage
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.user)),
@@ -63,7 +56,7 @@ class ProfileState extends State<ProfilePage> {
       title: const Text('The Buzz'),
       centerTitle: true,
       actions: [
-        ElevatedButton(
+        ElevatedButton( // Logout button function
           child: const Text('Logout'),
           onPressed: () async {
             await GoogleSignInApi.logout();
@@ -79,21 +72,20 @@ class ProfileState extends State<ProfilePage> {
       color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        // Layout of profile page
         children: [
           const SizedBox(height: 15),
-          const Center(
+          const Center( // Profile Picture
             child: CircleAvatar(
               radius: 50,
             //FIXME: If photo is null, causes error. Change to if user has a profile picture, display it
             // if not, display generic profile picture
             //foregroundImage: NetworkImage(user.photoUrl!),
+            ),
           ),
-          // const Text(
-          //   'Profile',
-          //   style: TextStyle(fontSize: 24),
-          // ),
-          ),
+          // Spacing between fields
           const SizedBox(height: 15),
+          // Username
           Container (
             width: 350,
             height: 35,
@@ -117,12 +109,13 @@ class ProfileState extends State<ProfilePage> {
               ),    
             alignment: Alignment.centerLeft,
             child: Text(
-            '  ${((widget.user.email!).split('@')[0])}',
+            '  ${((widget.user.email!).split('@')[0])}', // Parse email for username
             style: const TextStyle(color: Colors.white, fontSize: 20,),
             textAlign: TextAlign.left,
             ),
           ),
           const SizedBox(height: 5),
+          // Name
           Container (
             width: 350,
             height: 35,
@@ -152,6 +145,7 @@ class ProfileState extends State<ProfilePage> {
             ),
           ),
           const SizedBox(height: 5),
+          // User short description
           Container (
             width: 350,
             height: 35,
@@ -206,37 +200,9 @@ class ProfileState extends State<ProfilePage> {
           //This will take me to the page where I can make a post
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddIdeaState(user: user)),
+            MaterialPageRoute(builder: (context) => AddIdeaState(user: widget.user)),
           );
         },
       ), // This trailing comma makes auto-formatting nicer for build methods.
   );
 }
-
-// class AddUser extends StatelessWidget {
-//   final String uid;
-//   final String email;
-//   final String displayName;
-//   final String photoURL;
-
-//   AddUser(this.uid, this.email, this.displayName, this.photoURL);
-  
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     throw UnimplementedError();
-//   }
-//   Future<void> addUser() {
-//   // Call the user's CollectionReference to add a new user
-//   return users
-//       .add({
-//         'uid': uid,
-//         'displayName': displayName,
-//         'email': email,
-//         'photoURL': photoURL,
-//         'lastSeen': DateTime.now()
-//       })
-//       .then((value) => print("User Added"))
-//       .catchError((error) => print("Failed to add user: $error"));
-//   }
-// }
