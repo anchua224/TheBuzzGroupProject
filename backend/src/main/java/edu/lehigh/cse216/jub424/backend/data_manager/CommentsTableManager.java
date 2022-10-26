@@ -74,7 +74,7 @@ public class CommentsTableManager {
         return res;
     }
 
-    public int inserOneComment(int id, String user_id, String content){
+    public int insertOneComment(int id, String user_id, String content){
         int res = 0;
         try {
             mInsertOne.setInt(1, id);

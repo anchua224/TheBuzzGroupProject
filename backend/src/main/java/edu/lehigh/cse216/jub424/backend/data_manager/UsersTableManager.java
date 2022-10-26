@@ -14,14 +14,16 @@ public class UsersTableManager {
     private static PreparedStatement mSelectOneUser;
     private static PreparedStatement mSelectPartOfUser;
     private static PreparedStatement mSelectAll;
+    private static PreparedStatement mFindUser;
 
     public UsersTableManager(Connection mConnection) throws SQLException{
         mInsertUser = mConnection.prepareStatement("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)");
         mDeleteUser = mConnection.prepareStatement("DELETE FROM users WHERE user_id=?");
-        mUpdateNote = mConnection.prepareStatement("UPDATE users SET note=?");
+        mUpdateNote = mConnection.prepareStatement("UPDATE users SET name=?, GI=?, SO=?, note=? WHERE user_id=?");
         mSelectOneUser = mConnection.prepareStatement("SELECT * FROM users where user_id=?");
         mSelectPartOfUser = mConnection.prepareStatement("SELECT name, note FROM users where user_id=?");
         mSelectAll = mConnection.prepareStatement("SELECT * FROM users");
+        mFindUser = mConnection.prepareStatement("SELECT count(*) where user_id=?");
     }
     public int insertOneUser(String user_id, String email, String name, String GI, String SO, String note){
         int res = 0;
@@ -48,10 +50,14 @@ public class UsersTableManager {
         }
         return res;
     }
-    public int updateNote(String user_id){
+    public int updateProfile(String user_id, String name, String GI, String SO, String note){
         int res = 0;
         try{
-            mUpdateNote.setString(1, user_id);
+            mUpdateNote.setString(5, user_id);
+            mUpdateNote.setString(1,name);
+            mUpdateNote.setString(2,GI);
+            mUpdateNote.setString(3,SO);
+            mUpdateNote.setString(4,note);
             res = mUpdateNote.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
@@ -122,5 +128,20 @@ public class UsersTableManager {
             e.printStackTrace();
             return null;
         }
+    }
+    public boolean findUser(String user_id){
+        boolean flag = false;
+        try{
+            mFindUser.setString(1,user_id);
+            ResultSet rs = mFindUser.executeQuery();
+            if(rs.next()){
+                if(rs.getInt("count") != 0){
+                    flag = true;
+                }
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return flag;
     }
 }

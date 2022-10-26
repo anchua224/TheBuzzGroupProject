@@ -30,6 +30,8 @@ public class LikeTableManager {
      */
     private static PreparedStatement mDeleteIdea;
 
+    private static PreparedStatement mCheckLike;
+
     /**
      * This constructer set up all the sql query for the likes table use the
      * mConnection
@@ -37,14 +39,16 @@ public class LikeTableManager {
      * @throws SQLException when things goes worng in sql
      */
     public LikeTableManager(Connection mConnection) throws SQLException {
-        // CREATE TABLE likes (like_id SERIAL PRIMARY KEY, id INT, FOREIGN KEY (id)
-        // REFERENCES ideas(id))
+        // CREATE TABLE likes (id INT, user_id VARCHAR(16), FOREIGN KEY (id) 
+        // REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES user(user_id), 
+        // PRIMARY KEY(id, user_id))
 
         mGetLike = mConnection.prepareStatement("SELECT count(*) from likes WHERE id=?");
-        mInsertLike = mConnection.prepareStatement("INSERT INTO likes VALUES (default, ?)");
+        mInsertLike = mConnection.prepareStatement("INSERT INTO likes VALUES (?, ?)");
         mDeleteIdea = mConnection.prepareStatement("DELETE FROM likes WHERE id = ?");
         mDeleteOne = mConnection.prepareStatement(
-                "DELETE FROM likes WHERE like_id IN (SELECT like_id FROM likes WHERE id = ? LIMIT 1)");
+                "DELETE FROM likes WHERE id = ? AND user_id = ?");
+        mCheckLike = mConnection.prepareStatement("SELECT FROM likes WHERE id = ? AND user_id = ?");
     }
 
     /**
@@ -75,10 +79,11 @@ public class LikeTableManager {
      *
      * @return The number of rows that were inserted
      */
-    public int likeIdea(int id) {
+    public int likeIdea(int id, String user_id) {
         int count = 0;
         try {
             mInsertLike.setInt(1, id);
+            mInsertLike.setString(2, user_id);
             count += mInsertLike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,10 +98,11 @@ public class LikeTableManager {
      *
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int cancelLikeIdea(int id) {
+    public int cancelLikeIdea(int id, String user_id) {
         int res = -1;
         try {
             mDeleteOne.setInt(1, id);
+            mDeleteOne.setString(2, user_id);
             res = mDeleteOne.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -120,6 +126,28 @@ public class LikeTableManager {
             e.printStackTrace();
         }
         return res;
+    }
+
+    /**
+     * 
+     * @param id 
+     * @param user_id
+     * @return
+     */
+    public boolean checkLikeIdea(int id, String user_id){
+        try {
+            mCheckLike.setInt(1, id);
+            mCheckLike.setString(2, user_id);
+            ResultSet rs = mDeleteOne.executeQuery();
+            if (!rs.next() ) {
+                return false;
+            }else{
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

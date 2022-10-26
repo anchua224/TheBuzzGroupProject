@@ -47,6 +47,8 @@ public class OAuthManager {
             String locale = (String) payload.get("locale");
             String familyName = (String) payload.get("family_name");
             String givenName = (String) payload.get("given_name");
+
+            //System.out.println("success");
          
             userInfo.add(userId);
             userInfo.add(email);
@@ -55,10 +57,11 @@ public class OAuthManager {
             userInfo.add(locale);
             userInfo.add(familyName);
             userInfo.add(givenName);
-
+            
             String hashedSessionKey = HashFunc.hash(email);
             userInfo.add(hashedSessionKey);
-            // Use or store profile information
+            // Use or store profile information、
+            //System.out.println("success after hash: " + hashedSessionKey);
             // ...
     
         } else {
