@@ -3,12 +3,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:developer' as developer;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'api/google_signin_api.dart';
-import 'page/logged_in_page.dart';
+import 'page/profile_page.dart';
 
 
 // To the next person writing flutter code. flutter.io and geeksforgeeks is your
@@ -30,7 +31,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      // TODO: make home page login/sign-up screen
       home: const MyLoginPage(title: 'The Buzz'),
       //home: const MyHomePage(title: 'The Buzz'),
     );
@@ -59,21 +59,6 @@ class _MyLoginPage extends State<MyLoginPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            // decoration: BoxDecoration (
-            //   borderRadius: BorderRadius.horizontal(), 
-            //   color: Colors.blue
-            // ),
-            // child: const Padding (
-            //   padding: EdgeInsets.all(8.0),
-            //   child: Text(
-            //     "Sign In",
-            //     style: TextStyle(
-            //       color: Colors.white, 
-            //       fontSize: 25
-            //     ),
-            //   ),
-
-            // )
             child: Padding(
               padding: EdgeInsets.all(100.0),
               child: ElevatedButton.icon(
@@ -95,31 +80,19 @@ class _MyLoginPage extends State<MyLoginPage> {
 
           ),
         ]
-        // ElevatedButton.icon(
-        //   style: ElevatedButton.styleFrom(
-        //     primary: Colors.white,
-        //     onPrimary: Colors.black,
-        //     minimumSize: Size(double.infinity,50),
-        //   ),
-        //   icon: FaIcon(
-        //     FontAwesomeIcons.google,
-        //     color: Colors.red,
-        //   ),
-        //   lable: Text('Sign In with Google'),
-        //   onPressed: signIn,
-        // ),
       ),
     );
   }
+  // Signin Method from GoogleSignInApi
   Future signin() async {
   final user = await GoogleSignInApi.login();
   var snackBar = SnackBar(content: Text('Sign in Failed'));
-
+    // If the user login is not valid, show that sign-in failed
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => LoggedInPage(user: user),
+      // If user logging in is valid, send user to profile page
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => EditProfilePage(user: user),
       ));
     }
   }
@@ -127,7 +100,8 @@ class _MyLoginPage extends State<MyLoginPage> {
 
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  final GoogleSignInAccount user;
+  const MyHomePage({super.key, required this.title, required this.user});
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -149,6 +123,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void itemTapped(int index) {
     setState(() {
       selectedIndex = index;
+      // When profile icon is selected, push Profile Page
+      if (selectedIndex == 1) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute( builder: (context) => ProfilePage(user: widget.user)));
+      }
     });
   }
 
@@ -184,7 +162,6 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        // ******************** REVIEW ********************
         onPressed: () {
           //This will take me to the page where I can make a post
           Navigator.push(
@@ -196,6 +173,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
 
 class ListofIdeas extends StatefulWidget {
   const ListofIdeas({super.key});
@@ -470,6 +449,5 @@ class _TextBoxState extends State<TextBox> {
     );
   }
 }
-
 
 
