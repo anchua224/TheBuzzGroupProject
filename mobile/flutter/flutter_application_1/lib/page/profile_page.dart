@@ -4,6 +4,14 @@ import 'package:flutter_application_1/api/google_signin_api.dart';
 
 import '../main.dart';
 
+// States for the navigation bar
+enum NavState { home, profile}
+const Map<NavState, String> navState = {
+  NavState.home: 'Home',
+  //NavState.create: 'create',
+  NavState.profile: 'Profile',
+};
+
 // CDC Lists for Sexual Orientation and Gender Identity
 const List<String> sexualOrientation = <String>['Straight or Heterosexual', 'Lesbian or Gay', 'Bisexual', 
   'Queer, Pan, and/or Questioning', 'Other', 'Don\'t Know', 'Decline to Answer'];
@@ -25,7 +33,14 @@ class ProfilePage extends StatefulWidget {
 
 //TODO: Create different profile page
 class ProfileState extends State<ProfilePage> {
-  GoogleSignInAccount? user;
+  late final GoogleSignInAccount user;
+  String _contactText = '';
+
+  // Variables for switching between states using the navigation bar
+  // var _currentTab = NavState.profile;
+  // void _selectState(NavState state) {
+  //   setState(() => _currentTab = state);
+  // }
 
   int selectedIndex = 1;
   // This method will make it so the bottom navigation bar works and highlights
@@ -45,7 +60,7 @@ class ProfileState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('Edit Profile'),
+      title: const Text('The Buzz'),
       centerTitle: true,
       actions: [
         ElevatedButton(
@@ -61,30 +76,109 @@ class ProfileState extends State<ProfilePage> {
     ),
     body: Container(
       alignment: Alignment.topLeft,
-      color: const Color.fromARGB(200, 240, 128, 128),
+      color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 8),
-          const CircleAvatar(
-            radius: 40,
+          const SizedBox(height: 15),
+          const Center(
+            child: CircleAvatar(
+              radius: 50,
             //FIXME: If photo is null, causes error. Change to if user has a profile picture, display it
             // if not, display generic profile picture
-            //backgroundImage: NetworkImage(user.photoUrl!),
+            //foregroundImage: NetworkImage(user.photoUrl!),
           ),
           // const Text(
           //   'Profile',
           //   style: TextStyle(fontSize: 24),
           // ),
-          const SizedBox(height: 8),
-          Text(
-            'Name: ${widget.user.displayName!}',
-            style: const TextStyle(color: Colors.white, fontSize: 16), //Might change font size
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Email: ${widget.user.email}',
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+          const SizedBox(height: 15),
+          Container (
+            width: 350,
+            height: 35,
+            alignment: Alignment.centerLeft,
+            child: const Text(
+            'Username  ',
+            style: TextStyle(color: Colors.pink, fontSize: 22, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.left,
+            ),
+          ),
+          Container (
+            width: 350,
+            height: 45,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 238, 141, 149),
+              border: Border.all(
+                color: Color.fromARGB(255, 226, 89, 101),
+                width: 3,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              ),    
+            alignment: Alignment.centerLeft,
+            child: Text(
+            '  ${((widget.user.email!).split('@')[0])}',
+            style: const TextStyle(color: Colors.white, fontSize: 20,),
+            textAlign: TextAlign.left,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Container (
+            width: 350,
+            height: 35,
+            alignment: Alignment.centerLeft,
+            child: const Text(
+            'Name  ',
+            style: TextStyle(color: Colors.pink, fontSize: 22, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.left,
+            ),
+          ),
+          Container (
+            alignment: Alignment.centerLeft,
+            width: 350,
+            height: 45,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 238, 141, 149),
+              border: Border.all(
+                color: Color.fromARGB(255, 226, 89, 101),
+                width: 3,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              ),    
+            child: Text(
+              '  ${widget.user.displayName!}',
+              style: const TextStyle(color: Colors.white, fontSize: 20),
+              textAlign: TextAlign.left,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Container (
+            width: 350,
+            height: 35,
+            alignment: Alignment.centerLeft,
+            child: const Text(
+            'Bio  ',
+            style: TextStyle(color: Colors.pink, fontSize: 22, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.left,
+            ),
+          ),
+          Container (
+            alignment: Alignment.topLeft,
+            width: 350,
+            height: 150,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 238, 141, 149),
+              border: Border.all(
+                color: Color.fromARGB(255, 226, 89, 101),
+                width: 3,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              ),    
+            child: const Text(
+              ' n/a ',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+              textAlign: TextAlign.left,
+            ),
           ),
         ],
       ),
@@ -112,58 +206,37 @@ class ProfileState extends State<ProfilePage> {
           //This will take me to the page where I can make a post
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddIdeaState()),
+            MaterialPageRoute(builder: (context) => AddIdeaState(user: user)),
           );
         },
       ), // This trailing comma makes auto-formatting nicer for build methods.
   );
 }
 
-class EditProfilePage extends StatefulWidget {
-  final GoogleSignInAccount user;
+// class AddUser extends StatelessWidget {
+//   final String uid;
+//   final String email;
+//   final String displayName;
+//   final String photoURL;
 
-  const EditProfilePage({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => EditProfileState();
-}
-
-class EditProfileState extends State<EditProfilePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    GoogleSignInAccount? user;
-    return Scaffold (
-      appBar: AppBar(
-        title: const Text('Edit Profile'),
-        centerTitle: true,
-        actions: [
-          ElevatedButton.icon(
-            label: const Text('Done'),
-            icon: Icon(Icons.check_circle),
-            onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfilePage(user: widget.user),
-              ));
-            },
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              navigateEditImagePage(EditImagePage());
-            }
-            child: DisplayImage(
-              imagePath: user?.photoUrl,
-              onPressed: (){},
-            )
-          )
-        ],
-      ),
-    );
-  }
-}
+//   AddUser(this.uid, this.email, this.displayName, this.photoURL);
+  
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     throw UnimplementedError();
+//   }
+//   Future<void> addUser() {
+//   // Call the user's CollectionReference to add a new user
+//   return users
+//       .add({
+//         'uid': uid,
+//         'displayName': displayName,
+//         'email': email,
+//         'photoURL': photoURL,
+//         'lastSeen': DateTime.now()
+//       })
+//       .then((value) => print("User Added"))
+//       .catchError((error) => print("Failed to add user: $error"));
+//   }
+// }

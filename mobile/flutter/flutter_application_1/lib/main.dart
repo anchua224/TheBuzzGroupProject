@@ -85,14 +85,18 @@ class _MyLoginPage extends State<MyLoginPage> {
   }
   // Signin Method from GoogleSignInApi
   Future signin() async {
-  final user = await GoogleSignInApi.login();
-  var snackBar = SnackBar(content: Text('Sign in Failed'));
+    final user = await GoogleSignInApi.login();
+    var snackBar = SnackBar(content: Text('Sign in Failed'));
+    GoogleSignInAuthentication googleSignInAuthentication = await user!.authentication;
+
+    print(googleSignInAuthentication.accessToken);
+    print(googleSignInAuthentication.idToken);
     // If the user login is not valid, show that sign-in failed
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       // If user logging in is valid, send user to profile page
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => EditProfilePage(user: user),
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfilePage(user: user),
       ));
     }
   }
@@ -166,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //This will take me to the page where I can make a post
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddIdeaState()),
+            MaterialPageRoute(builder: (context) => AddIdeaState(user: widget.user)),
           );
         },
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -310,7 +314,7 @@ class Likes {
 // fetchLikes method is supposed to fetch the like # for a specific id
 Future<List<Likes>> fetchLikes(int id) async {
   final response = await http
-      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/likes/:id'));
+      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas/${id}'));
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, then parse the JSON.
     final List<Likes> returnData;
@@ -338,7 +342,7 @@ Future<List<Likes>> fetchLikes(int id) async {
 // updateLike method will post the like to the specific post with the specific id
 Future<Likes> updateLike(int id) async {
   final response = await http.put(
-      Uri.parse('https://cse216-fl22-team14.herokuapp.com/likes/:id'),
+      Uri.parse('https://cse216-fl22-team14.herokuapp.com/likes/${id}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -357,7 +361,12 @@ Future<Likes> updateLike(int id) async {
 // AddIdeaState class would be the state of the app once you are trying to post
 // an idea
 class AddIdeaState extends StatelessWidget {
-  const AddIdeaState({super.key});
+  final GoogleSignInAccount user;
+
+  const AddIdeaState({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -366,7 +375,7 @@ class AddIdeaState extends StatelessWidget {
         title: const Text('Create Post'),
       ),
       body: Column(
-        children: const <Widget>[TextBox()],
+        children: <Widget>[TextBox(user: user,)],
       ),
     );
   }
@@ -396,13 +405,19 @@ createPost(String title, String message) async {
 }
 
 class TextBox extends StatefulWidget {
-  const TextBox({super.key});
+  final GoogleSignInAccount user;
+
+  const TextBox({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   State<TextBox> createState() => _TextBoxState();
 }
 
 class _TextBoxState extends State<TextBox> {
+  GoogleSignInAccount? user;
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   @override
@@ -440,6 +455,10 @@ class _TextBoxState extends State<TextBox> {
         ),
         ElevatedButton(
             onPressed: () {
+               Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.user)),
+              );
               setState(() {
                 createPost(titleController.text, messageController.text);
               });
