@@ -4,6 +4,7 @@ import 'package:flutter_application_1/api/google_signin_api.dart';
 
 import '../main.dart';
 import 'create_post_page.dart';
+import 'edit_profile_page.dart';
 
 // States for the navigation bar
 enum NavState { home, profile}
@@ -75,73 +76,74 @@ class ProfileState extends State<ProfilePage> {
         // Layout of profile page
         children: [
           const SizedBox(height: 15),
-          const Center( // Profile Picture
-            child: CircleAvatar(
-              radius: 50,
-            //FIXME: If photo is null, causes error. Change to if user has a profile picture, display it
-            // if not, display generic profile picture
-            //foregroundImage: NetworkImage(user.photoUrl!),
-            ),
-          ),
-          // Spacing between fields
-          const SizedBox(height: 15),
-          // Username
-          Container (
-            width: 350,
-            height: 35,
-            alignment: Alignment.centerLeft,
-            child: const Text(
-            'Username  ',
-            style: TextStyle(color: Colors.pink, fontSize: 22, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.left,
-            ),
-          ),
-          Container (
-            width: 350,
-            height: 45,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 238, 141, 149),
-              border: Border.all(
-                color: Color.fromARGB(255, 226, 89, 101),
-                width: 3,
-              ),
-              borderRadius: BorderRadius.circular(12),
-              ),    
-            alignment: Alignment.centerLeft,
-            child: Text(
-            '  ${((widget.user.email!).split('@')[0])}', // Parse email for username
-            style: const TextStyle(color: Colors.white, fontSize: 20,),
-            textAlign: TextAlign.left,
-            ),
-          ),
-          const SizedBox(height: 5),
-          // Name
-          Container (
-            width: 350,
-            height: 35,
-            alignment: Alignment.centerLeft,
-            child: const Text(
-            'Name  ',
-            style: TextStyle(color: Colors.pink, fontSize: 22, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.left,
-            ),
-          ),
-          Container (
-            alignment: Alignment.centerLeft,
-            width: 350,
-            height: 45,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 238, 141, 149),
-              border: Border.all(
-                color: Color.fromARGB(255, 226, 89, 101),
-                width: 3,
-              ),
-              borderRadius: BorderRadius.circular(12),
-              ),    
-            child: Text(
-              '  ${widget.user.displayName!}',
-              style: const TextStyle(color: Colors.white, fontSize: 20),
-              textAlign: TextAlign.left,
+          Center( // Profile Picture
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(width: 5),
+                Expanded (
+                  flex: 0,
+                  child: CircleAvatar(
+                    radius: 45,
+                  ),
+                ),
+                // Expanded(
+                //   child: const SizedBox(width: 10)
+                // ),
+                Expanded (
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      Container (
+                        width: 250,
+                        height: 20,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                        ' ${widget.user.displayName}',
+                        style: TextStyle(color: Colors.pink, fontSize: 20, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.left,
+                        ),
+                      ),
+                      Container (
+                        width: 250,
+                        height: 25,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                        ' @${((widget.user.email!).split('@')[0])}',
+                        style: TextStyle(color: Colors.pink, fontSize: 20,),
+                        textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                // Edit Profile Button
+                Expanded (
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.pink,
+                          fixedSize: const Size(100, 30), 
+                          side: BorderSide(color: Colors.pink, width: 1),
+                          shape: StadiumBorder(),
+                        ),
+                    onPressed: () {
+                        // Send user back to edit page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EditProfilePage(user: widget.user)),
+                      );
+                    },
+                    child: const Text(
+                      'Edit Profile',
+                      style: TextStyle(
+                        fontSize: 12
+                      ),
+                    )
+                  )
+                ),
+                const SizedBox(width: 7),
+              ],
             ),
           ),
           const SizedBox(height: 5),
@@ -150,9 +152,9 @@ class ProfileState extends State<ProfilePage> {
             width: 350,
             height: 35,
             alignment: Alignment.centerLeft,
-            child: const Text(
-            'Bio  ',
-            style: TextStyle(color: Colors.pink, fontSize: 22, fontWeight: FontWeight.bold),
+            child: Text(
+            ' ${((widget.user.displayName!).split(' ')[0])}\'s Note',
+            style: const TextStyle(color: Colors.pink, fontSize: 20,),
             textAlign: TextAlign.left,
             ),
           ),
@@ -161,10 +163,10 @@ class ProfileState extends State<ProfilePage> {
             width: 350,
             height: 150,
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 238, 141, 149),
+              color: Color.fromARGB(187, 238, 141, 149),
               border: Border.all(
-                color: Color.fromARGB(255, 226, 89, 101),
-                width: 3,
+                color: Colors.pink,
+                width: 2,
               ),
               borderRadius: BorderRadius.circular(12),
               ),    

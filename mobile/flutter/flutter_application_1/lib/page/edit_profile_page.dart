@@ -28,7 +28,7 @@ class EditProfileState extends State<EditProfilePage> {
         title: const Text('Edit Profile'),
         centerTitle: true,
         actions: [
-          ElevatedButton.icon(
+          OutlinedButton.icon(
             label: const Text('Done'),
             icon: Icon(Icons.check_circle),
             onPressed: () {

@@ -92,37 +92,71 @@ class _TextBoxState extends State<TextBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TextField(
-          controller: titleController,
-          maxLength: 50,
-          decoration: const InputDecoration(
-              hintText: 'Enter Title', border: OutlineInputBorder()),
-          autofocus: true,
+    return SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+              child: TextField(
+                controller: titleController,
+                maxLength: 50,
+                keyboardType: TextInputType.multiline, //Expands text and creates a new line
+                minLines: 1,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                    hintText: 'Enter Title', border: OutlineInputBorder()),
+              //autofocus: true, // Opens keyboard to start typing on text box
+              ),
+            ),
+            Padding (
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+              child: SizedBox(
+              height: 300,
+              child: TextField(
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 20,
+                controller: messageController,
+                maxLength: 500,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), 
+                    hintText: '  Enter Message', 
+                    ),
+                textAlignVertical: TextAlignVertical.top,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink,
+                      foregroundColor: Colors.white,
+                      fixedSize: const Size(200, 80), 
+                    ),
+                onPressed: () {
+                    // Send user back to home page, ideas displayed up-to-date
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.user)),
+                  );
+                  setState(() {
+                    createPost(titleController.text, messageController.text);
+                  });
+                },
+                child: const Text(
+                  'Create Post',
+                  style: TextStyle(
+                    fontSize: 20
+                  ),
+                )
+              ),
+          ],
         ),
-        TextField(
-          controller: messageController,
-          maxLength: 500,
-          decoration: const InputDecoration(
-              hintText: 'Enter Message', border: OutlineInputBorder()),
-        ),
-        ElevatedButton(
-            onPressed: () {
-                // Send user back to home page, ideas displayed up-to-date
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.user)),
-              );
-              setState(() {
-                createPost(titleController.text, messageController.text);
-              });
-            },
-            child: const Text('Create Post'))
-      ],
-    );
+      );
   }
 }
+
 
 
