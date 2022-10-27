@@ -32,6 +32,9 @@ public class LikeTableManager {
 
     private static PreparedStatement mCheckLike;
 
+    private static PreparedStatement mCreateTable;
+    private static PreparedStatement mDropTable;
+
     /**
      * This constructer set up all the sql query for the likes table use the
      * mConnection
@@ -42,6 +45,10 @@ public class LikeTableManager {
         // CREATE TABLE likes (id INT, user_id VARCHAR(16), FOREIGN KEY (id) 
         // REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES user(user_id), 
         // PRIMARY KEY(id, user_id))
+        // mCreateTable = mConnection.prepareStatement("CREATE TABLE likes (id INT, user_id VARCHAR(64), FOREIGN KEY (id) "+
+        // "REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES users(user_id),"+
+        // "PRIMARY KEY(id, user_id))");
+        mDropTable = mConnection.prepareStatement("DROP TABLE likes");
 
         mGetLike = mConnection.prepareStatement("SELECT count(*) from likes WHERE id=?");
         mInsertLike = mConnection.prepareStatement("INSERT INTO likes VALUES (?, ?)");
@@ -50,6 +57,24 @@ public class LikeTableManager {
                 "DELETE FROM likes WHERE id = ? AND user_id = ?");
         mCheckLike = mConnection.prepareStatement("SELECT FROM likes WHERE id = ? AND user_id = ?");
     }
+
+    // public void createTable(){
+    //     try {
+    //         mCreateTable.execute();
+    //     } catch (SQLException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
+    // } public void dropTable(){
+    //     try {
+    //         mDropTable.executeQuery();
+    //     } catch (SQLException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
+    // }
+
+
 
     /**
      * get the likecount of an ideas of specific id
@@ -138,7 +163,7 @@ public class LikeTableManager {
         try {
             mCheckLike.setInt(1, id);
             mCheckLike.setString(2, user_id);
-            ResultSet rs = mDeleteOne.executeQuery();
+            ResultSet rs = mCheckLike.executeQuery();
             if (!rs.next() ) {
                 return false;
             }else{

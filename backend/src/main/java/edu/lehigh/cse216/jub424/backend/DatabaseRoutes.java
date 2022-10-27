@@ -142,7 +142,15 @@ public class DatabaseRoutes {
             response.type("application/json");
             // NB: createEntry checks for null title and message
             int newId; 
-            if(mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKey)){
+            
+            if(mDatabase.mDislikeTableManager.checkDislikeIdea(idx, sessionKey)){
+                int disR;
+                disR = mDatabase.mDislikeTableManager.cancelDislikeIdea(idx, sessionKey);
+                if(disR == -1){
+                    return gson.toJson(new StructuredResponse("error", "unable to cancel disliked record", null));
+                }
+            }
+            if(!mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKey)){
                 newId = mDatabase.mLikeTableManager.likeIdea(idx, sessionKey);
             }else {
                 return gson.toJson(new StructuredResponse("error", "this user already liked", null));
@@ -155,7 +163,7 @@ public class DatabaseRoutes {
         });
 
         // GET route that returns number of like of a idea that id correspond
-        Spark.get("/idea/:id/likes", (request, response) -> {
+        Spark.get("/idea/:id/like", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
@@ -171,16 +179,80 @@ public class DatabaseRoutes {
 
         // DELETE route for removing a like for a idea that with a id
         // this only remove one like
-        Spark.delete("/idea/:id/likes", (request, response) -> {
+        Spark.delete("/idea/:id/like", (request, response) -> {
             // If we can't get an ID, Spark will send a status 500
             int idx = Integer.parseInt(request.params("id"));
-            String userid = request.params("sessionKey");
+            String userid = request.queryParams("sessionKey");
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
             // NB: we won't concern ourselves too much with the quality of the
             // message sent on a successful delete
             int result = mDatabase.mLikeTableManager.cancelLikeIdea(idx, userid);
+            if (result == -1) {
+                return gson.toJson(new StructuredResponse("error", "unable to delete row " + idx, null));
+            } else {
+                return gson.toJson(new StructuredResponse("ok", null, null));
+            }
+        });
+    }
+
+    public static void dislikesRoutes(Database mDatabase){
+        final Gson gson = new Gson();
+        Spark.post("/idea/:id/dislike", (request, response) -> {
+            int idx = Integer.parseInt(request.params("id"));
+            String sessionKey= request.queryParams("sessionKey");
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            // NB: createEntry checks for null title and message
+            int newId; 
+            if(mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKey)){
+                int disR;
+                disR = mDatabase.mLikeTableManager.cancelLikeIdea(idx, sessionKey);
+                if(disR == -1){
+                    return gson.toJson(new StructuredResponse("error", "unable to cancel liked record", null));
+                }
+            }
+            if(!mDatabase.mDislikeTableManager.checkDislikeIdea(idx, sessionKey)){
+                newId = mDatabase.mDislikeTableManager.dislikeIdea(idx, sessionKey);
+            }else {
+                return gson.toJson(new StructuredResponse("error", "this user already disliked", null));
+            }
+            if (newId == -1) {
+                return gson.toJson(new StructuredResponse("error", "error performing insertion", null));
+            } else {
+                return gson.toJson(new StructuredResponse("ok", "" + newId, null));
+            }
+        });
+
+        // GET route that returns number of like of a idea that id correspond
+        Spark.get("/idea/:id/dislike", (request, response) -> {
+            int idx = Integer.parseInt(request.params("id"));
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            int number = mDatabase.mDislikeTableManager.getDislikeCount(idx);
+            if (number == -1) {
+                return gson.toJson(new StructuredResponse("error", idx + " not found",
+                        null));
+            } else {
+                return gson.toJson(new StructuredResponse("ok", null, number));
+            }
+        });
+
+        // DELETE route for removing a like for a idea that with a id
+        // this only remove one like
+        Spark.delete("/idea/:id/dislike", (request, response) -> {
+            // If we can't get an ID, Spark will send a status 500
+            int idx = Integer.parseInt(request.params("id"));
+            String userid = request.queryParams("sessionKey");
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            // NB: we won't concern ourselves too much with the quality of the
+            // message sent on a successful delete
+            int result = mDatabase.mDislikeTableManager.cancelDislikeIdea(idx, userid);
             if (result == -1) {
                 return gson.toJson(new StructuredResponse("error", "unable to delete row " + idx, null));
             } else {

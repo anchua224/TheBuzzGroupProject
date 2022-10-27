@@ -71,9 +71,14 @@ public class App {
 
         DatabaseRoutes.ideasRoutes(mDatabase);
         DatabaseRoutes.likesRoutes(mDatabase);
+        DatabaseRoutes.dislikesRoutes(mDatabase);
         DatabaseRoutes.loginRoutes(mDatabase);
         DatabaseRoutes.commentsRoutes(mDatabase);
         DatabaseRoutes.userRoutes(mDatabase);
+        //mDatabase.mLikeTableManager.dropTable();
+        //mDatabase.mLikeTableManager.createTable();
+        mDatabase.mDislikeTableManager.dropTable();
+        mDatabase.mDislikeTableManager.createTable();
     }
 
     /**
