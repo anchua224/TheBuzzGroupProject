@@ -77,8 +77,9 @@ public class App {
         DatabaseRoutes.userRoutes(mDatabase);
         //mDatabase.mLikeTableManager.dropTable();
         //mDatabase.mLikeTableManager.createTable();
-        mDatabase.mDislikeTableManager.dropTable();
-        mDatabase.mDislikeTableManager.createTable();
+        //mDatabase.mDislikeTableManager.dropTable();
+        //mDatabase.mDislikeTableManager.createTable();
+        //mDatabase.mCommentsTableManager.createTable();
     }
 
     /**

@@ -1,6 +1,5 @@
 package edu.lehigh.cse216.jub424.backend.data_manager;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.sql.*;
 
@@ -17,12 +16,38 @@ public class CommentsTableManager {
 
     private static PreparedStatement mSelectAllUnderOneIDea;
 
+    private static PreparedStatement mCreateTable;
+
+    private static PreparedStatement mDropTable;
+
     public CommentsTableManager(Connection mConnection) throws SQLException{
+        mCreateTable = mConnection.prepareStatement("CREATE TABLE comments (id INT, user_id VARCHAR(64), com_id SERIAL PRIMARY KEY, content VARCHAR(300), FOREIGN KEY (user_id) REFERENCES users(user_id), FOREIGN KEY (id) REFERENCES ideas(id))");
+        mDropTable = mConnection.prepareStatement("DROP TABLE comments");
+
         mSelectAll = mConnection.prepareStatement("SELECT * FROM comments ORDER BY com_id DESC");
         mSelectOne = mConnection.prepareStatement("SELECT * FROM comments where com_id=?");
         mUpdateOne = mConnection.prepareStatement("UPDATE comments SET content=? where com_id=?");
         mInsertOne = mConnection.prepareStatement("INSERT INTO comments VALUES (?, ?, default, ?)");
         mSelectAllUnderOneIDea = mConnection.prepareStatement("SELECT * FROM comments where id=? ORDER BY com_id DESC");
+    }
+
+
+    public void createTable(){
+        try {
+            mCreateTable.executeQuery();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void dropTable(){
+        try {
+            mDropTable.executeQuery();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public ArrayList<Comment> selectAllComments(){

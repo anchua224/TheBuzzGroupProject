@@ -134,7 +134,7 @@ public class DatabaseRoutes {
         // JSON from the body of the request, turn it into a SimpleIdeaRequest
         // object, extract the title and message, insert them, and return the
         // ID of the newly created row.
-        Spark.post("/idea/:id/like", (request, response) -> {
+        Spark.post("/ideas/:id/like", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
             String sessionKey= request.queryParams("sessionKey");
             // ensure status 200 OK, with a MIME type of JSON
@@ -163,7 +163,7 @@ public class DatabaseRoutes {
         });
 
         // GET route that returns number of like of a idea that id correspond
-        Spark.get("/idea/:id/like", (request, response) -> {
+        Spark.get("/ideas/:id/like", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
@@ -179,7 +179,7 @@ public class DatabaseRoutes {
 
         // DELETE route for removing a like for a idea that with a id
         // this only remove one like
-        Spark.delete("/idea/:id/like", (request, response) -> {
+        Spark.delete("/ideas/:id/like", (request, response) -> {
             // If we can't get an ID, Spark will send a status 500
             int idx = Integer.parseInt(request.params("id"));
             String userid = request.queryParams("sessionKey");
@@ -199,7 +199,7 @@ public class DatabaseRoutes {
 
     public static void dislikesRoutes(Database mDatabase){
         final Gson gson = new Gson();
-        Spark.post("/idea/:id/dislike", (request, response) -> {
+        Spark.post("/ideas/:id/dislike", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
             String sessionKey= request.queryParams("sessionKey");
             // ensure status 200 OK, with a MIME type of JSON
@@ -227,7 +227,7 @@ public class DatabaseRoutes {
         });
 
         // GET route that returns number of like of a idea that id correspond
-        Spark.get("/idea/:id/dislike", (request, response) -> {
+        Spark.get("/ideas/:id/dislike", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
@@ -243,7 +243,7 @@ public class DatabaseRoutes {
 
         // DELETE route for removing a like for a idea that with a id
         // this only remove one like
-        Spark.delete("/idea/:id/dislike", (request, response) -> {
+        Spark.delete("/ideas/:id/dislike", (request, response) -> {
             // If we can't get an ID, Spark will send a status 500
             int idx = Integer.parseInt(request.params("id"));
             String userid = request.queryParams("sessionKey");
