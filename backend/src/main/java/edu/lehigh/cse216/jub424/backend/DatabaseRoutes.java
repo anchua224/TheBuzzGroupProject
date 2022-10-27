@@ -267,8 +267,9 @@ public class DatabaseRoutes {
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
-            return gson.toJson(new StructuredResponse("ok", null,
-                mDatabase.mUsersTableManager.selectOneUser(useridx)));   
+            //System.out.println("hello");
+            User rUser = mDatabase.mUsersTableManager.selectOneUser(useridx);
+            return gson.toJson(new StructuredResponse("ok", null,rUser));   
         });
         Spark.put("/profile/:userid", (request, response) ->{
             String useridx = request.params("userid");
@@ -276,6 +277,7 @@ public class DatabaseRoutes {
             response.status(200);
             response.type("application/json");
             SimpleUserRequest req = gson.fromJson(request.body(), SimpleUserRequest.class);
+            System.out.println(req.mGI);
             int result = mDatabase.mUsersTableManager.updateProfile(useridx, req.mName,req.mGI,req.mSO,req.mNote);
             if(result != 0){
                 return gson.toJson(new StructuredResponse("ok", null, null));
