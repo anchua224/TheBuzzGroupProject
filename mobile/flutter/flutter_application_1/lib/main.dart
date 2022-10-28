@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'api/google_signin_api.dart';
 import 'page/profile_page.dart';
 import 'page/create_post_page.dart';
+import 'page/login_page.dart';
 
 
 // To the next person writing flutter code. flutter.io and geeksforgeeks is your
@@ -32,77 +33,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      home: const MyLoginPage(title: 'The Buzz'),
-      //home: const MyHomePage(title: 'The Buzz'),
+      home: const LoginPage(title: 'The Buzz'),
     );
   }
 }
-class MyLoginPage extends StatefulWidget {
-  const MyLoginPage({super.key, required this.title});
-
-  final String title;
-  @override
-  State<MyLoginPage> createState() => _MyLoginPage();
-}
-
-class _MyLoginPage extends State<MyLoginPage> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        centerTitle: true,
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            child: Padding(
-              padding: EdgeInsets.all(100.0),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.pink,
-                  foregroundColor: Colors.white,
-                  fixedSize: const Size(240, 80), 
-                  minimumSize: Size(double.infinity, 50),
-                ),
-                icon: Image.asset(
-                  'assets/images/google_icon.png',
-                  height: 32,
-                  width: 32
-                  ),
-                label: Text('Sign-in with Google'),
-                onPressed: signin, //signin method
-                ),
-              )
-
-          ),
-        ]
-      ),
-    );
-  }
-  // Signin Method from GoogleSignInApi
-  Future signin() async {
-    final user = await GoogleSignInApi.login();
-    var snackBar = SnackBar(content: Text('Sign in Failed'));
-    GoogleSignInAuthentication googleSignInAuthentication = await user!.authentication;
-
-    print(googleSignInAuthentication.accessToken);
-    print(googleSignInAuthentication.idToken);
-    // If the user login is not valid, show that sign-in failed
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else {
-      // If user logging in is valid, send user to profile page
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfilePage(user: user),
-      ));
-    }
-  }
-}
-
 
 class MyHomePage extends StatefulWidget {
   final GoogleSignInAccount user;
@@ -166,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add,),
         onPressed: () {
           //This will take me to the page where I can make a post
           Navigator.push(
@@ -227,9 +161,9 @@ class _ListofIdeasState extends State<ListofIdeas> {
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(snapshot.data![i].message),
-                        tileColor: const Color.fromARGB(200, 240, 128, 128), // Message Color
+                        tileColor: const Color.fromARGB(200, 251, 207, 126), // Message Color
                         trailing: GestureDetector(
-                          onDoubleTap: () {
+                          onTap: () {
                             setState(() {
                               //pass in snapshot.data.id
                               postLiked = !postLiked;

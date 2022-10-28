@@ -5,21 +5,15 @@ import 'package:flutter_application_1/api/google_signin_api.dart';
 import '../main.dart';
 import 'create_post_page.dart';
 import 'edit_profile_page.dart';
+import 'login_page.dart';
 
 // States for the navigation bar
-enum NavState { home, profile}
-const Map<NavState, String> navState = {
-  NavState.home: 'Home',
-  //NavState.create: 'create',
-  NavState.profile: 'Profile',
-};
-
-// CDC Lists for Sexual Orientation and Gender Identity
-const List<String> sexualOrientation = <String>['Straight or Heterosexual', 'Lesbian or Gay', 'Bisexual', 
-  'Queer, Pan, and/or Questioning', 'Other', 'Don\'t Know', 'Decline to Answer'];
-const List<String> genderIdentity = <String>['Male', 'Female', 'Transgender Man/ Trans Man', 
-  'Transgender Woman/ Trans Woman', 'Genderqueer/ gender nonconforming neither exclusively male nor female', 
-  'Other', 'Decline to Answer'];
+// enum NavState { home, profile}
+// const Map<NavState, String> navState = {
+//   NavState.home: 'Home',
+//   //NavState.create: 'create',
+//   NavState.profile: 'Profile',
+// };
 
 class ProfilePage extends StatefulWidget {
   final GoogleSignInAccount user;
@@ -37,6 +31,7 @@ class ProfileState extends State<ProfilePage> {
   late final GoogleSignInAccount user;
 
   int selectedIndex = 1; // Navigation bar, shows profile is selected
+  
   // This method will make it so the bottom navigation bar works and highlights
   // whatever tab ur supposed to be in
   void itemTapped(int index) {
@@ -57,12 +52,12 @@ class ProfileState extends State<ProfilePage> {
       title: const Text('The Buzz'),
       centerTitle: true,
       actions: [
-        ElevatedButton( // Logout button function
-          child: const Text('Logout'),
+        ElevatedButton.icon( // Logout button function
+          label: const Text('Logout'),
+          icon: const Icon(Icons.logout),
           onPressed: () async {
             await GoogleSignInApi.logout();
-
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MyLoginPage(title: 'The Buzz'),
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage(title: 'The Buzz'),
             ));
           },
         )
@@ -81,10 +76,11 @@ class ProfileState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(width: 5),
-                Expanded (
+                const Expanded (
                   flex: 0,
                   child: CircleAvatar(
                     radius: 45,
+                    backgroundColor: Color.fromARGB(255, 251, 207, 126),
                   ),
                 ),
                 // Expanded(
@@ -100,7 +96,7 @@ class ProfileState extends State<ProfilePage> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                         ' ${widget.user.displayName}',
-                        style: TextStyle(color: Colors.pink, fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(color: Colors.black, fontSize: 20, ),
                         textAlign: TextAlign.left,
                         ),
                       ),
@@ -110,7 +106,7 @@ class ProfileState extends State<ProfilePage> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                         ' @${((widget.user.email!).split('@')[0])}',
-                        style: TextStyle(color: Colors.pink, fontSize: 20,),
+                        style: const TextStyle(color: Color.fromARGB(200, 233, 30, 98), fontSize: 20,),
                         textAlign: TextAlign.left,
                         ),
                       ),
@@ -124,8 +120,8 @@ class ProfileState extends State<ProfilePage> {
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.pink,
                           fixedSize: const Size(100, 30), 
-                          side: BorderSide(color: Colors.pink, width: 1),
-                          shape: StadiumBorder(),
+                          side: const BorderSide(color: Colors.pink, width: 1),
+                          shape: const StadiumBorder(),
                         ),
                     onPressed: () {
                         // Send user back to edit page
@@ -146,33 +142,33 @@ class ProfileState extends State<ProfilePage> {
               ],
             ),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 10),
           // User short description
           Container (
-            width: 350,
+            width: 375,
             height: 35,
             alignment: Alignment.centerLeft,
             child: Text(
             ' ${((widget.user.displayName!).split(' ')[0])}\'s Note',
-            style: const TextStyle(color: Colors.pink, fontSize: 20,),
+            style: const TextStyle(color: Colors.black, fontSize: 18,),
             textAlign: TextAlign.left,
             ),
           ),
           Container (
             alignment: Alignment.topLeft,
-            width: 350,
+            width: 375,
             height: 150,
             decoration: BoxDecoration(
-              color: Color.fromARGB(187, 238, 141, 149),
+              color: const Color.fromARGB(255, 251, 207, 126),
               border: Border.all(
-                color: Colors.pink,
-                width: 2,
+                color: const Color.fromARGB(150, 233, 30, 98),
+                width: 1.5,
               ),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(5),
               ),    
             child: const Text(
-              ' n/a ',
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              ' N/A ',
+              style: TextStyle(color: Colors.black, fontSize: 18,),
               textAlign: TextAlign.left,
             ),
           ),
