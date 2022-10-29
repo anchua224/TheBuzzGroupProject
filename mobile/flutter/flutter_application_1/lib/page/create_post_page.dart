@@ -1,13 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:developer' as developer;
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../api/google_signin_api.dart';
 import 'profile_page.dart';
 import '../main.dart';
 

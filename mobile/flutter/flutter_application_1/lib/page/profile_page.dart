@@ -7,14 +7,6 @@ import 'create_post_page.dart';
 import 'edit_profile_page.dart';
 import 'login_page.dart';
 
-// States for the navigation bar
-// enum NavState { home, profile}
-// const Map<NavState, String> navState = {
-//   NavState.home: 'Home',
-//   //NavState.create: 'create',
-//   NavState.profile: 'Profile',
-// };
-
 class ProfilePage extends StatefulWidget {
   final GoogleSignInAccount user;
 
@@ -166,7 +158,7 @@ class ProfileState extends State<ProfilePage> {
               ),
               borderRadius: BorderRadius.circular(5),
               ),    
-            child: const Text(
+            child: Text(
               ' N/A ',
               style: TextStyle(color: Colors.black, fontSize: 18,),
               textAlign: TextAlign.left,
