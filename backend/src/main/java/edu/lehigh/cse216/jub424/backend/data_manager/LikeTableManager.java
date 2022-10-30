@@ -30,10 +30,13 @@ public class LikeTableManager {
      */
     private static PreparedStatement mDeleteIdea;
 
+    /**
+     * A prepared statement for check if a user has already liked the idea
+     */
     private static PreparedStatement mCheckLike;
 
-    private static PreparedStatement mCreateTable;
-    private static PreparedStatement mDropTable;
+    //private static PreparedStatement mCreateTable;
+    //private static PreparedStatement mDropTable;
 
     /**
      * This constructer set up all the sql query for the likes table use the
@@ -48,7 +51,7 @@ public class LikeTableManager {
         // mCreateTable = mConnection.prepareStatement("CREATE TABLE likes (id INT, user_id VARCHAR(64), FOREIGN KEY (id) "+
         // "REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES users(user_id),"+
         // "PRIMARY KEY(id, user_id))");
-        mDropTable = mConnection.prepareStatement("DROP TABLE likes");
+        // mDropTable = mConnection.prepareStatement("DROP TABLE likes");
 
         mGetLike = mConnection.prepareStatement("SELECT count(*) from likes WHERE id=?");
         mInsertLike = mConnection.prepareStatement("INSERT INTO likes VALUES (?, ?)");
@@ -154,10 +157,10 @@ public class LikeTableManager {
     }
 
     /**
-     * 
+     * check if a user has already liked an idea
      * @param id 
      * @param user_id
-     * @return
+     * @return A boolean value. true indicates the user has liked the idea
      */
     public boolean checkLikeIdea(int id, String user_id){
         try {

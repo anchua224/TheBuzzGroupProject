@@ -1,6 +1,14 @@
 package edu.lehigh.cse216.jub424.backend.data_structure;
 import java.util.Date;
-
+/**
+ * dislike holds a information of idea dislike situations. A row of dislike consists of
+ * an idea_id, and user_id. A combination of idea_id and user_id is unique
+ * 
+ * Because we will ultimately be converting instances of this object into JSON
+ * directly, we need to make the fields public. That being the case, we will
+ * not bother with having getters and setters... instead, we will allow code to
+ * interact with the fields directly.
+ */
 public class Dislike {
     /*
      * id for dislike

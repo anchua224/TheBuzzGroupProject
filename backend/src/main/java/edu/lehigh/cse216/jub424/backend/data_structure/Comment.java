@@ -1,6 +1,13 @@
 package edu.lehigh.cse216.jub424.backend.data_structure;
 import java.util.Date;
-
+/**
+ * Comments holds information of each comment.
+ * 
+ * Because we will ultimately be converting instances of this object into JSON
+ * directly, we need to make the fields public. That being the case, we will
+ * not bother with having getters and setters... instead, we will allow code to
+ * interact with the fields directly.
+ */
 public class Comment {
     /*
      * a FK indicate the idea

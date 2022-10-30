@@ -21,22 +21,26 @@ public class DislikeTableManager {
     private static PreparedStatement mInsertDislike;
 
     /**
-     * A prepared statement for get like count
+     * A prepared statement for get dislike count
      */
     private static PreparedStatement mGetDislike;
 
     /**
-     * A prepared statement for delete all like relative to an idea
+     * A prepared statement for delete all dislike relative to an idea
      */
     private static PreparedStatement mDeleteIdea;
 
+    /**
+     * A prepared statement for check if a user is already disliked
+     */
     private static PreparedStatement mCheckDislike;
 
-    private static PreparedStatement mCreateTable;
-    private static PreparedStatement mDropTable;
+
+    //private static PreparedStatement mCreateTable;
+    //private static PreparedStatement mDropTable;
 
     /**
-     * This constructer set up all the sql query for the likes table use the
+     * This constructer set up all the sql query for the dislikes table use the
      * mConnection
      * @param mConnection the connection to the database
      * @throws SQLException when things goes worng in sql
@@ -45,10 +49,10 @@ public class DislikeTableManager {
         // CREATE TABLE likes (id INT, user_id VARCHAR(16), FOREIGN KEY (id) 
         // REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES user(user_id), 
         // PRIMARY KEY(id, user_id))
-        mCreateTable = mConnection.prepareStatement("CREATE TABLE dislikes (id INT, user_id VARCHAR(64), FOREIGN KEY (id) "+
-        "REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES users(user_id),"+
-        "PRIMARY KEY(id, user_id))");
-        mDropTable = mConnection.prepareStatement("DROP TABLE dislikes");
+        // mCreateTable = mConnection.prepareStatement("CREATE TABLE dislikes (id INT, user_id VARCHAR(64), FOREIGN KEY (id) "+
+        // "REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES users(user_id),"+
+        // "PRIMARY KEY(id, user_id))");
+        // mDropTable = mConnection.prepareStatement("DROP TABLE dislikes");
 
         mGetDislike = mConnection.prepareStatement("SELECT count(*) from dislikes WHERE id=?");
         mInsertDislike = mConnection.prepareStatement("INSERT INTO dislikes VALUES (?, ?)");
@@ -58,21 +62,21 @@ public class DislikeTableManager {
         mCheckDislike = mConnection.prepareStatement("SELECT FROM dislikes WHERE id = ? AND user_id = ?");
     }
 
-    public void createTable(){
-        try {
-            mCreateTable.execute();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    } public void dropTable(){
-        try {
-            mDropTable.executeQuery();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+    // public void createTable(){
+    //     try {
+    //         mCreateTable.execute();
+    //     } catch (SQLException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
+    // } public void dropTable(){
+    //     try {
+    //         mDropTable.executeQuery();
+    //     } catch (SQLException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
+    // }
 
 
 
@@ -154,10 +158,10 @@ public class DislikeTableManager {
     }
 
     /**
-     * 
+     * Check if a certain user has already disliked a certain idea
      * @param id 
      * @param user_id
-     * @return
+     * @return A boolean value. true indicates the user has disliked the idea
      */
     public boolean checkDislikeIdea(int id, String user_id){
         try {

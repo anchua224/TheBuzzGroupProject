@@ -153,10 +153,10 @@ public class DatabaseRoutes {
             if(!mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKey)){
                 newId = mDatabase.mLikeTableManager.likeIdea(idx, sessionKey);
             }else {
-                return gson.toJson(new StructuredResponse("error", "this user already liked", null));
+                newId = mDatabase.mLikeTableManager.cancelLikeIdea(idx, sessionKey);
             }
             if (newId == -1) {
-                return gson.toJson(new StructuredResponse("error", "error performing insertion", null));
+                return gson.toJson(new StructuredResponse("error", "error performing like", null));
             } else {
                 return gson.toJson(new StructuredResponse("ok", "" + newId, null));
             }
@@ -217,10 +217,10 @@ public class DatabaseRoutes {
             if(!mDatabase.mDislikeTableManager.checkDislikeIdea(idx, sessionKey)){
                 newId = mDatabase.mDislikeTableManager.dislikeIdea(idx, sessionKey);
             }else {
-                return gson.toJson(new StructuredResponse("error", "this user already disliked", null));
+                newId = mDatabase.mDislikeTableManager.cancelDislikeIdea(idx, sessionKey);
             }
             if (newId == -1) {
-                return gson.toJson(new StructuredResponse("error", "error performing insertion", null));
+                return gson.toJson(new StructuredResponse("error", "error performing dislike", null));
             } else {
                 return gson.toJson(new StructuredResponse("ok", "" + newId, null));
             }
@@ -272,8 +272,8 @@ public class DatabaseRoutes {
             if(result.get(1).contains("lehigh.edu")){
                 //System.out.println("user is from lehigh");
                 String sessionKey = result.get(7);
-                // mDatabase.mUsersTableManager.insertOneUser(result.get(0),result.get(1),
-                // result.get(2),null, null, null);
+                mDatabase.mUsersTableManager.insertOneUser(sessionKey,result.get(1),
+                result.get(2),"NO GI YET", "NO SO YET", "NO NOTE YET");
                 //System.out.println("after sql");
                 return gson.toJson(sessionKey);
             }else{
@@ -310,7 +310,7 @@ public class DatabaseRoutes {
             }
         });
         Spark.get("/ideas/:id/comment/:comid",(request, response) -> {
-            int idx = Integer.parseInt(request.params("id"));
+            //int idx = Integer.parseInt(request.params("id"));
             int cmidx = Integer.parseInt(request.params("comid"));
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
@@ -350,7 +350,7 @@ public class DatabaseRoutes {
             response.status(200);
             response.type("application/json");
             
-            System.out.println("hello"+req.mGI);
+            //System.out.println("hello"+req.mGI);
             int result = mDatabase.mUsersTableManager.updateProfile(useridx, req.mName,req.mGI,req.mSO,req.mNote);
             if(result != 0){
                 return gson.toJson(new StructuredResponse("ok", null, null));

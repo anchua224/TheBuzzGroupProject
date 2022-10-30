@@ -5,24 +5,46 @@ import java.sql.*;
 
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 
+/**
+ * CommentsTableManager are all function interact with the comments table
+ * @author Na Chen
+ * @version 1.0.0
+ * @since 2022-10-28
+ */
 public class CommentsTableManager {
+    /**
+     * A prepared statement for selecting all row from database
+     */
     private static PreparedStatement mSelectAll;
-
+    /**
+     * A prepared statement for selecting one row from database
+     */
     private static PreparedStatement mSelectOne;
-
+    /**
+     * A prepared statement for updating a row in the database
+     */
     private static PreparedStatement mUpdateOne;
-
+    /**
+     * A prepared statement for inserting a row to the database
+     */
     private static PreparedStatement mInsertOne;
-
+    /**
+     * A prepared statement for selecting all row related to one idea_id in database
+     */
     private static PreparedStatement mSelectAllUnderOneIDea;
 
-    private static PreparedStatement mCreateTable;
+    //private static PreparedStatement mCreateTable;
+    //private static PreparedStatement mDropTable;
 
-    private static PreparedStatement mDropTable;
-
+    /**
+     * This constructer set up all the sql query for the comments table use the
+     * mConnection
+     * @param mConnection the connection to the database
+     * @throws SQLException when things goes worng in sql
+     */
     public CommentsTableManager(Connection mConnection) throws SQLException{
-        mCreateTable = mConnection.prepareStatement("CREATE TABLE comments (id INT, user_id VARCHAR(64), com_id SERIAL PRIMARY KEY, content VARCHAR(300), FOREIGN KEY (user_id) REFERENCES users(user_id), FOREIGN KEY (id) REFERENCES ideas(id))");
-        mDropTable = mConnection.prepareStatement("DROP TABLE comments");
+        //mCreateTable = mConnection.prepareStatement("CREATE TABLE comments (id INT, user_id VARCHAR(64), com_id SERIAL PRIMARY KEY, content VARCHAR(300), FOREIGN KEY (user_id) REFERENCES users(user_id), FOREIGN KEY (id) REFERENCES ideas(id))");
+        //mDropTable = mConnection.prepareStatement("DROP TABLE comments");
 
         mSelectAll = mConnection.prepareStatement("SELECT * FROM comments ORDER BY com_id DESC");
         mSelectOne = mConnection.prepareStatement("SELECT * FROM comments where com_id=?");
@@ -32,24 +54,29 @@ public class CommentsTableManager {
     }
 
 
-    public void createTable(){
-        try {
-            mCreateTable.executeQuery();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+    // public void createTable(){
+    //     try {
+    //         mCreateTable.executeQuery();
+    //     } catch (SQLException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
+    // }
 
-    public void dropTable(){
-        try {
-            mDropTable.executeQuery();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+    // public void dropTable(){
+    //     try {
+    //         mDropTable.executeQuery();
+    //     } catch (SQLException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
+    // }
 
+    /**
+     * get all the comments in the comments table
+     * 
+     * @return An arraylist contains objects of all comments in table
+     */
     public ArrayList<Comment> selectAllComments(){
         ArrayList<Comment> res = new ArrayList<>();
         try {
@@ -69,6 +96,13 @@ public class CommentsTableManager {
         }
     } 
 
+    /**
+     * get a specific comment
+     * 
+     * @param com_id The comment id of the row to get one comment
+     * 
+     * @return The comment object of the selected comment
+     */
     public Comment selectOneComment(int com_id){
         Comment res = null;
         try {
@@ -86,7 +120,14 @@ public class CommentsTableManager {
         }
         return res;
     }
-
+    /**
+     * update a specific comment
+     * 
+     * @param com_id The comment id of the row need to be updated
+     * @param content the new content of the comment
+     * 
+     * @return The number of like count of the row. -1 indicates an error.
+     */
     public int updateOneComment(int com_id, String content){
         int res = -1;
         try {
@@ -98,7 +139,15 @@ public class CommentsTableManager {
         }
         return res;
     }
-
+    /**
+     * insert a new comment to table
+     * 
+     * @param id The id of the related idea
+     * @param user_id the user id of the related user
+     * @param content the content of the comment
+     * 
+     * @return The number of rows inserted to the comment table.
+     */
     public int insertOneComment(int id, String user_id, String content){
         int res = 0;
         try {
@@ -111,7 +160,13 @@ public class CommentsTableManager {
         }
         return res;
     }
-
+    /**
+     * select all the comments under a certain idea
+     * 
+     * @param id The id of the idea
+     * 
+     * @return An arraylist contains all the comments object under one idea
+     */
     public ArrayList<Comment> selectAllComUnderOneIdea(int id){
         ArrayList<Comment> res = new ArrayList<>();
         try{
