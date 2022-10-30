@@ -3,11 +3,6 @@ import axios from 'axios';
 import Idea from './Idea';
 
 
-// type Idea = {
-//     id: number;
-//     username: string;
-//     description: string;
-// };
 
 export default function Ideas() {
 
@@ -16,7 +11,6 @@ export default function Ideas() {
     const getPosts = async () => {
         axios.get('https://cse216-fl22-team14.herokuapp.com/ideas')
             .then(response =>{
-                console.log(response.data.mData)
                 setIdeas(response.data.mData)
             })
             .catch(error => {
@@ -26,7 +20,7 @@ export default function Ideas() {
     
     useEffect(() => {
         getPosts();
-    }, [])
+    }, [Ideas])
 
     return (
     <div>

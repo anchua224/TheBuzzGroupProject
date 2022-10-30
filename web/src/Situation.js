@@ -16,6 +16,11 @@ export const getLogin = (key) =>{
     return loginCheck;
 }
 
+export const logout = (key) =>{
+  sessionKey = null;
+  loginCheck = false;
+}
+
 export default function Situation() {
   return (
     <div>Situation</div>

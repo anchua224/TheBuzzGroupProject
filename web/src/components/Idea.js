@@ -9,12 +9,9 @@ export default function Idea(props) {
     const [dislike, setDislike] = useState();
 
     const getLike = async () => {
-        axios.get(`https://cse216-fl22-team14.herokuapp.com/likes/${props.id}`)
+        axios.get(`https://cse216-fl22-team14.herokuapp.com/ideas/${props.id}/like`)
             .then(response =>{
-                console.log(response);
-                console.log(response.data.mData);
                 setLike(response.data.mData);
-                console.log(like)
             })
             .catch(error => {
                 console.log(error);
@@ -22,9 +19,8 @@ export default function Idea(props) {
     };
 
     const getDislike = async () => {
-        axios.get(`https://cse216-fl22-team14.herokuapp.com/dislikes/${props.id}`)
+        axios.get(`https://cse216-fl22-team14.herokuapp.com/ideas/${props.id}/dislike`)
             .then(response =>{
-                console.log(response);
                 setDislike(response.data.mData);
             })
             .catch(error => {
@@ -34,36 +30,37 @@ export default function Idea(props) {
 
     const handleLike = async(e) =>{
 
-
-        axios.post(`https://cse216-fl22-team14.herokuapp.com/likes/${props.id}?sessionKey=${getSessionKey()}`)
+        axios.post(`https://cse216-fl22-team14.herokuapp.com/ideas/${props.id}/like?sessionKey=${getSessionKey()}`)
             .catch(error => {
                 console.log(error.massage)
             });
 
         getLike();
+        getDislike();
     }
 
     const handleDisike = async(e) =>{
 
 
-        axios.post(`https://cse216-fl22-team14.herokuapp.com/dislikes/${props.id}?sessionKey=${getSessionKey()}`)
+        axios.post(`https://cse216-fl22-team14.herokuapp.com/ideas/${props.id}/dislike?sessionKey=${getSessionKey()}`)
             .catch(error => {
                 console.log(error.massage)
             });
-
+            
+        getLike();
         getDislike();
     }
 
     useEffect(()=>{
         getLike();
         getDislike();
-    },[]);
+    },[like,dislike]);
 
     return (
         <div className='idea' key={props.id}>
             <h3>{props.title}</h3>
             <h5>{props.massage}</h5>
-            <p>{props.createDate}</p>
+            {/* <p>{props.createDate}</p> */}
             <button id={props.id}  onClick={(e) => handleLike(e)}>
                 Like: {like}
             </button>
@@ -71,7 +68,7 @@ export default function Idea(props) {
                 DisLike: {dislike}
             </button>
             <Comments 
-                id={props.id}
+                idea_id={props.id}
             />
         </div>
     )

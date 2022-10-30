@@ -1,7 +1,9 @@
 import React,{useEffect, useState} from 'react';
 import jwt_decode from "jwt-decode";
 import axios from 'axios';
-import Situation, { getLogin, setSessionKey } from '../Situation';
+import Situation, { getLogin, setSessionKey,logout } from '../Situation';
+import Ideas from './Ideas';
+import Header from './Header';
 
 
 const Login = () => {
@@ -29,6 +31,7 @@ const Login = () => {
 
     function handleSignOut(event){
         setUser({});
+        logout();
         document.getElementById("signInDiv").hidden = false;
     }
 
@@ -51,13 +54,10 @@ const Login = () => {
         <div className='login'>
             <div id='signInDiv'></div>
             {   Object.keys(user).length !== 0 && 
-                <button onClick={ (e) => handleSignOut} >Sign out</button>
-            }
-            {   Object.keys(user).length !== 0 &&
-                <div className='userInfor'>
-                    {/* <img src={user.picture} alt="user image"></img>
-                    <h3>{user.name}</h3>
-                    <h3>{user.email}</h3> */}
+                <div>
+                    <button onClick={ (e) => handleSignOut} >Sign out</button>
+                    <Header />
+                    <Ideas />
                 </div>
             }
         </div>
