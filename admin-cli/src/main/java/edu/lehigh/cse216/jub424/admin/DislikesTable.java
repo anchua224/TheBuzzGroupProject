@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 
-class LikesTable{
+class DislikesTable{
     /**
      * A prepared statement for deleting a row from the database
      */
@@ -18,25 +18,25 @@ class LikesTable{
     /**
      * A prepared statement for inserting into the database
      */
-    private static PreparedStatement mInsertLike;
+    private static PreparedStatement mInsertDislike;
 
     /**
-     * A prepared statement for getting the like count
+     * A prepared statement for get dislike count
      */
-    private static PreparedStatement mGetLike;
+    private static PreparedStatement mGetDislike;
 
     /**
-     * A prepared statement for deleting all likes relative to an idea
+     * A prepared statement for delete all dislike relative to an idea
      */
     private static PreparedStatement mDeleteIdea;
 
     /**
-     * create the LIKES table
+     * create the DISLIKES table
      */
     private static PreparedStatement mCreateTable;
      
     /**
-     * drop the LIKES table
+     * drop the DISLIKES table
      */
     private static PreparedStatement mDropTable;
 
@@ -45,19 +45,19 @@ class LikesTable{
      * for prepared statement
      * @param take in the connection object
      */
-    public LikesTable(Connection mConnection) throws SQLException {
-        mCreateTable = mConnection.prepareStatement("CREATE TABLE likes (id INT, user_id VARCHAR(64), " + 
-        "FOREIGN KEY (id) REFERENCES ideas(id),  FOREIGN KEY (user_id) REFERENCES USERS(user_id), " + 
+    public DislikesTable(Connection mConnection) throws SQLException {
+        mCreateTable = mConnection.prepareStatement("CREATE TABLE Dislikes (id INT, user_id VARCHAR(64), " + 
+        "FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES USERS(user_id), " + 
         "PRIMARY KEY(id, user_id)");
-        mDropTable =mConnection.prepareStatement("DROP TABLE LIKES");
-        mGetLike = mConnection.prepareStatement("SELECT count(*) from likes WHERE id=?");
-        mInsertLike = mConnection.prepareStatement("INSERT INTO likes VALUES (?, ?)");
-        mDeleteIdea = mConnection.prepareStatement("DELETE FROM likes WHERE id = ?");
-        mDeleteOne = mConnection.prepareStatement("DELETE FROM likes WHERE id = ? AND " +
-        "user_id = ?)");
+        mDropTable =mConnection.prepareStatement("DROP TABLE DISLIKES");
+        mGetDislike = mConnection.prepareStatement("SELECT count(*) from dislikes WHERE id=?");
+        mInsertDislike = mConnection.prepareStatement("INSERT INTO dislikes VALUES (?, default)");
+        mDeleteIdea = mConnection.prepareStatement("DELETE FROM dislikes WHERE id = ?");
+        mDeleteOne = mConnection.prepareStatement("DELETE FROM dislikes WHERE dislike_id IN " + 
+        "(SELECT dislike_id FROM dislikes WHERE id = ? LIMIT 1)");
     }
     /**
-    * Create the LIKES table
+    * Create the DISLIKES table
     */
     void createTable() {
         try {
@@ -67,7 +67,7 @@ class LikesTable{
         }
     }
     /**
-    * Drop the LIKES table
+    * Drop the DISLIKES table
     */
     void dropTable() {
         try {
@@ -77,30 +77,30 @@ class LikesTable{
         }
     }
     /**
-     * insert the likecount for a row in the database let it + 1
+     * insert the dislikecount for a row in the database let it + 1
      * 
      * @param id The id of the row to update
      *
      * @return The number of rows that were inserted
      */
-    public int likeIdea(int id) {
+    public int DislikeIdea(int id) {
         int count = 0;
         try {
-            mInsertLike.setInt(1, id);
-            count += mInsertLike.executeUpdate();
+            mInsertDislike.setInt(1, id);
+            count += mInsertDislike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return count;
     }
     /**
-     * Update the likecount for a row in the database let it - 1
+     * Update the dislikecount for a row in the database let it - 1
      * 
      * @param id The id of the row to update
      *
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int cancelLikeIdea(int id) {
+    public int cancelDislikeIdea(int id) {
         int res = -1;
         try {
             mDeleteOne.setInt(1, id);
@@ -111,13 +111,13 @@ class LikesTable{
         return res;
     }
     /**
-     * delete all likes relative to an idea
+     * delete all dislikes relative to an idea
      * 
      * @param id The id of the row to update
      *
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int deleteLikeIdea(int id) {
+    public int deleteDislikeIdea(int id) {
         int res = -1;
         try {
             mDeleteIdea.setInt(1, id);
@@ -128,17 +128,17 @@ class LikesTable{
         return res;
     }
     /**
-     * get the likecount of an idea of a specific id
+     * get the dislikecount of an ideas of specific id
      * 
      * @param id The id of the row to get like count
      * 
      * @return The number of like count of the row. -1 indicates an error.
      */
-    public int getLikeCount(int id) {
+    public int getDislikeCount(int id) {
         int res = -1;
         try {
-            mGetLike.setInt(1, id);
-            ResultSet rs = mGetLike.executeQuery();
+            mGetDislike.setInt(1, id);
+            ResultSet rs = mGetDislike.executeQuery();
             if (rs.next()) {
                 res = rs.getInt("count");
             }

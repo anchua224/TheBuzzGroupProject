@@ -10,11 +10,6 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 
-/**
- * Database All functions related to database connection and disconnection
- * @author Na Chen
- * @version 1.0.0
- */
 public class Database {
     /**
      * The connection to the database.  When there is no connection, it should
@@ -22,16 +17,15 @@ public class Database {
      */
     public Connection mConnection;
 
-    /**
-     * create an object of mIdeaTable 
-     */
     public IdeaTable mIdeaTable;
     
-    /**
-     * create an object of mLikesTable 
-     */
     public LikesTable mLikesTable;
  
+    public DislikesTable mDislikesTable;
+
+    public CommentsTable mCommentsTable;
+
+    public UserTable mUserTable;
     /**
      * The Database constructor is private: we only create Database objects 
      * through the getDatabase() method.
@@ -78,14 +72,14 @@ public class Database {
             System.out.println("URI Syntax Error");
             return null;
         }
-    
-
         // Attempt to create all of our prepared statements.  If any of these 
         // fail, the whole getDatabase() call should fail
         try {
-
             db.mIdeaTable = new IdeaTable(db.mConnection);
             db.mLikesTable = new LikesTable(db.mConnection);
+            db.mDislikesTable = new DislikesTable(db.mConnection);
+            db.mCommentsTable = new CommentsTable(db.mConnection);
+            db.mUserTable = new UserTable(db.mConnection);
         } catch (SQLException e) {
             System.err.println("Error creating prepared statement");
             e.printStackTrace();
@@ -94,9 +88,6 @@ public class Database {
         }
         return db;
     }
-
-
-
     /**
      * Close the current connection to the database, if one exists.
      * 

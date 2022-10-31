@@ -1,5 +1,4 @@
 package edu.lehigh.cse216.jub424.admin;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -10,12 +9,7 @@ import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 
-/**
- * IdeaTable All functions related to interact with idea table
- * @author Na Chen
- * @version 1.0.0
- */
- public class IdeaTable{
+class CommentsTable{
     private static PreparedStatement mCreateTable;
 
     private static PreparedStatement mDropTable;
@@ -44,69 +38,46 @@ import java.util.ArrayList;
      */
     private static PreparedStatement mUpdateOne;
 
-    public IdeaTable(Connection mConnection) throws SQLException {
-        // CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,
-        // message VARCHAR(500) NOT NULL,likecount INT NOT NULL, dislikecount INT not
-        // NULL)
-
-
-        mCreateTable = mConnection.prepareStatement(
-            "CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,"+
-            "message VARCHAR(500) NOT NULL, valid INT, user_id VARCHAR(64), " + 
-            "FOREIGN KEY (user_id) REFERENCES USER(user_id))"
-        );        
-        mDropTable = mConnection.prepareStatement("DROP TABLE IDEAS");     
-        mSelectAll = mConnection.prepareStatement("SELECT * FROM ideas ORDER BY id DESC");
-        mSelectOne = mConnection.prepareStatement("SELECT * from ideas WHERE id=?");
-        mDeleteOne = mConnection.prepareStatement("DELETE FROM ideas WHERE id = ?");
-        mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?)");
-        mUpdateOne = mConnection.prepareStatement("UPDATE ideas SET subject = ?, message = ? WHERE id = ?");
+    public CommentsTable(Connection mConnection) throws SQLException {
+        mCreateTable = mConnection.prepareStatement("CREATE TABLE comments (id INT, user_id VARCHAR(64), " + 
+        "com_id SERIAL PRIMARY KEY, FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERNCES USERS(user_id), " + 
+        "content VARCHAR(300))");        
+        mDropTable = mConnection.prepareStatement("DROP TABLE COMMENTS");     
+        mSelectAll = mConnection.prepareStatement("SELECT * FROM comments ORDER BY com_id DESC");
+        mSelectOne = mConnection.prepareStatement("SELECT FROM comments WHERE com_id = ?");
+        mDeleteOne = mConnection.prepareStatement("DELETE FROM comments WHERE com_id = ?");
+        mInsertOne = mConnection.prepareStatement("INSERT INTO comments VALUES (default, default, default, ?)");
+        mUpdateOne = mConnection.prepareStatement("UPDATE comments SET content = ? WHERE com_id = ?");
     }
 
-    //inner class Idea, holds information of one row in the idea table
-    class Idea{
+    //inner class Comments, holds information of one row in the Comments table
+    class Comments{
         /**
-        * id, which is the primary key of idea
+        * id, which is the primary key of Comments
         */
         public int id;
 
         /**
-        * The title for this idea
+        * content in the Comments which is a string
         */
-        public String title;
+        public String content;
 
-        /**
-        * massage in the idea which is a string
-        */
-        public String massage;
-
-        /**
-         * 
-         * idea validility
-         */
-        //public int valid;
-        /**
-        * Create a new Idea with the provided id, title and massage. And a
+         /**
+        * Create a new Comment with the provided id, and content. And a
         * creation date based on the system clock at the time the constructor was
         * called. 
         * 
-        * @param id id to the idea, which is unique for the whole time
+        * @param id id to the Comments, which is unique for the whole time
         * 
-        * @title The title of this idea
-        * 
-        * @param massage massage of the idea
+        * @param content content of the Comments
         */
-        public Idea(int id, String title, String massage){
+        public Comments(int id, String content){
             this.id = id;
-            this.title = title;
-            this.massage = massage;
+            this.content = content;
         }
-
     }
-
-    
     /**
-    * Create the IDEAS table
+    * Create the CommentsS table
     */
     void createTable() {
         try {
@@ -116,7 +87,7 @@ import java.util.ArrayList;
         }
     }
     /**
-    * Drop the IDEAS table
+    * Drop the CommentsS table
     */
     void dropTable() {
         try {
@@ -125,22 +96,19 @@ import java.util.ArrayList;
             e.printStackTrace();
         }
     }
-
-
     /**
     * Query the database for a list of all subjects and their IDs
     * 
     * @return All rows, as an ArrayList
     */
-    public ArrayList<Idea> selectAllIdeas() {
-            ArrayList<Idea> res = new ArrayList<Idea>();
+    public ArrayList<Comments> selectAllComments() {
+            ArrayList<Comments> res = new ArrayList<Comments>();
             try {
                 ResultSet rs = mSelectAll.executeQuery();
                 while (rs.next()) {
-                    res.add(new Idea(
+                    res.add(new Comments(
                         rs.getInt("id"),
-                        rs.getString("subject"),
-                        rs.getString("message")
+                        rs.getString("content")
                         ));
                 }
                 rs.close();
@@ -151,22 +119,21 @@ import java.util.ArrayList;
             }    
     }    
     /**
-     * Get all idea for a specific row, by ID
+     * Get all Comments for a specific row, by ID
      * 
      * @param id The id of the row being requested
      * 
-     * @return The idea for the requested row, or null if the ID was invalid
+     * @return The Comments for the requested row, or null if the ID was invalid
      */
-    public Idea selectOneIdea(int id) {
-        Idea res = null;
+    public Comments selectOneComments(int id) {
+        Comments res = null;
         try {
             mSelectOne.setInt(1, id);
             ResultSet rs = mSelectOne.executeQuery();
             if (rs.next()) {
-                res = new Idea(
+                res = new Comments(
                         rs.getInt("id"),
-                        rs.getString("subject"),
-                        rs.getString("message")
+                        rs.getString("content")
                         );
             }
         } catch (SQLException e) {
@@ -181,7 +148,7 @@ import java.util.ArrayList;
      * 
      * @return The number of rows that were deleted. -1 indicates an error.
      */
-    public int deleteIdea(int id) {
+    public int deleteComments(int id) {
         int res = -1;
         try {
             mDeleteOne.setInt(1, id);
@@ -199,11 +166,10 @@ import java.util.ArrayList;
      * 
      * @return The number of rows that were inserted
      */
-    public int insertIdea(String subject, String message) {
+    public int insertComments(String content) {
         int count = 0;
         try {
-            mInsertOne.setString(1, subject);
-            mInsertOne.setString(2, message);
+            mInsertOne.setString(1, content);
             count += mInsertOne.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -214,16 +180,15 @@ import java.util.ArrayList;
      * Update the subject and message for a row in the database
      * 
      * @param id      The id of the row to update
-     * @param subject The new title of the idea
+     * 
      * @param message The new message contents
      * 
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int updateIdea(int id, String subject, String message) {
+    public int updateComments(int id, String content) {
         int res = -1;
         try {
-            mUpdateOne.setString(1, subject);
-            mUpdateOne.setString(2, message);
+            mUpdateOne.setString(1, content);
             mUpdateOne.setInt(3, id);
             res = mUpdateOne.executeUpdate();
         } catch (SQLException e) {
