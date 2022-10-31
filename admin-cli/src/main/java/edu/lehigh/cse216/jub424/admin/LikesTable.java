@@ -1,5 +1,4 @@
 package edu.lehigh.cse216.jub424.admin;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -10,13 +9,7 @@ import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 
-
-/**
- * LikesTable All funtions and SQL statements needed to interact with the likes table
- * @author Na Chen
- * @version 1.0.0
- */
-public class LikesTable{
+class LikesTable{
     /**
      * A prepared statement for deleting a row from the database
      */
@@ -28,12 +21,12 @@ public class LikesTable{
     private static PreparedStatement mInsertLike;
 
     /**
-     * A prepared statement for get like count
+     * A prepared statement for getting the like count
      */
     private static PreparedStatement mGetLike;
 
     /**
-     * A prepared statement for delete all like relative to an idea
+     * A prepared statement for deleting all likes relative to an idea
      */
     private static PreparedStatement mDeleteIdea;
 
@@ -50,22 +43,18 @@ public class LikesTable{
 
     /**
      * for prepared statement
-     * @param mConnection take in the connection object
+     * @param take in the connection object
      */
     public LikesTable(Connection mConnection) throws SQLException {
-        
-        mCreateTable = mConnection.prepareStatement(
-            "CREATE TABLE likes (like_id SERIAL PRIMARY KEY, id INT, FOREIGN KEY (id) REFERENCES ideas(id))");
+        mCreateTable = mConnection.prepareStatement("CREATE TABLE likes (id INT, user_id VARCHAR(64), " + 
+        "FOREIGN KEY (id) REFERENCES ideas(id),  FOREIGN KEY (user_id) REFERENCES USERS(user_id), " + 
+        "PRIMARY KEY(id, user_id)");
         mDropTable =mConnection.prepareStatement("DROP TABLE LIKES");
-        
         mGetLike = mConnection.prepareStatement("SELECT count(*) from likes WHERE id=?");
-        mInsertLike = mConnection.prepareStatement("INSERT INTO likes VALUES (default, ?)");
+        mInsertLike = mConnection.prepareStatement("INSERT INTO likes VALUES (?, ?)");
         mDeleteIdea = mConnection.prepareStatement("DELETE FROM likes WHERE id = ?");
-        mDeleteOne = mConnection.prepareStatement(
-                "DELETE FROM likes WHERE like_id IN (SELECT like_id FROM likes WHERE id = ? LIMIT 1)");
+        mDeleteOne = mConnection.prepareStatement("DELETE FROM likes WHERE id = ? AND user_id = ?)");
     }
-
-
     /**
     * Create the LIKES table
     */
@@ -76,7 +65,6 @@ public class LikesTable{
             e.printStackTrace();
         }
     }
-
     /**
     * Drop the LIKES table
     */
@@ -87,7 +75,6 @@ public class LikesTable{
             e.printStackTrace();
         }
     }
-
     /**
      * insert the likecount for a row in the database let it + 1
      * 
@@ -105,7 +92,6 @@ public class LikesTable{
         }
         return count;
     }
-
     /**
      * Update the likecount for a row in the database let it - 1
      * 
@@ -123,9 +109,8 @@ public class LikesTable{
         }
         return res;
     }
-
     /**
-     * delete all like relative to an idea
+     * delete all likes relative to an idea
      * 
      * @param id The id of the row to update
      *
@@ -141,9 +126,8 @@ public class LikesTable{
         }
         return res;
     }
-
     /**
-     * get the likecount of an ideas of specific id
+     * get the likecount of an idea of a specific id
      * 
      * @param id The id of the row to get like count
      * 
@@ -162,5 +146,4 @@ public class LikesTable{
         }
         return res;
     }
-
 }
