@@ -10,31 +10,31 @@ import java.util.Date;
  * interact with the fields directly.
  */
 public class User {
-    /*
+    /**
      * id of the user
      */
     public String user_id;
-    /*
+    /**
      * email of the user
      */
     public String email;
-    /*
+    /**
      * name of the user
      */
     public String name;
-    /*
+    /**
      * GI of the user
      */
     public String GI;
-    /*
+    /**
      * SO of the user
      */
     public String SO;
-    /*
+    /**
      * note of the user
      */
     public String note;
-    /*
+    /**
      * the creation time, should not be changed
      */
     public final Date createdDate;

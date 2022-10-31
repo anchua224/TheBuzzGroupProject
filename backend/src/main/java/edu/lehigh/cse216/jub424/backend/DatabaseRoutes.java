@@ -23,7 +23,7 @@ public class DatabaseRoutes {
     /**
      * set up all the routes for the ideas table
      * /ideas get, post
-     * /ideas/:id get, put, delete
+     * /ideas/:id get
      * @param mDatabase connection of the database
      */
     public static void ideasRoutes(Database mDatabase) {
@@ -125,7 +125,7 @@ public class DatabaseRoutes {
 
     /**
      * set up all the routes for the likes table
-     * /likes/:id get, post, delete
+     * /ideas/:id/likes?sessionKey get, post, delete
      * @param mDatabase connection of the database
      */
     public static void likesRoutes(Database mDatabase) {
@@ -198,6 +198,11 @@ public class DatabaseRoutes {
         });
     }
 
+    /**
+     * set up all the routes for the dislikes table
+     * /ideas/:id/dislikes?sessionKey get, post, delete
+     * @param mDatabase connection of the database
+     */
     public static void dislikesRoutes(Database mDatabase){
         final Gson gson = new Gson();
         Spark.post("/ideas/:id/dislike", (request, response) -> {
@@ -262,6 +267,11 @@ public class DatabaseRoutes {
         });
     }
 
+    /**
+     * set up all the routes for the OAuth login
+     * /login post
+     * @param mDatabase connection of the database
+     */
     public static void loginRoutes(Database mDatabase){
         final Gson gson = new Gson();
         Spark.post("/login",(request, response) -> {
@@ -284,6 +294,12 @@ public class DatabaseRoutes {
         });
     }
 
+    /**
+     * set up all the routes for the comments table
+     * /ideas/:id/comment,  get, post
+     * /ideas/:id/comment/:comid get, put
+     * @param mDatabase connection of the database
+     */
     public static void commentsRoutes(Database mDatabase){
         final Gson gson = new Gson();
         Spark.get("/ideas/:id/comment", (request, response) -> {
@@ -333,6 +349,11 @@ public class DatabaseRoutes {
             }
         });    
     }
+    /**
+     * set up all the routes for the users table
+     * /profile/:userid,  get, put
+     * @param mDatabase connection of the database
+     */
     public static void userRoutes(Database mDatabase){
         final Gson gson = new Gson();
         Spark.get("/profile/:userid", (request, response) ->{

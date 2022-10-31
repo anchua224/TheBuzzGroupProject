@@ -29,11 +29,20 @@ public class Database {
      */
     public LikeTableManager mLikeTableManager;
 
+    /**
+     * mDislikeTableManager deal with the dislikes table 
+     */
     public DislikeTableManager mDislikeTableManager;
 
 
+    /**
+     * mCommentsTableManager deal with the comments table 
+     */
     public CommentsTableManager mCommentsTableManager;
 
+    /**
+     * mUsersTableManager deal with the users table 
+     */
     public UsersTableManager mUsersTableManager;
 
     /**

@@ -105,6 +105,7 @@ public class DislikeTableManager {
      * insert the dislikecount for a row in the database let it + 1
      * 
      * @param id The id of the row to update
+     * @param user_id id of the user
      *
      * @return The number of rows that were inserted
      */
@@ -124,6 +125,7 @@ public class DislikeTableManager {
      * Update the dislikecount for a row in the database let it - 1
      * 
      * @param id The id of the row to update
+     * @param user_id id of the user
      *
      * @return The number of rows that were updated. -1 indicates an error.
      */
@@ -159,8 +161,8 @@ public class DislikeTableManager {
 
     /**
      * Check if a certain user has already disliked a certain idea
-     * @param id 
-     * @param user_id
+     * @param id idea id
+     * @param user_id user id
      * @return A boolean value. true indicates the user has disliked the idea
      */
     public boolean checkDislikeIdea(int id, String user_id){

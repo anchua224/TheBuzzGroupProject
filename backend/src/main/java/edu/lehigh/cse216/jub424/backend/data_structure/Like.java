@@ -38,7 +38,7 @@ public class Like {
      * creation date based on the system clock at the time the constructor was
      * called.
      * 
-     * @param user_id id to the like, which is unique for the whole time
+     * @param user_id id of the user
      * 
      * @param idea_id id of the idea
      */

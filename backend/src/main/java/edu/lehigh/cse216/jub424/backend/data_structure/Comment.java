@@ -9,23 +9,23 @@ import java.util.Date;
  * interact with the fields directly.
  */
 public class Comment {
-    /*
+    /**
      * a FK indicate the idea
      */
     public int idea_id;
-    /*
+    /**
      * a FK indicate the user
      */
     public String user_id;
-    /*
+    /**
      * the PK of the comment table, 
      */
     public int com_id;
-    /*
+    /**
      * the content of each comment
      */
     public String content;
-    /*
+    /**
      * the creation time, cannot be changed 
      */
     public final Date createdDate;

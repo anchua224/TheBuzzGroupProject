@@ -14,14 +14,39 @@ import edu.lehigh.cse216.jub424.backend.data_structure.*;
  */
 public class UsersTableManager {
     
-    private static PreparedStatement mInsertUser;
+    /**
+     * A prepared statement for inserting a row from the database
+     */
+    private static PreparedStatement mInsertUser;   
+    /**
+    * A prepared statement for deleting a row from the database
+    */
     private static PreparedStatement mDeleteUser;
+    /**
+     * A prepared statement for updating a row from the database
+     */
     private static PreparedStatement mUpdateNote;
+    /**
+     * A prepared statement for selecting a row from the database
+     */    
     private static PreparedStatement mSelectOneUser;
     //private static PreparedStatement mSelectPartOfUser;
+       
+    /**
+     * A prepared statement for selecting all the rows in database
+     */
     private static PreparedStatement mSelectAll;
+       
+    /**
+     * A prepared statement for finding a user in database
+     */
     private static PreparedStatement mFindUser;
 
+    /**
+     * UsersTableManager manage all the SQL queries related to user table
+     * @param mConnection connection to the databse
+     * @throws SQLException when there is an error related to sql
+     */
     public UsersTableManager(Connection mConnection) throws SQLException{
         mInsertUser = mConnection.prepareStatement("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)");
         mDeleteUser = mConnection.prepareStatement("DELETE FROM users WHERE user_id=?");
@@ -130,8 +155,6 @@ public class UsersTableManager {
     } 
     /**
      * select all the users
-     * 
-     * @param user_id The id of the user
      * 
      * @return An arraylist with all the user objects
      */

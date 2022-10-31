@@ -22,14 +22,17 @@ import java.util.Collections;
  * @since 2022-10-28
  */
 public class OAuthManager {
+    /**
+     * client id from google
+     */
     public static final String CLIENT_ID = "259939040609-4gh5cug157ecmc3igr6qtpqojjl6813g.apps.googleusercontent.com";
 
     /**
      * OAuthHandling takes in a token id string and return user information and sessionKey
-     * @param idTokenString
+     * @param idTokenString idTokenString send from front end
      * @return An arrayList that contains user information from google and sessionKey
-     * @throws GeneralSecurityException
-     * @throws IOException
+     * @throws GeneralSecurityException when there is  security exception 
+     * @throws IOException when there is a IO exception
      */
     public static ArrayList<String> OAuthHandling(String idTokenString) throws GeneralSecurityException, IOException{
         ArrayList<String> userInfo = new ArrayList<>();

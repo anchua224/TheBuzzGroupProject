@@ -153,6 +153,8 @@ public class IdeaTableManager {
      * 
      * @param subject The subject for this new row
      * @param message The message body for this new row
+     * @param validity valid=1, invalid=0
+     * @param userid of the user
      * 
      * @return The number of rows that were inserted
      */

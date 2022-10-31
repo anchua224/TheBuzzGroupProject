@@ -104,6 +104,7 @@ public class LikeTableManager {
      * insert the likecount for a row in the database let it + 1
      * 
      * @param id The id of the row to update
+     * @param user_id id of the user
      *
      * @return The number of rows that were inserted
      */
@@ -123,6 +124,7 @@ public class LikeTableManager {
      * Update the likecount for a row in the database let it - 1
      * 
      * @param id The id of the row to update
+     * @param user_id id of the user
      *
      * @return The number of rows that were updated. -1 indicates an error.
      */
@@ -158,8 +160,8 @@ public class LikeTableManager {
 
     /**
      * check if a user has already liked an idea
-     * @param id 
-     * @param user_id
+     * @param id id of the idea
+     * @param user_id id of the user
      * @return A boolean value. true indicates the user has liked the idea
      */
     public boolean checkLikeIdea(int id, String user_id){
