@@ -8,15 +8,16 @@ export const setSessionKey = (key) =>{
     loginCheck = true;
 }
 
-export const getSessionKey = (key) =>{
+export const getSessionKey = () =>{
     return sessionKey;
 }
 
-export const getLogin = (key) =>{
+
+export const getLogin = () =>{
     return loginCheck;
 }
 
-export const logout = (key) =>{
+export const logout = () =>{
   sessionKey = null;
   loginCheck = false;
 }

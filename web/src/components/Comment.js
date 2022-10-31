@@ -2,14 +2,16 @@ import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { getSessionKey } from '../Situation';
 import EditComment from './EditComment';
+import ProfileSimple from './ProfileSimple';
 
 export default function Comment(props) {
 
     const [IsEditable, setIsEditable] = useState(false);
-    const [CommentNow, setCommentNow] = useState();
     const [User, setUser] = useState();
-    
+    const [content, setContent] = useState();
     const [isOpen, setIsOpen] = useState(false);
+  
+    const [profileIsOpen, setProfileIsOpen] = useState(false);
 
     const editComment = async () => {
         axios.get(`https://cse216-fl22-team14.herokuapp.com/ideas/${props.idea_id}/comment/${props.com_id}?sessionKey=${getSessionKey()}`,{
@@ -26,8 +28,7 @@ export default function Comment(props) {
     const getComment = async () => {
         axios.get(`https://cse216-fl22-team14.herokuapp.com/ideas/${props.idea_id}/comment/${props.com_id}`)
             .then(response =>{
-                console.log(response);
-                props.content = response.data.mData.content;
+                setContent(response.data.mData.content);
             })
             .catch(error => {
                 console.log(error);
@@ -38,11 +39,8 @@ export default function Comment(props) {
         axios.get(`https://cse216-fl22-team14.herokuapp.com/profile/${props.user_id}`)
           .then(response =>{
             setUser(response.data.mData.name);
-            console.log(response.data.mData.name);
-            console.log(getSessionKey());
             if(getSessionKey() === response.data.mData.user_id){
                 setIsEditable(true);
-                console.log(IsEditable);
             }
           })
           .catch(error => {
@@ -51,9 +49,9 @@ export default function Comment(props) {
     }
 
     useEffect(() => {
-        // getComment();
+        getComment();
         getUserInfor();
-    }, [CommentNow])
+    }, [isOpen])
 
     
     const handleEdit = async(e) =>{
@@ -63,27 +61,30 @@ export default function Comment(props) {
             .catch(error => {
                 console.log(error.massage)
             });
+        getComment();
     }
 
-    const checkUser = async(e) =>{
-
-    }
 
     return (
         <div className='comment' key={props.com_id}>
             <h5>{
-                <button id={props.com_id}  onClick={(e) => checkUser(e)}>
-                {User}
-                </button>
-            }: {props.content} {IsEditable  &&
+                    <button id={props.com_id}  onClick={() => setProfileIsOpen(true)}>
+                    {User}
+                    </button>
+            }: {content} {IsEditable  &&
                     <button onClick={() => setIsOpen(true)}>Edit</button>
             }</h5>
             <EditComment
                         idea_id={props.idea_id}
                         com_id={props.com_id}
                         open={isOpen}
-                        onClose = {() => setIsOpen(false)}
+                        onClose = {() => {setIsOpen(false);getComment();}}
                         old_content={props.content}
+            />
+            <ProfileSimple 
+                    profileOpen={profileIsOpen}
+                    profileOnClose = {() => setProfileIsOpen(false)}
+                    user_id={props.user_id}
             />
         </div>
     )

@@ -1,17 +1,17 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import Idea from './Idea';
-
-
+import AddIdea from './AddIdea';
 
 export default function Ideas() {
 
-    const [Ideas, setIdeas] = useState([]);
+    const [Ideas, setIdeas] = useState([]);  
+    const [isOpen, setIsOpen] = useState(false);
 
     const getPosts = async () => {
         axios.get('https://cse216-fl22-team14.herokuapp.com/ideas')
             .then(response =>{
-                setIdeas(response.data.mData)
+                setIdeas(response.data.mData);
             })
             .catch(error => {
                 console.log(error)
@@ -20,10 +20,16 @@ export default function Ideas() {
     
     useEffect(() => {
         getPosts();
-    }, [Ideas])
+    }, [isOpen])
+    
 
     return (
     <div>
+        <button id='addIdeaButton' onClick={() => setIsOpen(true)}> AddIdea </button>
+        <AddIdea 
+          open={isOpen}
+          onClose = {() => {setIsOpen(false);getPosts();}}
+        />
         {Ideas.map(idea => {
             return (
                 <div className='ideaList' key={idea.id}>
@@ -32,6 +38,8 @@ export default function Ideas() {
                         title={idea.title}
                         massage={idea.massage}
                         createDate={idea.createdDate}
+                        validity={idea.validity}
+                        user_id={idea.userid}
                     />
                 </div>
             )
@@ -40,3 +48,5 @@ export default function Ideas() {
     )
     
 }
+
+

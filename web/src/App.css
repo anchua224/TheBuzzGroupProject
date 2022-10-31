@@ -4,7 +4,28 @@
     padding: 15px;
     margin: 0 auto;
     margin-top: 10 ;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30em;
+    background-color: beige;
 }
-h5{
-    margin:0 auto;
+.comment{
+    border: 1px solid black;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 0 auto;
+    margin-top: 10 ;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: blanchedalmond;
+}
+#addIdeaButton,#myProfileButton{
+    margin-top: 10 ;
+    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    width: 6em;
+}
+body{
+    background-image: url('background.jpg');
 }

@@ -24,7 +24,7 @@ export default function Comments(props) {
 
   useEffect(() => {
     getComments();
-  }, [Comments])
+  }, [isOpen])
   
   
 
@@ -49,7 +49,7 @@ export default function Comments(props) {
       <AddComment 
           idea_id={props.idea_id}
           open={isOpen}
-          onClose = {() => setIsOpen(false)}
+          onClose = {() => {setIsOpen(false);getComments();}}
       />
     </div>
   )

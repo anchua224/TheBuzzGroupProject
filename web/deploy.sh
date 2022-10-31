@@ -7,7 +7,7 @@ mkdir $TARGETFOLDER
 mkdir $TARGETFOLDER/$WEBFOLDERNAME
 
 # step 2: update our npm dependencies
-npm update
+# npm update
 
 # step 3: build the project
 npm run build
