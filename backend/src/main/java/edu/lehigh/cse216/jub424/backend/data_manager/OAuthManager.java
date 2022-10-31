@@ -15,9 +15,22 @@ import edu.lehigh.cse216.jub424.backend.Hashing.HashFunc;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import java.util.Collections;
 
+/**
+ * OAuthTableManager contains a function that helps process token
+ * @author Na Chen
+ * @version 1.0.0
+ * @since 2022-10-28
+ */
 public class OAuthManager {
     public static final String CLIENT_ID = "259939040609-4gh5cug157ecmc3igr6qtpqojjl6813g.apps.googleusercontent.com";
 
+    /**
+     * OAuthHandling takes in a token id string and return user information and sessionKey
+     * @param idTokenString
+     * @return An arrayList that contains user information from google and sessionKey
+     * @throws GeneralSecurityException
+     * @throws IOException
+     */
     public static ArrayList<String> OAuthHandling(String idTokenString) throws GeneralSecurityException, IOException{
         ArrayList<String> userInfo = new ArrayList<>();
         JsonFactory jsonFactory = new GsonFactory();

@@ -3,10 +3,10 @@ package edu.lehigh.cse216.jub424.backend.data_manager;
 import java.sql.*;
 
 /**
- * LikeTableManager are all function interact with the likes table
- * @author Junchen Bao
+ * LikeTableManager are all function interact with the dislikes table
+ * @author Junchen Bao, Na Chen
  * @version 1.0.0
- * @since 2022-09-16
+ * @since 2022-10-28
  */
 public class DislikeTableManager {
 
@@ -83,9 +83,9 @@ public class DislikeTableManager {
     /**
      * get the likecount of an ideas of specific id
      * 
-     * @param id The id of the row to get like count
+     * @param id The id of the row to get dislike count
      * 
-     * @return The number of like count of the row. -1 indicates an error.
+     * @return The number of dislike count of the row. -1 indicates an error.
      */
     public int getDislikeCount(int id) {
         int res = -1;
@@ -102,7 +102,7 @@ public class DislikeTableManager {
     }
 
     /**
-     * insert the likecount for a row in the database let it + 1
+     * insert the dislikecount for a row in the database let it + 1
      * 
      * @param id The id of the row to update
      *
@@ -121,7 +121,7 @@ public class DislikeTableManager {
     }
 
     /**
-     * Update the likecount for a row in the database let it - 1
+     * Update the dislikecount for a row in the database let it - 1
      * 
      * @param id The id of the row to update
      *
@@ -140,7 +140,7 @@ public class DislikeTableManager {
     }
 
     /**
-     * delete all like relative to an idea
+     * delete all dislike relative to an idea
      * 
      * @param id The id of the row to update
      *

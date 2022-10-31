@@ -4,6 +4,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+
+/**
+ * Hash function
+ */
 public class HashFunc {
 
     public static byte[] getSHA(String get) throws NoSuchAlgorithmException {

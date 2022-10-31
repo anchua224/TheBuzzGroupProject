@@ -18,7 +18,7 @@ public class UsersTableManager {
     private static PreparedStatement mDeleteUser;
     private static PreparedStatement mUpdateNote;
     private static PreparedStatement mSelectOneUser;
-    private static PreparedStatement mSelectPartOfUser;
+    //private static PreparedStatement mSelectPartOfUser;
     private static PreparedStatement mSelectAll;
     private static PreparedStatement mFindUser;
 
@@ -27,7 +27,7 @@ public class UsersTableManager {
         mDeleteUser = mConnection.prepareStatement("DELETE FROM users WHERE user_id=?");
         mUpdateNote = mConnection.prepareStatement("UPDATE users SET name=?, GI=?, SO=?, note=? WHERE user_id=?");
         mSelectOneUser = mConnection.prepareStatement("SELECT * FROM users where user_id=?");
-        mSelectPartOfUser = mConnection.prepareStatement("SELECT name, note FROM users where user_id=?");
+        //mSelectPartOfUser = mConnection.prepareStatement("SELECT name, note FROM users where user_id=?");
         mSelectAll = mConnection.prepareStatement("SELECT * FROM users");
         mFindUser = mConnection.prepareStatement("SELECT count(*) where user_id=?");
     }
