@@ -49,6 +49,7 @@ public class DatabaseRoutes {
         Spark.post("/ideas", (request, response) -> {
             // NB: if gson.Json fails, Spark will reply with status 500 Internal
             // Server Error
+            String sessionKey = request.queryParams("sessionKey");
             SimpleIdeaRequest req = gson.fromJson(request.body(), SimpleIdeaRequest.class);
             // ensure status 200 OK, with a MIME type of JSON
             // NB: even on error, we return 200, but with a JSON object that
@@ -56,7 +57,7 @@ public class DatabaseRoutes {
             response.status(200);
             response.type("application/json");
             // NB: createEntry checks for null title and message
-            int newId = mDatabase.mIdeaTableManager.insertIdea(req.mTitle, req.mMessage);
+            int newId = mDatabase.mIdeaTableManager.insertIdea(req.mTitle, req.mMessage,1,sessionKey);
             if (newId == -1) {
                 return gson.toJson(new StructuredResponse("error", "error performing insertion", null));
             } else {
@@ -84,41 +85,41 @@ public class DatabaseRoutes {
             }
         });
 
-        // DELETE route for removing a row from the table ideas
-        Spark.delete("/ideas/:id", (request, response) -> {
-            // If we can't get an ID, Spark will send a status 500
-            int idx = Integer.parseInt(request.params("id"));
-            // ensure status 200 OK, with a MIME type of JSON
-            response.status(200);
-            response.type("application/json");
-            // NB: we won't concern ourselves too much with the quality of the
-            // message sent on a successful delete
-            int result_like = mDatabase.mLikeTableManager.deleteLikeIdea(idx);
-            int result = mDatabase.mIdeaTableManager.deleteIdeas(idx);
-            if (result == -1 || result_like == -1) {
-                return gson.toJson(new StructuredResponse("error", "unable to delete row " + idx, null));
-            } else {
-                return gson.toJson(new StructuredResponse("ok", null, null));
-            }
-        });
+        // // DELETE route for removing a row from the table ideas
+        // Spark.delete("/ideas/:id", (request, response) -> {
+        //     // If we can't get an ID, Spark will send a status 500
+        //     int idx = Integer.parseInt(request.params("id"));
+        //     // ensure status 200 OK, with a MIME type of JSON
+        //     response.status(200);
+        //     response.type("application/json");
+        //     // NB: we won't concern ourselves too much with the quality of the
+        //     // message sent on a successful delete
+        //     int result_like = mDatabase.mLikeTableManager.deleteLikeIdea(idx);
+        //     int result = mDatabase.mIdeaTableManager.deleteIdeas(idx);
+        //     if (result == -1 || result_like == -1) {
+        //         return gson.toJson(new StructuredResponse("error", "unable to delete row " + idx, null));
+        //     } else {
+        //         return gson.toJson(new StructuredResponse("ok", null, null));
+        //     }
+        // });
 
-        // PUT route for updating a row in the ideas tabel. This is almost
-        // exactly the same as POST
-        Spark.put("/ideas/:id", (request, response) -> {
-            // If we can't get an ID or can't parse the JSON, Spark will send
-            // a status 500
-            int idx = Integer.parseInt(request.params("id"));
-            SimpleIdeaRequest req = gson.fromJson(request.body(), SimpleIdeaRequest.class);
-            // ensure status 200 OK, with a MIME type of JSON
-            response.status(200);
-            response.type("application/json");
-            int result = mDatabase.mIdeaTableManager.updateIdea(idx, req.mTitle, req.mMessage);
-            if (result == -1) {
-                return gson.toJson(new StructuredResponse("error", "unable to update row " + idx, null));
-            } else {
-                return gson.toJson(new StructuredResponse("ok", null, result));
-            }
-        });
+        // // PUT route for updating a row in the ideas tabel. This is almost
+        // // exactly the same as POST
+        // Spark.put("/ideas/:id", (request, response) -> {
+        //     // If we can't get an ID or can't parse the JSON, Spark will send
+        //     // a status 500
+        //     int idx = Integer.parseInt(request.params("id"));
+        //     SimpleIdeaRequest req = gson.fromJson(request.body(), SimpleIdeaRequest.class);
+        //     // ensure status 200 OK, with a MIME type of JSON
+        //     response.status(200);
+        //     response.type("application/json");
+        //     int result = mDatabase.mIdeaTableManager.updateIdea(idx, req.mTitle, req.mMessage);
+        //     if (result == -1) {
+        //         return gson.toJson(new StructuredResponse("error", "unable to update row " + idx, null));
+        //     } else {
+        //         return gson.toJson(new StructuredResponse("ok", null, result));
+        //     }
+        // });
 
     }
 
