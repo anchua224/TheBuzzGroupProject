@@ -13,22 +13,22 @@ class LikesTable{
     /**
      * A prepared statement for deleting a row from the database
      */
-    private static PreparedStatement mDeleteOne;
+    private static PreparedStatement mRemoveLike;
 
     /**
      * A prepared statement for inserting into the database
      */
-    private static PreparedStatement mInsertLike;
+    private static PreparedStatement mAddLike;
 
     /**
      * A prepared statement for getting the like count
      */
-    private static PreparedStatement mGetLike;
+    private static PreparedStatement mGetLikes;
 
     /**
      * A prepared statement for deleting all likes relative to an idea
      */
-    private static PreparedStatement mDeleteIdea;
+    private static PreparedStatement mDeleteLikes;
 
     /**
      * create the LIKES table
@@ -47,13 +47,13 @@ class LikesTable{
      */
     public LikesTable(Connection mConnection) throws SQLException {
         mCreateTable = mConnection.prepareStatement("CREATE TABLE likes (id INT, user_id VARCHAR(64), " + 
-        "FOREIGN KEY (id) REFERENCES ideas(id),  FOREIGN KEY (user_id) REFERENCES USERS(user_id), " + 
-        "PRIMARY KEY(id, user_id)");
+        "FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES USERS(user_id), " + 
+        "PRIMARY KEY(id, user_id))");
         mDropTable =mConnection.prepareStatement("DROP TABLE LIKES");
-        mGetLike = mConnection.prepareStatement("SELECT count(*) from likes WHERE id=?");
-        mInsertLike = mConnection.prepareStatement("INSERT INTO likes VALUES (?, ?)");
-        mDeleteIdea = mConnection.prepareStatement("DELETE FROM likes WHERE id = ?");
-        mDeleteOne = mConnection.prepareStatement("DELETE FROM likes WHERE id = ? AND user_id = ?)");
+        mGetLikes = mConnection.prepareStatement("SELECT count(*) from likes WHERE id=?");
+        mAddLike = mConnection.prepareStatement("INSERT INTO likes VALUES (?, ?)");
+        mDeleteLikes = mConnection.prepareStatement("DELETE FROM likes WHERE id=?");
+        mRemoveLike = mConnection.prepareStatement("DELETE FROM likes VALUES (?, ?)");
     }
     /**
     * Create the LIKES table
@@ -82,11 +82,12 @@ class LikesTable{
      *
      * @return The number of rows that were inserted
      */
-    public int likeIdea(int id) {
+    public int likeIdea(int id, String email) {
         int count = 0;
         try {
-            mInsertLike.setInt(1, id);
-            count += mInsertLike.executeUpdate();
+            mAddLike.setInt(1, id);
+            mAddLike.setString(2,HashFunc.hash(email));
+            count += mAddLike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,11 +100,12 @@ class LikesTable{
      *
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int cancelLikeIdea(int id) {
+    public int removeLike(int id, String email) {
         int res = -1;
         try {
-            mDeleteOne.setInt(1, id);
-            res = mDeleteOne.executeUpdate();
+            mRemoveLike.setInt(1, id);
+            mRemoveLike.setString(2, email);
+            res = mRemoveLike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -116,11 +118,11 @@ class LikesTable{
      *
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int deleteLikeIdea(int id) {
+    public int deleteAllLikes(int id) {
         int res = -1;
         try {
-            mDeleteIdea.setInt(1, id);
-            res = mDeleteIdea.executeUpdate();
+           mDeleteLikes.setInt(1, id);
+            res =mDeleteLikes.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -136,8 +138,8 @@ class LikesTable{
     public int getLikeCount(int id) {
         int res = -1;
         try {
-            mGetLike.setInt(1, id);
-            ResultSet rs = mGetLike.executeQuery();
+            mGetLikes.setInt(1, id);
+            ResultSet rs = mGetLikes.executeQuery();
             if (rs.next()) {
                 res = rs.getInt("count");
             }

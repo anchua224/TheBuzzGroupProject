@@ -50,7 +50,7 @@ public class App {
             case "LIKES":
                 System.out.println("  [T] Create Table " + tableName);
                 System.out.println("  [D] Drop Table " + tableName);
-                System.out.println("  [-] Cancel like idea");
+                System.out.println("  [-] Remove like from idea");
                 System.out.println("  [+] Like an idea");
                 System.out.println("  [g] Get the count of likes related to a certain idea");
                 System.out.println("  [0] delete all the rows(likes) related to a certain idea");
@@ -60,7 +60,7 @@ public class App {
             case "DISLIKES":
                 System.out.println("  [T] Create Table " + tableName);
                 System.out.println("  [D] Drop Table " + tableName);
-                System.out.println("  [-] Cancel dislike idea");
+                System.out.println("  [-] Remove dislike from idea");
                 System.out.println("  [+] Dislike an idea");
                 System.out.println("  [g] Get the count of dislikes related to a certain idea");
                 System.out.println("  [0] delete all the rows(dislikes) related to a certain idea");
@@ -265,9 +265,10 @@ public class App {
                         } else if (action == '+') {
                             String subject = getString(in, "Enter the subject");
                             String message = getString(in, "Enter the message");
+                            int valid = getInt(in, "Is the idea valid (1-yes, 0-no)");
                             if (subject.equals("") || message.equals(""))
                                 continue;
-                            int res = db.mIdeaTable.insertIdea(subject, message);
+                            int res = db.mIdeaTable.insertIdea(subject, message, valid);
                             System.out.println(res + " rows added");
                         } else if (action == '~') {
                             int id = getInt(in, "Enter the row ID ");
@@ -275,7 +276,8 @@ public class App {
                                 continue;
                             String newMessage = getString(in, "Enter the new message");
                             String newTitle = getString(in, "Enter the new title");
-                            int res = db.mIdeaTable.updateIdea(id, newTitle, newMessage);
+                            int newValid = getInt(in, "Is the idea valid (1-yes, 0-no)");
+                            int res = db.mIdeaTable.updateIdea(id, newTitle, newMessage, newValid);
                             if (res == -1)
                                 continue;
                             System.out.println("  " + res + " rows updated");
@@ -292,23 +294,25 @@ public class App {
                             db.mLikesTable.dropTable();
                         } else if (action == '-') {
                             int id = getInt(in, "Enter the row ID");
+                            String email = getString(in, "Enter your email");
                             if (id == -1)
                                 continue;
-                            int res = db.mLikesTable.cancelLikeIdea(id);
+                            int res = db.mLikesTable.removeLike(id, email);
                             if (res == -1)
                                 continue;
                             System.out.println("  " + res + " rows deleted");
                         } else if (action == '+') {
                             int id = getInt(in, "Enter the row ID");
+                            String email = getString(in, "Enter your email");
                             if (id == -1)
                                 continue;
-                            int res = db.mLikesTable.likeIdea(id);
+                            int res = db.mLikesTable.likeIdea(id, email);
                             System.out.println(res + " rows added");
                         } else if (action == '0') {
                             int id = getInt(in, "Enter the row ID");
                             if (id == -1)
                                 continue;
-                            int res = db.mLikesTable.deleteLikeIdea(id);
+                            int res = db.mLikesTable.deleteAllLikes(id);
                             System.out.println(res + " rows deleted");
                         } else if (action == 'g') {
                             int id = getInt(in, "Enter the row ID");
@@ -329,23 +333,25 @@ public class App {
                             db.mDislikesTable.dropTable();
                         } else if (action == '-') {
                             int id = getInt(in, "Enter the row ID");
+                            String email = getString(in, "Enter your email");
                             if (id == -1)
                                 continue;
-                            int res = db.mDislikesTable.cancelDislikeIdea(id);
+                            int res = db.mDislikesTable.removeDislike(id, email);
                             if (res == -1)
                                 continue;
                             System.out.println("  " + res + " rows deleted");
                         } else if (action == '+') {
                             int id = getInt(in, "Enter the row ID");
+                            String email = getString(in, "Enter your email");
                             if (id == -1)
                                 continue;
-                            int res = db.mDislikesTable.DislikeIdea(id);
+                            int res = db.mDislikesTable.DislikeIdea(id, email);
                             System.out.println(res + " rows added");
                         } else if (action == '0') {
                             int id = getInt(in, "Enter the row ID");
                             if (id == -1)
                                 continue;
-                            int res = db.mDislikesTable.deleteDislikeIdea(id);
+                            int res = db.mDislikesTable.deleteAllDislikes(id);
                             System.out.println(res + " rows deleted");
                         } else if (action == 'g') {
                             int id = getInt(in, "Enter the row ID");

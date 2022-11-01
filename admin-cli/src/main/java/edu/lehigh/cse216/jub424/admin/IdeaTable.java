@@ -45,22 +45,15 @@ import java.util.ArrayList;
     private static PreparedStatement mUpdateOne;
 
     public IdeaTable(Connection mConnection) throws SQLException {
-        // CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,
-        // message VARCHAR(500) NOT NULL,likecount INT NOT NULL, dislikecount INT not
-        // NULL)
-
-
-        mCreateTable = mConnection.prepareStatement(
-            "CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,"+
-            "message VARCHAR(500) NOT NULL, valid INT, user_id VARCHAR(64), " + 
-            "FOREIGN KEY (user_id) REFERENCES USER(user_id))"
-        );        
+        mCreateTable = mConnection.prepareStatement("CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,"+
+            "message VARCHAR(500) NOT NULL, valid INT NOT NULL, user_id VARCHAR(64), " + 
+            "FOREIGN KEY (user_id) REFERENCES USER(user_id))");        
         mDropTable = mConnection.prepareStatement("DROP TABLE IDEAS");     
         mSelectAll = mConnection.prepareStatement("SELECT * FROM ideas ORDER BY id DESC");
-        mSelectOne = mConnection.prepareStatement("SELECT * from ideas WHERE id=?");
+        mSelectOne = mConnection.prepareStatement("SELECT * FROM ideas WHERE id=? AND valid = 1");
         mDeleteOne = mConnection.prepareStatement("DELETE FROM ideas WHERE id = ?");
-        mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?)");
-        mUpdateOne = mConnection.prepareStatement("UPDATE ideas SET subject = ?, message = ? WHERE id = ?");
+        mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?, ?)");
+        mUpdateOne = mConnection.prepareStatement("UPDATE ideas SET subject = ?, message = ?, valid = ? WHERE id = ?");
     }
 
     //inner class Idea, holds information of one row in the idea table
@@ -82,9 +75,9 @@ import java.util.ArrayList;
 
         /**
          * 
-         * idea validility
+         * idea validility (1 = valid, 0 = invalid)
          */
-        //public int valid;
+        public int valid;
         /**
         * Create a new Idea with the provided id, title and massage. And a
         * creation date based on the system clock at the time the constructor was
@@ -96,15 +89,14 @@ import java.util.ArrayList;
         * 
         * @param massage massage of the idea
         */
-        public Idea(int id, String title, String massage){
+        public Idea(int id, String title, String massage, int valid){
             this.id = id;
             this.title = title;
             this.massage = massage;
+            this.valid = valid;
         }
 
     }
-
-    
     /**
     * Create the IDEAS table
     */
@@ -125,8 +117,6 @@ import java.util.ArrayList;
             e.printStackTrace();
         }
     }
-
-
     /**
     * Query the database for a list of all subjects and their IDs
     * 
@@ -140,7 +130,8 @@ import java.util.ArrayList;
                     res.add(new Idea(
                         rs.getInt("id"),
                         rs.getString("subject"),
-                        rs.getString("message")
+                        rs.getString("message"),
+                        rs.getInt("valid")
                         ));
                 }
                 rs.close();
@@ -166,7 +157,8 @@ import java.util.ArrayList;
                 res = new Idea(
                         rs.getInt("id"),
                         rs.getString("subject"),
-                        rs.getString("message")
+                        rs.getString("message"),
+                        rs.getInt("valid")
                         );
             }
         } catch (SQLException e) {
@@ -196,14 +188,16 @@ import java.util.ArrayList;
      * 
      * @param subject The subject for this new row
      * @param message The message body for this new row
+     * @param valid The validity of the idea
      * 
      * @return The number of rows that were inserted
      */
-    public int insertIdea(String subject, String message) {
+    public int insertIdea(String subject, String message, int valid) {
         int count = 0;
         try {
             mInsertOne.setString(1, subject);
             mInsertOne.setString(2, message);
+            mInsertOne.setInt(3, valid);
             count += mInsertOne.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -219,12 +213,13 @@ import java.util.ArrayList;
      * 
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int updateIdea(int id, String subject, String message) {
+    public int updateIdea(int id, String subject, String message, int valid) {
         int res = -1;
         try {
             mUpdateOne.setString(1, subject);
             mUpdateOne.setString(2, message);
-            mUpdateOne.setInt(3, id);
+            mUpdateOne.setInt(3, valid);
+            mUpdateOne.setInt(4, id);
             res = mUpdateOne.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
