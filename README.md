@@ -102,18 +102,22 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 	
 ## Backlog Item List (Phase 2 Sprint 7):
 - Mobile:
-	- Showing user's profile picture if they have one
-	- Navigation bar to switch from profile to home page
-	- Showing number of likes/dislikes for posts
+	- Ideas do not show likes
+	- Ideas do not show names of users, only user ids
+	- User cannot view other profiles
+	- Users cannot view comments
+	- Main problem was using the routes. Had trouble with parsing json and storing information, as well as putting information using routes
+
 - Backend:
-	- Much of the ERD implementations need to be incorporated for Mobile and Web to move forward.
+	- User table
+		- Change the SQL query for the users' table to make it consistent with new tables
+	- Better JavDoc with additional details
 - Admin:
-	- Unit tests aren't working
-	- Method for invalidating a user and idea isn't ideal
+	- Unit tests still need to be worked on and more methods are needed to make options easier and faster to reach.
 - Web 
-	- Add the session key to all put, post, and delete requests
-	- Add comment component
-	- Add profile
-	- Add web header	
+	- The JS documentation hasn’t been completed
+	- The unit tests still need to be developed
+	
+
 
 	
