@@ -10,6 +10,7 @@ import '../api/google_signin_api.dart';
 import 'profile_page.dart';
 import 'create_post_page.dart';
 import '../main.dart';
+import '../objects/user.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});
@@ -63,8 +64,14 @@ class _LoginPage extends State<LoginPage> {
     final user = await GoogleSignInApi.login();
     GoogleSignInAuthentication googleSignInAuthentication = await user!.authentication;
 
-    print(googleSignInAuthentication.accessToken);
-    print(googleSignInAuthentication.idToken);
+    //print(googleSignInAuthentication.accessToken);
+    //print(googleSignInAuthentication.idToken);
+
+    // If user is not in database, create new user object and send to a new page
+      // to complete their profile information
+    var currentUser = User(user);
+    //currentUser = User(user).initializeUser(user, currentUser);
+    // Else, pull user information from database and send to home page
     
     if (user == null) { // If the user login is not valid, show that sign-in failed
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sign in Failed')));
@@ -74,7 +81,29 @@ class _LoginPage extends State<LoginPage> {
       GoogleSignInApi.logout();
     }else {
       // If user logging in is valid, send user to profile page
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfilePage(user: user),
+      // FIXME: change to send user to home page
+      String? idToken = googleSignInAuthentication.idToken;
+      print(idToken);
+      print(idToken!.substring(1023));
+      print(user.id);
+       final response = await http.post(
+        Uri.parse('https://cse216-fl22-team14.herokuapp.com/login?token='+idToken),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+         if (response.statusCode == 200) {
+            // If the server did return a 200 CREATED response,
+            // then parse the JSON.
+            print(response.body);
+            currentUser.setSessionKey((response.body).split('"')[1]);
+            print(currentUser.sessionKey);
+          } else {
+            // If the server did not return a 200 CREATED response,
+            // then throw an exception.
+            throw Exception('Failed to get session key.');
+          }
+     // currentUser.setSessionKey(key!);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfilePage(user: currentUser),
       ));
     }
   }

@@ -3,24 +3,26 @@ import 'package:flutter_application_1/api/google_signin_api.dart';
 
 import '../main.dart';
 import 'create_post_page.dart';
-import 'edit_profile_page.dart';
-import 'login_page.dart';
 
 import '../objects/user.dart';
 
-class ProfilePage extends StatefulWidget {
+// Profile Page for viewing other users profile information
+// Displays: username, profile picture, name, note
+class PublicProfilePage extends StatefulWidget {
   final User user;
+  final User currentUser;
 
-  const ProfilePage({
+  const PublicProfilePage({
     Key? key,
     required this.user,
+    required this.currentUser,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => ProfileState();
+  State<StatefulWidget> createState() => PublicProfileState();
 }
 
-class ProfileState extends State<ProfilePage> {
+class PublicProfileState extends State<PublicProfilePage> {
   
 
   int selectedIndex = 1; // Navigation bar, shows profile is selected
@@ -47,11 +49,10 @@ class ProfileState extends State<ProfilePage> {
       actions: [
         ElevatedButton.icon( // Logout button function
           label: const Text('Logout'),
-          icon: const Icon(Icons.logout),
+          icon: const Icon(Icons.home),
           onPressed: () async {
-            widget.user.setSessionKey("n/a");
             await GoogleSignInApi.logout();
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginPage(title: 'The Buzz'),
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.user),
             ));
           },
         )
@@ -107,31 +108,6 @@ class ProfileState extends State<ProfilePage> {
                     ]
                   ),
                 ),
-                // Edit Profile Button
-                Expanded (
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.pink,
-                          fixedSize: const Size(100, 30), 
-                          side: const BorderSide(color: Colors.pink, width: 1),
-                          shape: const StadiumBorder(),
-                        ),
-                    onPressed: () {
-                        // Send user back to edit page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => EditProfilePage(user: widget.user)),
-                      );
-                    },
-                    child: const Text(
-                      'Edit Profile',
-                      style: TextStyle(
-                        fontSize: 12
-                      ),
-                    )
-                  )
-                ),
                 const SizedBox(width: 7),
               ],
             ),
@@ -161,7 +137,7 @@ class ProfileState extends State<ProfilePage> {
               borderRadius: BorderRadius.circular(5),
               ),    
             child: Text(
-              '${widget.user.note}',
+              ' N/A',
               style: TextStyle(color: Colors.black, fontSize: 18,),
               textAlign: TextAlign.left,
             ),

@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/page/view_idea.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:developer' as developer;
 import 'dart:convert';
@@ -8,6 +9,9 @@ import 'package:http/http.dart' as http;
 import 'page/profile_page.dart';
 import 'page/create_post_page.dart';
 import 'page/login_page.dart';
+import 'page/view_idea.dart';
+
+import '../objects/user.dart';
 
 
 // To the next person writing flutter code. flutter.io and geeksforgeeks is your
@@ -35,7 +39,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  final GoogleSignInAccount user;
+  final User user;
   const MyHomePage({super.key, required this.title, required this.user});
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -75,8 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         centerTitle: true,
       ),
-      body: const Center(
-        child: ListofIdeas(),
+      body: Center(
+        child: ListOfIdeas(user: widget.user),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.pinkAccent,
@@ -111,14 +115,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-class ListofIdeas extends StatefulWidget {
-  const ListofIdeas({super.key});
+class ListOfIdeas extends StatefulWidget {
+  final User user;
+
+  const ListOfIdeas({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
-  State<ListofIdeas> createState() => _ListofIdeasState();
+  State<ListOfIdeas> createState() => _ListOfIdeasState();
 }
 
-class _ListofIdeasState extends State<ListofIdeas> {
+class _ListOfIdeasState extends State<ListOfIdeas> {
   @override
   void initState() {
     super.initState();
@@ -127,14 +136,15 @@ class _ListofIdeasState extends State<ListofIdeas> {
   void retry() {
     setState(() {});
   }
-
+  String name = 'loading';
+  List<bool> postLiked = List.generate(4, (i) => false); // Default State
+  List<bool> postDisliked = List.generate(4, (i) => false);
   @override
   Widget build(BuildContext context) {
-    // boolean varaible stating that the likes icon should be white
-    // FIXME: create an enabled and disabled button color and functionality
-    bool postLiked = false; // Default State
     var fb = FutureBuilder<List<Idea>>(
-      future: fetchIdeas(),
+      future:
+        fetchIdeas(),
+        
       builder: (BuildContext context, AsyncSnapshot<List<Idea>> snapshot) {
         Widget child;
         if (snapshot.hasData) {
@@ -144,32 +154,95 @@ class _ListofIdeasState extends State<ListofIdeas> {
               padding: const EdgeInsets.all(26.0),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, i) {
+                //String name = await getUserName(snapshot.data![i].userid) as String;
+                //getProfileData(snapshot.data![i].userid);
                 return Column(
                   children: <Widget>[
                     ListTile(
-                        // FIXME:
-                        // This is supposed to remove a like
-                        onLongPress: () {
-                          updateLike(i);
-                        },
                         title: Text(
-                          snapshot.data![i].title,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          snapshot.data![i].userid,
+                          style: const TextStyle(fontSize: 14),
                         ),
-                        subtitle: Text(snapshot.data![i].message),
+                        subtitle: 
+                        Row(
+                          children: [
+                            Column(
+                              children: [
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    width: 300,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      snapshot.data![i].title,
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 300,
+                                    child: Text(
+                                        snapshot.data![i].message,
+                                        style: const TextStyle(fontSize: 14),
+                                        ),
+                                    alignment: Alignment.centerLeft,
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                              Column(
+                              children: [
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  height: 20,
+                                  width: 20,
+                                  child: IconButton(
+                                    color: postLiked[i] ? Colors.pink : Colors.white, 
+                                    onPressed: () { 
+                                      setState(() {
+                                        //pass in snapshot.data.id
+                                        postLiked[i] = !postLiked[i];
+                                    });
+                                    }, 
+                                    icon: const Icon(Icons.favorite),
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  height: 30,
+                                  width: 20,
+                                  child: IconButton(
+                                    color: postDisliked[i] ? Colors.blue : Colors.white, 
+                                    onPressed: () { 
+                                      setState(() {
+                                        //pass in snapshot.data.id
+                                        postDisliked[i] = !postDisliked[i];
+                                        postLiked[i] = !postLiked[i];
+                                    });
+                                    }, 
+                                    icon: const Icon(Icons.heart_broken),
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  height: 20,
+                                  width: 20,
+                                  child: IconButton(
+                                    color: Colors.white, 
+                                    onPressed: () { 
+                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ViewIdeaPage(user: widget.user, idea: snapshot.data![i], id: i)));
+                                    }, 
+                                    icon: const Icon(Icons.open_in_new),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
+                          ],
+                        ),
+                          
                         tileColor: const Color.fromARGB(200, 251, 207, 126), // Message Color
-                        trailing: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              //pass in snapshot.data.id
-                              postLiked = !postLiked;
-                            });
-                          },
-                          child: Icon(
-                            Icons.favorite,
-                            color: postLiked ? Colors.pink : Colors.white,
-                          ),
-                        )),
+                        ),
                     const Divider(height: 8.0),
                   ],
                 );
@@ -184,19 +257,47 @@ class _ListofIdeasState extends State<ListofIdeas> {
     );
     return fb;
   }
+  // void getUserName(String userid) async {
+  //   Future<dbUser> userFuture = getProfileData(userid);
+  //   dbUser? user = await userFuture;
+  //   //name = user.displayName;
+  // }
+  
+  void getProfileData(String userid) async {
+    final response = await http
+      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${userid}'));
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response, then parse the JSON.
+      
+      //return returnData;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Did not receive success status code from request.');
+    }
+  }
 }
 
 // Idea class holds the title and message of every idea
 class Idea {
   final String title;
   final String message;
+  final int id;
+  final int validity;
+  final String userid;
+  final String dateCreated;
 
-  const Idea({required this.title, required this.message});
+  const Idea({required this.title, required this.message, required this.id, required this.validity, 
+    required this.userid, required this.dateCreated});
 
   factory Idea.fromJson(Map<String, dynamic> json) {
     return Idea(
       title: json['title'],
       message: json['massage'],
+      id: json['id'],
+      validity: json['validity'],
+      userid: json['userid'],
+      dateCreated: json['createdDate'],
     );
   }
 }
@@ -244,9 +345,9 @@ class Likes {
 }
 // FIXME:
 // fetchLikes method is supposed to fetch the like # for a specific id
-Future<List<Likes>> fetchLikes(int id) async {
+Future<List<Likes>> fetchLikes(int id, User user) async {
   final response = await http
-      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas/${id}'));
+      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas/:${id}/like?sessionKey=${user.sessionKey}'));
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, then parse the JSON.
     final List<Likes> returnData;
@@ -272,9 +373,9 @@ Future<List<Likes>> fetchLikes(int id) async {
 }
 // FIXME:
 // updateLike method will post the like to the specific post with the specific id
-Future<Likes> updateLike(int id) async {
+Future<Likes> updateLike(int id, User user) async {
   final response = await http.put(
-      Uri.parse('https://cse216-fl22-team14.herokuapp.com/likes/${id}'),
+      Uri.parse('https://cse216-fl22-team14.herokuapp.com/likes/$id/like?sessionKey=${user.sessionKey}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

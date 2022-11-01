@@ -5,12 +5,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'profile_page.dart';
+import '../objects/user.dart';
 import '../main.dart';
 
 // AddIdeaState class would be the state of the app once you are trying to post
 // an idea
 class AddIdeaState extends StatelessWidget {
-  final GoogleSignInAccount user;
+  final User user;
 
   const AddIdeaState({
     Key? key,
@@ -32,29 +33,10 @@ class AddIdeaState extends StatelessWidget {
 
 // createPost method is the method called in order to post an idea to the
 // database
-createPost(String title, String message) async {
-  final response = await http.post(
-    Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'mTitle': title,
-      'mMessage': message,
-    }),
-  );
-  if (response.statusCode == 200) {
-    // If the server did return a 200 CREATED response,
-    // then parse the JSON.
-  } else {
-    // If the server did not return a 200 CREATED response,
-    // then throw an exception.
-    throw Exception('Failed to create Post.');
-  }
-}
+
 
 class TextBox extends StatefulWidget {
-  final GoogleSignInAccount user;
+  final User user;
 
   const TextBox({
     Key? key,
@@ -66,7 +48,6 @@ class TextBox extends StatefulWidget {
 }
 
 class _TextBoxState extends State<TextBox> {
-  late final GoogleSignInAccount user;
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   @override
@@ -151,6 +132,27 @@ class _TextBoxState extends State<TextBox> {
           ],
         ),
       );
+  }
+  createPost(String title, String message) async {
+    final response = await http.post(
+      Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'mId': widget.user.id!,
+        'mTitle': title,
+        'mMessage': message,
+      }),
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 200 CREATED response,
+      // then parse the JSON.
+    } else {
+      // If the server did not return a 200 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create Post.');
+    }
   }
 }
 

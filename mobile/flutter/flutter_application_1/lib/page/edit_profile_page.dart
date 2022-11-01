@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:meta/meta.dart';
+import 'dart:developer' as developer;
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'profile_page.dart';
+import '../objects/user.dart';
 
 class EditProfilePage extends StatefulWidget {
-  final GoogleSignInAccount user;
+  final User user;
 
   const EditProfilePage({
     Key? key,
@@ -54,14 +58,15 @@ class EditProfileState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    var user = CurrentUser();
-    user = initializeUser(widget.user, user);
-    if (user.so != "n/a") {
-      valueSO = user.so;
+    //var user = User();
+    //FIXME: initialize user in another page
+    //user = User().initializeUser(widget.user, user);
+    if (widget.user.so != "n/a") {
+      valueSO = widget.user.so;
       hintSO = false;
     }
-    if (user.gi != "n/a") {
-      valueGI = user.gi;
+    if (widget.user.gi != "n/a") {
+      valueGI = widget.user.gi;
     }
     // user.setName();
     return Scaffold (
@@ -73,6 +78,7 @@ class EditProfileState extends State<EditProfilePage> {
             label: const Text('Done'),
             icon: const Icon(Icons.check_circle),
             onPressed: () {
+              updateProfile(widget.user);
               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfilePage(user: widget.user),
               ));
             },
@@ -120,7 +126,7 @@ class EditProfileState extends State<EditProfilePage> {
                     borderRadius: BorderRadius.circular(5),
                     ),
                   child: Text(
-                  ' ${user.email}',
+                  ' ${widget.user.email}',
                   style: const TextStyle(color: Colors.black, fontSize: 16,),
                   textAlign: TextAlign.left,
                   ),
@@ -165,7 +171,7 @@ class EditProfileState extends State<EditProfilePage> {
                       setState(() {
                         valueSO = value ?? "";
                       });
-                      user.setSO(value!);
+                      widget.user.setSO(value!);
                     },
                   ),
                 ),
@@ -209,7 +215,7 @@ class EditProfileState extends State<EditProfilePage> {
                       setState(() {
                         valueGI = value ?? "";
                       });
-                      user.setGI(value!);
+                      widget.user.setGI(value!);
                     },
                   ),
                 ),
@@ -237,7 +243,7 @@ class EditProfileState extends State<EditProfilePage> {
                     borderRadius: BorderRadius.circular(5),
                     ),
                   child: Text(
-                  ' ${user.uid}',
+                  ' ${widget.user.uid}',
                   style: const TextStyle(color: Colors.black, fontSize: 16,),
                   textAlign: TextAlign.left,
                   ),
@@ -253,12 +259,15 @@ class EditProfileState extends State<EditProfilePage> {
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 20,
-                controller: displayNameController..text = '${user.displayName}',
+                controller: displayNameController..text = '${widget.user.displayName}',
                 maxLength: 50,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),   
                   ),
                 textAlignVertical: TextAlignVertical.top,
+                onChanged: (String text) {
+                  widget.user.setNewName(text);
+                },
                 ),
               ),
             const Text(
@@ -271,13 +280,15 @@ class EditProfileState extends State<EditProfilePage> {
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 20,
-                controller: noteController..text = '${user.note}',
+                controller: noteController..text = '${widget.user.note}',
                 maxLength: 500,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(), 
                   ),
                 textAlignVertical: TextAlignVertical.top,
-                
+                onChanged: (String text) {
+                  widget.user.setNote(text);
+                },
                 ),
               ),
           ],
@@ -287,82 +298,25 @@ class EditProfileState extends State<EditProfilePage> {
     );
   }
   
-  CurrentUser initializeUser(GoogleSignInAccount _user, CurrentUser user) {
-    String? none = "n/a";
-    user.setID(_user);
-    user.setEmail(_user);
-    user.setName(_user);
-    user.setUID(_user);
-    user.setSO(none);
-    user.setGI(none);
-    user.setNote(user.displayName!+" has not written a note.");
-
-    return user;
+  void updateProfile(User user) async {
+    final response = await http.put(
+      Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${user.id}sessionKey=${user.sessionKey}'),
+      body: jsonEncode(<String, String>{
+        'user_id': widget.user.id!,
+        'name': widget.user.displayName!,
+        'note': widget.user.note!,
+        'SO': widget.user.so!,
+        'GI': widget.user.gi!,
+      }),
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 200 CREATED response,
+      // then parse the JSON.
+    } else {
+      // If the server did not return a 200 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to update profile.');
+    }
   }
 }
-
-// Class contains information for user currently logged into the app
-class CurrentUser {
-   CurrentUser();
-
-  // User properties
-  late String? id; late String? email; late final String? uid;
-  late String? displayName;
-  late String? photoURL;
-  late String? so;
-  late String? gi;
-  late String? note;
-  GoogleSignInAccount? _user;
-  GoogleSignInAccount get user => _user!;
-
-  // Setter Methods
-  void setID(GoogleSignInAccount user) {
-    id = user.id;
-  }
-  void setEmail(GoogleSignInAccount user) {
-    email = user.email;
-  }
-  void setName(GoogleSignInAccount user) {
-    displayName = user.displayName;
-  }
-  void setNewName(String newName) {
-    displayName = newName;
-  }
-  void setPhoto(String photoURL) {
-    this.photoURL = photoURL;
-  }
-  void setUID(GoogleSignInAccount user) {
-    uid = (((user.email).split('@'))[0]);
-  }
-  void setGI(String gi) {
-    this.gi = gi;
-  }
-  void setSO(String so) {
-    this.so = so;
-  }
-  void setNote(String note) {
-    this.note = note;
-  }
-
-}
-
-// class AddUser extends StatelessWidget {
-//   final GoogleSignInAccount googleAccount;
-//   var newUser = CurrentUser();
-//   newUser.id = googleAccount.id;
-
-//   // Future<void> addUser() {
-//   // // Call the user's CollectionReference to add a new user
-//   // return users
-//   //     .add({
-//   //       'uid': uid,
-//   //       'displayName': displayName,
-//   //       'email': email,
-//   //       'photoURL': photoURL,
-//   //       'lastSeen': DateTime.now()
-//   //     })
-//   //     .then((value) => print("User Added"))
-//   //     .catchError((error) => print("Failed to add user: $error"));
-//   // }
-// }
 
