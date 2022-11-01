@@ -1,6 +1,6 @@
 /**
- * like holds a information of idea like situations. A row of liek consists of
- * an id which is idea_id, and unique like_id as PK.
+ * like holds a information of idea like situations. A row of like consists of
+ * an idea_id, and user_id. A combination of idea_id and user_id is unique
  * 
  * Because we will ultimately be converting instances of this object into JSON
  * directly, we need to make the fields public. That being the case, we will
@@ -18,9 +18,9 @@ import java.util.Date;
  */
 public class Like {
     /**
-     * like_id, which is the primary key of like
+     * user_id, indeicate which user likes the idea
      */
-    public int like_id;
+    public int user_id;
 
     /**
      * idea_id, which is indicate of the idea
@@ -34,16 +34,16 @@ public class Like {
     public final Date createdDate;
 
     /**
-     * Create a new Idea with the provided id, title and massage. And a
+     * Create a new Like with the provided idea_id, user_id and massage. And a
      * creation date based on the system clock at the time the constructor was
      * called.
      * 
-     * @param like_id id to the like, which is unique for the whole time
+     * @param user_id id of the user
      * 
      * @param idea_id id of the idea
      */
-    public Like(int like_id, int idea_id) {
-        this.like_id = like_id;
+    public Like(int user_id, int idea_id) {
+        this.user_id = user_id;
         this.idea_id = idea_id;
         createdDate = new Date();
     }

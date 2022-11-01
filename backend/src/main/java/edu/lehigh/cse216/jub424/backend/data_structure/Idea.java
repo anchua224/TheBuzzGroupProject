@@ -13,6 +13,19 @@ import java.util.Date;
  */
 public class Idea {
 
+
+    /**
+     * validity of the idea, invalid=0/valid=1
+     */
+
+    public int validity;
+
+
+    /**
+     * user id of the user
+     */
+    public String userid;
+
     /**
      * id, which is the primary key of idea
      */
@@ -44,12 +57,17 @@ public class Idea {
      * @param title The title of this idea
      * 
      * @param massage massage of the idea
+     * 
+     * @param validity valid=1, invalid=0
+     * 
+     * @param userid id of the user
      */
-    public Idea(int id, String title, String massage) {
+    public Idea(int id, String title, String massage, int validity, String userid) {
         this.id = id;
         this.title = title;
         this.massage = massage;
-
+        this.userid = userid;
+        this.validity = validity;
         createdDate = new Date();
     }
 
