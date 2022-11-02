@@ -43,17 +43,22 @@ import java.util.ArrayList;
      * A prepared statement for updating a single row in the database
      */
     private static PreparedStatement mUpdateOne;
-
+    /**
+     * 
+     * A prepared statement for invalidating a single idea in the database
+     */
+    private static PreparedStatement mInvalidateOne;
     public IdeaTable(Connection mConnection) throws SQLException {
         mCreateTable = mConnection.prepareStatement("CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,"+
             "message VARCHAR(500) NOT NULL, valid INT NOT NULL, user_id VARCHAR(64), " + 
-            "FOREIGN KEY (user_id) REFERENCES USER(user_id))");        
+            "FOREIGN KEY (user_id) REFERENCES USERS(user_id))");        
         mDropTable = mConnection.prepareStatement("DROP TABLE IDEAS");     
         mSelectAll = mConnection.prepareStatement("SELECT * FROM ideas ORDER BY id DESC");
         mSelectOne = mConnection.prepareStatement("SELECT * FROM ideas WHERE id=? AND valid = 1");
         mDeleteOne = mConnection.prepareStatement("DELETE FROM ideas WHERE id = ?");
         mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?, ?)");
-        mUpdateOne = mConnection.prepareStatement("UPDATE ideas SET subject = ?, message = ?, valid = ? WHERE id = ?");
+        mUpdateOne = mConnection.prepareStatement("UPDATE ideas SET subject = ?, message = ? WHERE id = ?");
+        mInvalidateOne = mConnection.prepareStatement("UPDATE ideas SET validity = 0 WHERE id = ?");
     }
 
     //inner class Idea, holds information of one row in the idea table
@@ -131,7 +136,7 @@ import java.util.ArrayList;
                         rs.getInt("id"),
                         rs.getString("subject"),
                         rs.getString("message"),
-                        rs.getInt("valid")
+                        rs.getInt("validity")
                         ));
                 }
                 rs.close();
@@ -158,7 +163,7 @@ import java.util.ArrayList;
                         rs.getInt("id"),
                         rs.getString("subject"),
                         rs.getString("message"),
-                        rs.getInt("valid")
+                        rs.getInt("validity")
                         );
             }
         } catch (SQLException e) {
@@ -213,14 +218,23 @@ import java.util.ArrayList;
      * 
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int updateIdea(int id, String subject, String message, int valid) {
+    public int updateIdea(int id, String subject, String message) {
         int res = -1;
         try {
             mUpdateOne.setString(1, subject);
             mUpdateOne.setString(2, message);
-            mUpdateOne.setInt(3, valid);
-            mUpdateOne.setInt(4, id);
+            mUpdateOne.setInt(3, id);
             res = mUpdateOne.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+    public int invalidateIdea(int id){
+        int res = -1;
+        try{
+            mInvalidateOne.setInt(1, id);
+            res = mInvalidateOne.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

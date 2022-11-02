@@ -53,7 +53,7 @@ class LikesTable{
         mGetLikes = mConnection.prepareStatement("SELECT count(*) from likes WHERE id=?");
         mAddLike = mConnection.prepareStatement("INSERT INTO likes VALUES (?, ?)");
         mDeleteLikes = mConnection.prepareStatement("DELETE FROM likes WHERE id=?");
-        mRemoveLike = mConnection.prepareStatement("DELETE FROM likes VALUES (?, ?)");
+        mRemoveLike = mConnection.prepareStatement("DELETE FROM likes WHERE id = ? AND user_id = ?");
     }
     /**
     * Create the LIKES table
@@ -104,7 +104,7 @@ class LikesTable{
         int res = -1;
         try {
             mRemoveLike.setInt(1, id);
-            mRemoveLike.setString(2, email);
+            mRemoveLike.setString(2, HashFunc.hash(email));
             res = mRemoveLike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

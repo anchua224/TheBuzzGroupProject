@@ -53,7 +53,7 @@ class DislikesTable{
         mGetDislikes = mConnection.prepareStatement("SELECT count(*) from dislikes WHERE id=?");
         mAddDislike = mConnection.prepareStatement("INSERT INTO dislikes VALUES (?, ?)");
         mDeleteDislikes = mConnection.prepareStatement("DELETE FROM dislikes WHERE id=?");
-        mRemoveDislike = mConnection.prepareStatement("DELETE FROM dislikes VALUES (?, ?)");
+        mRemoveDislike = mConnection.prepareStatement("DELETE FROM dislikes WHERE id = ? AND user_id = ?");
     }
     /**
     * Create the DISLIKES table
@@ -104,7 +104,7 @@ class DislikesTable{
         int res = -1;
         try {
             mRemoveDislike.setInt(1, id);
-            mRemoveDislike.setString(2, email);
+            mRemoveDislike.setString(2, HashFunc.hash(email));
             res = mRemoveDislike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

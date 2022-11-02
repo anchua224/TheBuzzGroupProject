@@ -32,18 +32,19 @@ public class App {
     /**
      * Print the inner menus for our program
      * 
-     * @param the name of table
+     * @param tableName name of table
      */
     static void inner_menu(String tableName) {
         switch (tableName) {
             case "IDEAS":
                 System.out.println("  [T] Create Table " + tableName);
                 System.out.println("  [D] Drop Table " + tableName);
-                System.out.println("  [1] Query for a specific row");
-                System.out.println("  [*] Query for all rows");
-                System.out.println("  [-] Delete a row");
-                System.out.println("  [+] Insert a new row");
-                System.out.println("  [~] Update a row");
+                System.out.println("  [1] Query for a specific idea");
+                System.out.println("  [*] Query for all ideass");
+                System.out.println("  [-] Delete an idea");
+                System.out.println("  [+] Insert a new idea");
+                System.out.println("  [~] Update an idea");
+                System.out.println("  [0] Invalidate an idea");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
             break;
@@ -53,7 +54,7 @@ public class App {
                 System.out.println("  [-] Remove like from idea");
                 System.out.println("  [+] Like an idea");
                 System.out.println("  [g] Get the count of likes related to a certain idea");
-                System.out.println("  [0] delete all the rows(likes) related to a certain idea");
+                System.out.println("  [0] delete all the likes related to a certain idea");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
             break;
@@ -63,29 +64,29 @@ public class App {
                 System.out.println("  [-] Remove dislike from idea");
                 System.out.println("  [+] Dislike an idea");
                 System.out.println("  [g] Get the count of dislikes related to a certain idea");
-                System.out.println("  [0] delete all the rows(dislikes) related to a certain idea");
+                System.out.println("  [0] delete all the dislikes related to a certain idea");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
             break;
             case "COMMENTS":
                 System.out.println("  [T] Create Table " + tableName);
                 System.out.println("  [D] Drop Table " + tableName);
-                System.out.println("  [1] Query for a specific row");
-                System.out.println("  [*] Query for all rows");
-                System.out.println("  [-] Delete a row");
-                System.out.println("  [+] Inset a new row");
-                System.out.println("  [~] Update a row");
+                System.out.println("  [1] Query for a specific comment");
+                System.out.println("  [*] Query for all comments");
+                System.out.println("  [-] Delete a comment");
+                System.out.println("  [+] Inset a new comment");
+                System.out.println("  [~] Update a comment");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
             break;
             case "USER":
                 System.out.println("  [T] Create Table " + tableName);
                 System.out.println("  [D] Drop Table " + tableName);
-                System.out.println("  [1] Query for a specific row");
-                System.out.println("  [*] Query for all rows");
-                System.out.println("  [-] Delete a row");
-                System.out.println("  [+] Inset a new row");
-                System.out.println("  [~] Update a row");
+                System.out.println("  [1] Query for a specific user");
+                System.out.println("  [*] Query for all users");
+                System.out.println("  [-] Delete a user");
+                System.out.println("  [+] Inset a new user");
+                System.out.println("  [~] Update a user");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
             break;
@@ -229,7 +230,7 @@ public class App {
                 switch (inputInt) {
                     // Table IDEAS
                     case 1:
-                        action = prompt(in, "TD1*-+~?<");
+                        action = prompt(in, "TD10*-+~?<");
                         if (action == '?') {
                             inner_menu("IDEAS");
                         } else if (action == 'T') {
@@ -245,6 +246,14 @@ public class App {
                                 System.out.println("  [" + res.id + "] " + res.title);
                                 System.out.println("  --> " + res.massage);
                             }
+                        } else if (action == '0') {
+                            int id =getInt(in, "Enter the row ID");
+                            if (id == -1)
+                                continue;
+                            int res = db.mIdeaTable.invalidateIdea(id);
+                            if (res == -1)
+                                continue;
+                            System.out.println("  " + res + " rows invalidated");
                         } else if (action == '*') {
                             ArrayList<IdeaTable.Idea> res = db.mIdeaTable.selectAllIdeas();
                             if (res == null)
@@ -276,8 +285,7 @@ public class App {
                                 continue;
                             String newMessage = getString(in, "Enter the new message");
                             String newTitle = getString(in, "Enter the new title");
-                            int newValid = getInt(in, "Is the idea valid (1-yes, 0-no)");
-                            int res = db.mIdeaTable.updateIdea(id, newTitle, newMessage, newValid);
+                            int res = db.mIdeaTable.updateIdea(id, newTitle, newMessage);
                             if (res == -1)
                                 continue;
                             System.out.println("  " + res + " rows updated");
@@ -376,7 +384,7 @@ public class App {
                                 continue;
                             CommentsTable.Comments res = db.mCommentsTable.selectOneComments(id);
                             if (res != null) {
-                                System.out.println("  [" + res.id + "] " + res.content);
+                                System.out.println("  [" + res.com_id + "] " + res.content);
                             }
                         } else if (action == '*') {
                             ArrayList<CommentsTable.Comments> res = db.mCommentsTable.selectAllComments();
@@ -385,10 +393,10 @@ public class App {
                             System.out.println("  Current Database Contents");
                             System.out.println("  -------------------------");
                             for (CommentsTable.Comments rd : res) {
-                                System.out.println("  [" + rd.id + "] " + rd.content);
+                                System.out.println("  [" + rd.com_id + "] " + rd.content);
                             }
                         } else if (action == '-') {
-                            int id = getInt(in, "Enter the row ID");
+                            int id = getInt(in, "Enter the comment ID");
                             if (id == -1)
                                 continue;
                             int res = db.mCommentsTable.deleteComments(id);
@@ -396,13 +404,15 @@ public class App {
                                 continue;
                             System.out.println("  " + res + " rows deleted");
                         } else if (action == '+') {
+                            int id = getInt(in, "Enter the idea ID you want to comment");
                             String content = getString(in, "Enter the content");
+                            String email = getString(in, "Enter your email");
                             if (content.equals(""))
                                 continue;
-                            int res = db.mCommentsTable.insertComments(content);
+                            int res = db.mCommentsTable.insertComments(id, content, email);
                             System.out.println(res + " rows added");
                         } else if (action == '~') {
-                            int id = getInt(in, "Enter the row ID ");
+                            int id = getInt(in, "Enter the comment ID ");
                             if (id == -1)
                                 continue;
                             String newComment = getString(in, "Enter the new comment");
@@ -415,75 +425,74 @@ public class App {
                     // User table
                     case 5:
                         action = prompt(in, "TD1*-+~?<");
-                            if (action == '?') {
-                                inner_menu("USER");
-                            } else if (action == 'T') {
-                                db.mUserTable.createTable();
-                            } else if (action == 'D') {
-                                db.mUserTable.dropTable();
-                            } else if (action == '1') {
-                                String id = getString(in, "Enter the email");
-                                if (id.equals(""))
-                                    continue;
-                                UserTable.User res = db.mUserTable.selectOneUser(id);
-                                if (res != null) {
-                                    System.out.println("  [" + res.user_id + "] ");
-                                    System.out.println("  --> " + res.email);
-                                    System.out.println("  --> " + res.name);
-                                    System.out.println("  --> " + res.GI);
-                                    System.out.println("  --> " + res.SO);
-                                    System.out.println("  --> " + res.note);
-                                }
-                            } else if (action == '*') {
-                                ArrayList<UserTable.User> res = db.mUserTable.selectAllUsers();
-                                if (res == null)
-                                    continue;
-                                System.out.println("  Current Database Contents");
-                                System.out.println("  -------------------------");
-                                for (UserTable.User rd : res) {
-                                    System.out.println("  [" + rd.user_id + "] ");
-                                    System.out.println("  --> " + rd.email);
-                                    System.out.println("  --> " + rd.name);
-                                    System.out.println("  --> " + rd.GI);
-                                    System.out.println("  --> " + rd.SO);
-                                    System.out.println("  --> " + rd.note);
-                                }
-                            } else if (action == '-') {
-                                String id = getString(in, "Enter the email");
-                                if (id.equals(""))
-                                    continue;
-                                int res = db.mUserTable.deleteUser(id);
-                                if (res == -1)
-                                    continue;
-                                System.out.println("  " + res + " rows deleted");
-                            } else if (action == '+') {
-                                String email = getString(in, "Enter your email");
-                                String name = getString(in, "Enter your name");
-                                String GI = getString(in, "Enter your gender identity");
-                                String SO = getString(in, "Enter your sexual orientation");
-                                String note = getString(in, "Enter your note");
-                                if (email.equals("") || name.equals("") || GI.equals("") || SO.equals("") || note.equals(""))
-                                    continue;
-                                int res = db.mUserTable.insertUser(email, name, GI, SO, note);
-                                System.out.println(res + " rows added");
-                            } else if (action == '~') {
-                                String id = getString(in, "Enter the email ");
-                                if (id.equals(""))
-                                    continue;
-                                String newName = getString(in, "Enter your new name");
-                                String newGI = getString(in, "Enter your new gender identity");
-                                String newSO = getString(in, "Enter your new sexual orientation");
-                                String newNote = getString(in, "Enter your new note");
-                                int res = db.mUserTable.updateUser(id, newName, newGI, newSO, newNote);
-                                if (res == -1)
-                                    continue;
-                                System.out.println("  " + res + " rows updated");
+                        if (action == '?') {
+                            inner_menu("USER");
+                        } else if (action == 'T') {
+                            db.mUserTable.createTable();
+                        } else if (action == 'D') {
+                            db.mUserTable.dropTable();
+                        } else if (action == '1') {
+                            String id = getString(in, "Enter the email");
+                            if (id.equals(""))
+                                continue;
+                            UserTable.User res = db.mUserTable.selectOneUser(id);
+                            if (res != null) {
+                                System.out.println("  [" + res.user_id + "] ");
+                                System.out.println("  --> " + res.email);
+                                System.out.println("  --> " + res.name);
+                                System.out.println("  --> " + res.GI);
+                                System.out.println("  --> " + res.SO);
+                                System.out.println("  --> " + res.note);
                             }
-                        break;
+                        } else if (action == '*') {
+                            ArrayList<UserTable.User> res = db.mUserTable.selectAllUsers();
+                            if (res == null)
+                                continue;
+                            System.out.println("  Current Database Contents");
+                            System.out.println("  -------------------------");
+                            for (UserTable.User rd : res) {
+                                System.out.println("  [" + rd.user_id + "] ");
+                                System.out.println("  --> " + rd.email);
+                                System.out.println("  --> " + rd.name);
+                                System.out.println("  --> " + rd.GI);
+                                System.out.println("  --> " + rd.SO);
+                                System.out.println("  --> " + rd.note);
+                            }
+                        } else if (action == '-') {
+                            String id = getString(in, "Enter the email");
+                            if (id.equals(""))
+                                continue;
+                            int res = db.mUserTable.deleteUser(id);
+                            if (res == -1)
+                                continue;
+                            System.out.println("  " + res + " rows deleted");
+                        } else if (action == '+') {
+                            String email = getString(in, "Enter your email");
+                            String name = getString(in, "Enter your name");
+                            String GI = getString(in, "Enter your gender identity");
+                            String SO = getString(in, "Enter your sexual orientation");
+                            String note = getString(in, "Enter your note");
+                            if (email.equals("") || name.equals("") || GI.equals("") || SO.equals("") || note.equals(""))
+                                continue;
+                            int res = db.mUserTable.insertUser(email, name, GI, SO, note);
+                            System.out.println(res + " rows added");
+                        } else if (action == '~') {
+                            String id = getString(in, "Enter the email ");
+                            if (id.equals(""))
+                                continue;
+                            String newName = getString(in, "Enter your new name");
+                            String newGI = getString(in, "Enter your new gender identity");
+                            String newSO = getString(in, "Enter your new sexual orientation");
+                            String newNote = getString(in, "Enter your new note");
+                            int res = db.mUserTable.updateUser(id, newName, newGI, newSO, newNote);
+                            if (res == -1)
+                                continue;
+                            System.out.println("  " + res + " rows updated");
+                        }
+                    break;
                 }
             } while (action != '<');
         }
-
         // Always remember to disconnect from the database when the program
         // exits
         db.disconnect();

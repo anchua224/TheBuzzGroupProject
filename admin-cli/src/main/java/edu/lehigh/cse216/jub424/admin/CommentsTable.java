@@ -16,46 +16,46 @@ class CommentsTable{
    /**
      * A prepared statement for getting all data in the database
      */
-    private static PreparedStatement mSelectAll;
+    private static PreparedStatement mSelectAllComments;
 
     /**
      * A prepared statement for getting one row from the database
      */
-    private static PreparedStatement mSelectOne;
+    private static PreparedStatement mSelectOneComment;
 
     /**
      * A prepared statement for deleting a row from the database
      */
-    private static PreparedStatement mDeleteOne;
+    private static PreparedStatement mDeleteOneComment;
 
     /**
      * A prepared statement for inserting into the database
      */
-    private static PreparedStatement mInsertOne;
+    private static PreparedStatement mAddComment;
 
     /**
      * A prepared statement for updating a single row in the database
      */
-    private static PreparedStatement mUpdateOne;
+    private static PreparedStatement mUpdateComment;
 
     public CommentsTable(Connection mConnection) throws SQLException {
         mCreateTable = mConnection.prepareStatement("CREATE TABLE comments (id INT, user_id VARCHAR(64), " + 
         "com_id SERIAL PRIMARY KEY, FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERNCES USERS(user_id), " + 
         "content VARCHAR(300))");        
         mDropTable = mConnection.prepareStatement("DROP TABLE COMMENTS");     
-        mSelectAll = mConnection.prepareStatement("SELECT * FROM comments ORDER BY com_id DESC");
-        mSelectOne = mConnection.prepareStatement("SELECT FROM comments WHERE com_id = ?");
-        mDeleteOne = mConnection.prepareStatement("DELETE FROM comments WHERE com_id = ?");
-        mInsertOne = mConnection.prepareStatement("INSERT INTO comments VALUES (default, default, default, ?)");
-        mUpdateOne = mConnection.prepareStatement("UPDATE comments SET content = ? WHERE com_id = ?");
+        mSelectAllComments = mConnection.prepareStatement("SELECT * FROM comments ORDER BY com_id DESC");
+        mSelectOneComment = mConnection.prepareStatement("SELECT * FROM comments WHERE com_id = ?");
+        mDeleteOneComment = mConnection.prepareStatement("DELETE FROM comments WHERE com_id = ?");
+        mAddComment = mConnection.prepareStatement("INSERT INTO comments VALUES (?, ?, default, ?)");
+        mUpdateComment = mConnection.prepareStatement("UPDATE comments SET content = ? WHERE com_id = ?");
     }
 
     //inner class Comments, holds information of one row in the Comments table
     class Comments{
         /**
-        * id, which is the primary key of Comments
+        * com_id, which is the primary key of Comments
         */
-        public int id;
+        public int com_id;
 
         /**
         * content in the Comments which is a string
@@ -63,21 +63,18 @@ class CommentsTable{
         public String content;
 
          /**
-        * Create a new Comment with the provided id, and content. And a
-        * creation date based on the system clock at the time the constructor was
-        * called. 
+        * Create a new Comment with the com_id, and content. 
         * 
-        * @param id id to the Comments, which is unique for the whole time
-        * 
+        * @param com_id com_id to the Comments, which is unique for the whole time
         * @param content content of the Comments
         */
-        public Comments(int id, String content){
-            this.id = id;
+        public Comments(int com_id, String content){
+            this.com_id = com_id;
             this.content = content;
         }
     }
     /**
-    * Create the CommentsS table
+    * Create the Comments table
     */
     void createTable() {
         try {
@@ -87,7 +84,7 @@ class CommentsTable{
         }
     }
     /**
-    * Drop the CommentsS table
+    * Drop the Comments table
     */
     void dropTable() {
         try {
@@ -97,17 +94,17 @@ class CommentsTable{
         }
     }
     /**
-    * Query the database for a list of all subjects and their IDs
+    * Query the database for a list of all subjects and their com_ids
     * 
     * @return All rows, as an ArrayList
     */
     public ArrayList<Comments> selectAllComments() {
             ArrayList<Comments> res = new ArrayList<Comments>();
             try {
-                ResultSet rs = mSelectAll.executeQuery();
+                ResultSet rs = mSelectAllComments.executeQuery();
                 while (rs.next()) {
                     res.add(new Comments(
-                        rs.getInt("id"),
+                        rs.getInt("com_id"),
                         rs.getString("content")
                         ));
                 }
@@ -119,22 +116,22 @@ class CommentsTable{
             }    
     }    
     /**
-     * Get all Comments for a specific row, by ID
+     * Get all Comments for a specific idea, by id
      * 
      * @param id The id of the row being requested
      * 
-     * @return The Comments for the requested row, or null if the ID was invalid
+     * @return The Comments for the requested row, or null if the com_id was invalid
      */
-    public Comments selectOneComments(int id) {
+    public Comments selectOneComments(int com_id) {
         Comments res = null;
         try {
-            mSelectOne.setInt(1, id);
-            ResultSet rs = mSelectOne.executeQuery();
+            mSelectOneComment.setInt(1, com_id);
+            ResultSet rs = mSelectOneComment.executeQuery();
             if (rs.next()) {
                 res = new Comments(
-                        rs.getInt("id"),
+                        rs.getInt("com_id"),
                         rs.getString("content")
-                        );
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -142,17 +139,17 @@ class CommentsTable{
         return res;
     }
     /**
-     * Delete a row by ID
+     * Delete a row by com_id
      * 
-     * @param id The id of the row to delete
+     * @param com_id The com_id of the row to delete
      * 
      * @return The number of rows that were deleted. -1 indicates an error.
      */
-    public int deleteComments(int id) {
+    public int deleteComments(int com_id) {
         int res = -1;
         try {
-            mDeleteOne.setInt(1, id);
-            res = mDeleteOne.executeUpdate();
+            mDeleteOneComment.setInt(1, com_id);
+            res = mDeleteOneComment.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -161,16 +158,19 @@ class CommentsTable{
     /**
      * Insert a row into the database
      * 
-     * @param subject The subject for this new row
-     * @param message The message body for this new row
+     * @param id The id for the idea you want to comment
+     * @param comment The comment for this new row
+     * @param email The email for the user commenting
      * 
      * @return The number of rows that were inserted
      */
-    public int insertComments(String content) {
+    public int insertComments(int id, String content, String email) {
         int count = 0;
         try {
-            mInsertOne.setString(1, content);
-            count += mInsertOne.executeUpdate();
+            mAddComment.setInt(1, id);
+            mAddComment.setString(2, HashFunc.hash(email));
+            mAddComment.setString(3, content);
+            count += mAddComment.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -179,18 +179,18 @@ class CommentsTable{
     /**
      * Update the subject and message for a row in the database
      * 
-     * @param id      The id of the row to update
+     * @param com_id      The com_id of the row to update
      * 
      * @param message The new message contents
      * 
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int updateComments(int id, String content) {
+    public int updateComments(int com_id, String content) {
         int res = -1;
         try {
-            mUpdateOne.setString(1, content);
-            mUpdateOne.setInt(3, id);
-            res = mUpdateOne.executeUpdate();
+            mUpdateComment.setString(1, content);
+            mUpdateComment.setInt(2, com_id);
+            res = mUpdateComment.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
