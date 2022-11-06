@@ -35,6 +35,10 @@ public class User {
      */
     public String note;
     /**
+     * validity of the user
+     */
+    public int validity;
+    /**
      * the creation time, should not be changed
      */
     public final Date createdDate;
@@ -48,13 +52,14 @@ public class User {
      * @param note note from the user
      * 
      */
-    public User(String user_id, String email, String name, String GI, String SO, String note){
+    public User(String user_id, String email, String name, String GI, String SO, String note, int validity){
         this.user_id=user_id;
         this.email=email;
         this.name=name;
         this.GI=GI;
         this.SO=SO;
         this.note=note;
+        this.validity = validity;
         createdDate = new Date();
     }
 }
