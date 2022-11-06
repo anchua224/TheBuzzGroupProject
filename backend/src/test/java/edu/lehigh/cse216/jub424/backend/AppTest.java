@@ -46,6 +46,7 @@ public class AppTest
         assertTrue(idea.id == id);
         assertTrue(idea.title.equals(title));
         assertTrue(idea.massage.equals(content));
+        assertTrue(idea.userid.equals(user_id));
     }
 
     /**
