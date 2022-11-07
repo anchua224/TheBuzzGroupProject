@@ -99,6 +99,7 @@ class _LoginPage extends State<LoginPage> {
             throw Exception('Failed to get session key.');
           }
      // currentUser.setSessionKey(key!);
+      // Get user information from database
       currentUser = await getUserInfo(currentUser);
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfilePage(user: currentUser),
       ));
@@ -112,18 +113,9 @@ class _LoginPage extends State<LoginPage> {
       final List<dbUser> returnData;
       var res = jsonDecode(response.body);
       res = res['mData'];
-      print('json decode: $res');
-      // if (res is List) {
-      //   returnData = (res).map((x) => dbUser.fromJson(x)).toList();
-      // } else if (res is Map) {
-      //   returnData = <dbUser>[dbUser.fromJson(res as Map<String, dynamic>)];
-      // } else {
-      //   developer
-      //       .log('ERROR: Unexpected json response type (was not a List or Map).');
-      //   returnData = List.empty();
-      // }
+      // print('json decode: $res');
       user.setSO(res['SO']);
-      print('json so: ${res['SO']}');
+      // print('json so: ${res['SO']}');
       user.setNewName(res['name']);
       user.setGI(res['GI']);
       user.setNote(res['note']);

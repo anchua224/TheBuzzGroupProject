@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/api/google_signin_api.dart';
+import 'package:flutter_application_1/page/view_idea.dart';
 
 import '../main.dart';
 import 'create_post_page.dart';
@@ -11,7 +12,7 @@ import '../objects/user.dart';
 // Profile Page for viewing other users profile information
 // Displays: username, profile picture, name, note
 class PublicProfilePage extends StatefulWidget {
-  final User user;
+  final DBUser user;
   final User currentUser;
 
   const PublicProfilePage({
@@ -39,7 +40,7 @@ class PublicProfileState extends State<PublicProfilePage> {
       if (selectedIndex == 0) { // When home icon is selected, push HomePage
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.user)),
+            MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.currentUser)),
           );
       } 
     });
@@ -51,15 +52,16 @@ class PublicProfileState extends State<PublicProfilePage> {
       title: const Text('The Buzz'),
       centerTitle: true,
       actions: [
-        ElevatedButton.icon( // Logout button function
-          label: const Text('Logout'),
-          icon: const Icon(Icons.home),
-          onPressed: () async {
-            await GoogleSignInApi.logout();
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.user),
-            ));
-          },
-        )
+        // *** Can't implement without sending all the necessary data through to the page
+        //
+        // ElevatedButton.icon( // Logout button function
+        //   label: const Text('Back'),
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () async {
+        //     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ViewIdeaPage(title: 'The Buzz', user: widget.currentUser, id: null, idea: null,),
+        //     ));
+        //   },
+        // )
       ],
     ),
     body: Container(
@@ -149,46 +151,5 @@ class PublicProfileState extends State<PublicProfilePage> {
         ],
       ),
     ),
-    bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.pinkAccent,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.circle),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: selectedIndex,
-        selectedItemColor: Colors.white,
-        onTap: itemTapped,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          //This will take me to the page where I can make a post
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddIdeaState(user: widget.user)),
-          );
-        },
-      ), // This trailing comma makes auto-formatting nicer for build methods.
   );
-  Future<DBUser> getUserInfo(String userId) async{
-    final response = await http
-        .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/$userId'));
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response, then parse the JSON.
-      Map<String,String> userMap = jsonDecode(response.body);
-      DBUser user = DBUser.fromJson(userMap);
-      return user;
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Did not receive success status code from request.');
-    }
-  }
 }
