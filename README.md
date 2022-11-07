@@ -96,27 +96,34 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 
 ## User Interfaces
 ### Mobile
-![image](markdown_images/Mobile_UI_v2.png)
+<!-- ![image](markdown_images/Mobile_UI_v2.png) -->
+![image](markdown_images/mobile_ui_1.png)
+![image](markdown_images/mobile_ui_2.png)
+![image](markdown_images/mobile_ui_3.png)
+
 ### Web
 ![image](markdown_images/Web_UI_v2.png)
 	
-## Backlog Item List (Phase 2 Sprint 7):
+## Backlog Item & Tech Debt List (Phase 2 Sprint 9):
 - Mobile:
 	- Ideas do not show likes
-	- Ideas do not show names of users, only user ids
-	- User cannot view other profiles
+	- Ideas do not show names of users, only user ids (Tried implementing a hash map that saves user id and names, couldn’t test with ideas table down)
+	- Ideas cannot be liked
+	- Unit tests not implemented
+	- User cannot view other profiles (Tried to implement, couldn’t test with technical difficulties)
 	- Users cannot view comments
-	- Main problem was using the routes. Had trouble with parsing json and storing information, as well as putting information using routes
 
 - Backend:
-	- User table
-		- Change the SQL query for the users' table to make it consistent with new tables
-	- Better JavDoc with additional details
+	- Deploy not working
+
 - Admin:
-	- Unit tests still need to be worked on and more methods are needed to make options easier and faster to reach.
+	- not specific methods to do each update of items in database specifically
+	- no fast way to drop and create all tables with one method
+	- moving from table to table isn't very optimal
+
 - Web 
-	- The JS documentation hasn’t been completed
-	- The unit tests still need to be developed
+	- The JS Documentation
+	- Unit test for react
 	
 
 
