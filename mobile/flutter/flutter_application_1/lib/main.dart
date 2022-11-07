@@ -161,6 +161,7 @@ class _ListOfIdeasState extends State<ListOfIdeas> {
               padding: const EdgeInsets.all(26.0),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, i) {
+                // Hash names into a hash map with user id
                 getProfileData(snapshot.data![i].userid, widget.user).then((String val) {
                   names[snapshot.data![n].userid] = val;
                 });
@@ -187,11 +188,11 @@ class _ListOfIdeasState extends State<ListOfIdeas> {
                                   ),
                                   Container(
                                     width: 300,
+                                    alignment: Alignment.centerLeft,
                                     child: Text(
                                         snapshot.data![i].message,
                                         style: const TextStyle(fontSize: 14),
                                         ),
-                                    alignment: Alignment.centerLeft,
                                   ),
                                   const SizedBox(height: 10),
                                 ],
@@ -238,7 +239,8 @@ class _ListOfIdeasState extends State<ListOfIdeas> {
                                   child: IconButton(
                                     color: Colors.white, 
                                     onPressed: () { 
-                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ViewIdeaPage(user: widget.user, idea: snapshot.data![i], id: i)));
+                                      // View Idea Page
+                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ViewIdeaPage(user: widget.user, idea: snapshot.data![i], id: i, title: 'The Buzz',)));
                                     }, 
                                     icon: const Icon(Icons.open_in_new),
                                   ),

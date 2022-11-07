@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/api/google_signin_api.dart';
 
@@ -25,7 +27,9 @@ class PublicProfilePage extends StatefulWidget {
 class PublicProfileState extends State<PublicProfilePage> {
   
 
-  int selectedIndex = 1; // Navigation bar, shows profile is selected
+  int selectedIndex = 1;
+  
+  get http => null; // Navigation bar, shows profile is selected
   
   // This method will make it so the bottom navigation bar works and highlights
   // whatever tab ur supposed to be in
@@ -173,4 +177,18 @@ class PublicProfileState extends State<PublicProfilePage> {
         },
       ), // This trailing comma makes auto-formatting nicer for build methods.
   );
+  Future<DBUser> getUserInfo(String userId) async{
+    final response = await http
+        .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/$userId'));
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response, then parse the JSON.
+      Map<String,String> userMap = jsonDecode(response.body);
+      DBUser user = DBUser.fromJson(userMap);
+      return user;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Did not receive success status code from request.');
+    }
+  }
 }

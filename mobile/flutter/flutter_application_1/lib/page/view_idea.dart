@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/page/public_profile_page.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +17,7 @@ class ViewIdeaPage extends StatefulWidget {
     Key? key,
     required this.user,
     required this.idea,
-    required this.id,
+    required this.id, required String title,
   }) : super(key: key);
 
   @override
@@ -173,16 +174,19 @@ class ViewIdeaState extends State<ViewIdeaPage> {
                       fixedSize: const Size(200, 80), 
                     ),
                 onPressed: () {
-                    // Send user back to home page, ideas displayed up-to-date
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyHomePage(title: 'The Buzz', user: widget.user)),
-                  );
-                  setState(() {
-                    addComment(commentController.text, widget.id, widget.user);
+                    // View User Profile
+                    DBUser viewProfile;
+                    setState(() {
+                      getUserInfo(widget.idea.userid).then((DBUser val) {
+                        viewProfile = val;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PublicProfilePage( user: viewProfile, currentUser: widget.user,)),
+                      );
+                    });
                   });
                 },
-                icon: const Icon(Icons.comment),
+                icon: const Icon(Icons.person),
                 label: const Text(
                   'Add Comment',
                   style: TextStyle(
@@ -203,7 +207,7 @@ class ViewIdeaState extends State<ViewIdeaPage> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'mUserId': widget.user.id!,
+        'mUserId': widget.user.sessionKey,
         'mContent': comment,
       }),
     );
@@ -214,6 +218,20 @@ class ViewIdeaState extends State<ViewIdeaPage> {
       // If the server did not return a 200 CREATED response,
       // then throw an exception.
       throw Exception('Failed to create Post.');
+    }
+  }
+  Future<DBUser> getUserInfo(String userId) async{
+    final response = await http
+        .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/$userId'));
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response, then parse the JSON.
+      Map<String,String> userMap = jsonDecode(response.body);
+      DBUser user = DBUser.fromJson(userMap);
+      return user;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Did not receive success status code from request.');
     }
   }
 }

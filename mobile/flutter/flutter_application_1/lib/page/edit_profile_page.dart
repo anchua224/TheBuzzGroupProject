@@ -295,7 +295,7 @@ class EditProfileState extends State<EditProfilePage> {
     ),
     );
   }
-  
+  // Update Profile Information with put request
   void updateProfile(User user) async {
     Uri url = Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${user.sessionKey}?sessionKey=${user.sessionKey}');
     final response = await http.put(url,
@@ -312,7 +312,7 @@ class EditProfileState extends State<EditProfilePage> {
     if (response.statusCode == 200) {
       // If the server did return a 200 CREATED response,
       // then parse the JSON.
-      print("Updated note: "+ user.note!);
+      // print("Updated note: "+ user.note!); // Used for debugging
     } else {
       // If the server did not return a 200 CREATED response,
       // then throw an exception.

@@ -71,7 +71,7 @@ class User {
   }
 }
 
-class dbUser {
+class DBUser {
   String? userid;
   String? email;
   String? displayName;
@@ -80,11 +80,11 @@ class dbUser {
   String? note;
   String? createdDate;
 
-  dbUser({required this.userid, required this.email, required this.displayName, required this.gi, 
+  DBUser({required this.userid, required this.email, required this.displayName, required this.gi, 
     required this.so, required this.note, required this.createdDate});
 
-  factory dbUser.fromJson(Map<String, dynamic> json) {
-    return dbUser(
+  factory DBUser.fromJson(Map<String, dynamic> json) {
+    return DBUser(
       userid: json['user_id'],
       email: json['email'],
       displayName: json['name'],
@@ -93,25 +93,5 @@ class dbUser {
       note: json['note'],
       createdDate: json['createdDate'],
     );
-}
-
-// class AddUser extends StatelessWidget {
-//   final GoogleSignInAccount googleAccount;
-//   var newUser = CurrentUser();
-//   newUser.id = googleAccount.id;
-
-//   // Future<void> addUser() {
-//   // // Call the user's CollectionReference to add a new user
-//   // return users
-//   //     .add({
-//   //       'uid': uid,
-//   //       'displayName': displayName,
-//   //       'email': email,
-//   //       'photoURL': photoURL,
-//   //       'lastSeen': DateTime.now()
-//   //     })
-//   //     .then((value) => print("User Added"))
-//   //     .catchError((error) => print("Failed to add user: $error"));
-//   // }
-// }
+  }
 }
