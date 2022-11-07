@@ -136,7 +136,7 @@ class PublicProfileState extends State<PublicProfilePage> {
               ),
               borderRadius: BorderRadius.circular(5),
               ),    
-            child: Text(
+            child: const Text(
               ' N/A',
               style: TextStyle(color: Colors.black, fontSize: 18,),
               textAlign: TextAlign.left,

@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/api/google_signin_api.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:developer' as developer;
 
 import '../main.dart';
 import 'create_post_page.dart';
@@ -38,7 +43,6 @@ class ProfileState extends State<ProfilePage> {
       } 
     });
   }
-
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
@@ -162,7 +166,7 @@ class ProfileState extends State<ProfilePage> {
               ),    
             child: Text(
               '${widget.user.note}',
-              style: TextStyle(color: Colors.black, fontSize: 18,),
+              style: const TextStyle(color: Colors.black, fontSize: 18,),
               textAlign: TextAlign.left,
             ),
           ),

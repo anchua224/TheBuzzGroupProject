@@ -1,4 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/page/view_idea.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -111,6 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+  
+  
 }
 
 
@@ -128,17 +132,20 @@ class ListOfIdeas extends StatefulWidget {
 }
 
 class _ListOfIdeasState extends State<ListOfIdeas> {
+  var name = "";
+  Map<String, String> names = HashMap();
   @override
   void initState() {
+    name = "hi";
     super.initState();
   }
 
   void retry() {
     setState(() {});
   }
-  String name = 'loading';
-  List<bool> postLiked = List.generate(4, (i) => false); // Default State
-  List<bool> postDisliked = List.generate(4, (i) => false);
+  int n = 0;
+  // List<bool> postLiked = List.generate(6, (i) => false); // Default State
+  // List<bool> postDisliked = List.generate(6, (i) => false);
   @override
   Widget build(BuildContext context) {
     var fb = FutureBuilder<List<Idea>>(
@@ -154,13 +161,14 @@ class _ListOfIdeasState extends State<ListOfIdeas> {
               padding: const EdgeInsets.all(26.0),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, i) {
-                //String name = await getUserName(snapshot.data![i].userid) as String;
-                //getProfileData(snapshot.data![i].userid);
+                getProfileData(snapshot.data![i].userid, widget.user).then((String val) {
+                  names[snapshot.data![n].userid] = val;
+                });
                 return Column(
                   children: <Widget>[
                     ListTile(
                         title: Text(
-                          snapshot.data![i].userid,
+                          names[snapshot.data![i].userid]!,
                           style: const TextStyle(fontSize: 14),
                         ),
                         subtitle: 
@@ -195,11 +203,11 @@ class _ListOfIdeasState extends State<ListOfIdeas> {
                                   height: 20,
                                   width: 20,
                                   child: IconButton(
-                                    color: postLiked[i] ? Colors.pink : Colors.white, 
+                                   //color: postLiked[i] ? Colors.pink : Colors.white, 
                                     onPressed: () { 
                                       setState(() {
                                         //pass in snapshot.data.id
-                                        postLiked[i] = !postLiked[i];
+                                        //postLiked[i] = !postLiked[i];
                                     });
                                     }, 
                                     icon: const Icon(Icons.favorite),
@@ -211,12 +219,12 @@ class _ListOfIdeasState extends State<ListOfIdeas> {
                                   height: 30,
                                   width: 20,
                                   child: IconButton(
-                                    color: postDisliked[i] ? Colors.blue : Colors.white, 
+                                    //color: postDisliked[i] ? Colors.blue : Colors.white, 
                                     onPressed: () { 
                                       setState(() {
                                         //pass in snapshot.data.id
-                                        postDisliked[i] = !postDisliked[i];
-                                        postLiked[i] = !postLiked[i];
+                                        // postDisliked[i] = !postDisliked[i];
+                                        // postLiked[i] = !postLiked[i];
                                     });
                                     }, 
                                     icon: const Icon(Icons.heart_broken),
@@ -257,15 +265,17 @@ class _ListOfIdeasState extends State<ListOfIdeas> {
     );
     return fb;
   }
-  // void getUserName(String userid) async {
-  //   Future<dbUser> userFuture = getProfileData(userid);
-  //   dbUser? user = await userFuture;
-  //   //name = user.displayName;
-  // }
-  
-  void getProfileData(String userid) async {
+  void getName(String userid, User user) {
+    getProfileData(userid, user);
+  }
+  Future<String> getProfileData(String userid, User user) async {
     final response = await http
-      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${userid}'));
+      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${userid}?sessionKey=${user.sessionKey}'));
+      var res = jsonDecode(response.body);
+      res = res['mData'];
+      print(res);
+      var name = res['name'];
+      print(name);
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response, then parse the JSON.
       
@@ -275,7 +285,9 @@ class _ListOfIdeasState extends State<ListOfIdeas> {
       // then throw an exception.
       throw Exception('Did not receive success status code from request.');
     }
+    return name;
   }
+
 }
 
 // Idea class holds the title and message of every idea
@@ -312,7 +324,6 @@ Future<List<Idea>> fetchIdeas() async {
     var res = jsonDecode(response.body);
     res = res['mData'];
     print('json decode: $res');
-
     if (res is List) {
       returnData = (res).map((x) => Idea.fromJson(x)).toList();
     } else if (res is Map) {
@@ -390,6 +401,8 @@ Future<Likes> updateLike(int id, User user) async {
     throw Exception('Failed to like post.');
   }
 }
+
+
 
 
 

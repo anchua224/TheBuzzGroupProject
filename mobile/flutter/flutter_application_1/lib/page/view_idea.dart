@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:developer' as developer;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'profile_page.dart';
-import 'create_post_page.dart';
-import 'login_page.dart';
 import '../main.dart';
 
 import '../objects/user.dart';
@@ -66,7 +62,7 @@ class ViewIdeaState extends State<ViewIdeaPage> {
               width: 400,
               height: 150,
               decoration: BoxDecoration(
-                color: Color.fromARGB(176, 251, 207, 126),
+                color: const Color.fromARGB(176, 251, 207, 126),
                 border: Border.all(
                   color: const Color.fromARGB(150, 233, 30, 98),
                   width: 1.5,
@@ -77,29 +73,29 @@ class ViewIdeaState extends State<ViewIdeaPage> {
                 crossAxisAlignment: CrossAxisAlignment. start,
                 children: [
                   Text(
-                    '${widget.idea.userid}',
-                    style: TextStyle(color: Colors.black, fontSize: 18,),
+                    widget.idea.userid,
+                    style: const TextStyle(color: Colors.black, fontSize: 18,),
                     textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 7),
                   Text(
                     textAlign: TextAlign.left,
-                    '${widget.idea.title}',
-                    style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold,),
+                    widget.idea.title,
+                    style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold,),
                   ),
                   const SizedBox(height: 5),
                   Text(
                     textAlign: TextAlign.left,
                     '  ${widget.idea.message}',
-                    style: TextStyle(color: Colors.black, fontSize: 16,),
+                    style: const TextStyle(color: Colors.black, fontSize: 16,),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 3),
+            const SizedBox(height: 3),
             Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: const Color.fromARGB(255, 255, 255, 255),
                 border: Border.all(
                   color: const Color.fromARGB(150, 233, 30, 98),
                   width: 1.5,
@@ -115,7 +111,7 @@ class ViewIdeaState extends State<ViewIdeaPage> {
                       ' @${widget.user.uid}'
                     ),
                   ),
-                  SizedBox(width: 150),
+                  const SizedBox(width: 150),
                                 Container(
                                   alignment: Alignment.centerRight,
                                   child: IconButton(
@@ -186,7 +182,7 @@ class ViewIdeaState extends State<ViewIdeaPage> {
                     addComment(commentController.text, widget.id, widget.user);
                   });
                 },
-                icon: Icon(Icons.comment),
+                icon: const Icon(Icons.comment),
                 label: const Text(
                   'Add Comment',
                   style: TextStyle(

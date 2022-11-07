@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
-import '../page/profile_page.dart';
-import '../page/edit_profile_page.dart';
 
 // Class contains information for user currently logged into the app
 class User {

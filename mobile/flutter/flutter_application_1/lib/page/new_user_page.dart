@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:meta/meta.dart';
-
-import 'profile_page.dart';
-import 'login_page.dart';
-import 'edit_profile_page.dart';
-import '../main.dart';
 
 class NewUserPage extends StatefulWidget {
   final GoogleSignInAccount user;

@@ -1,15 +1,11 @@
-import 'dart:ui';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:developer' as developer;
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../api/google_signin_api.dart';
 import 'profile_page.dart';
-import 'create_post_page.dart';
-import '../main.dart';
 import '../objects/user.dart';
 
 class LoginPage extends StatefulWidget {
@@ -36,20 +32,20 @@ class _LoginPage extends State<LoginPage> {
         children: <Widget>[
           Container(
             child: Padding(
-              padding: EdgeInsets.all(100.0),
+              padding: const EdgeInsets.all(100.0),
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.pink,
                   foregroundColor: Colors.white,
                   fixedSize: const Size(240, 80), 
-                  minimumSize: Size(double.infinity, 50),
+                  minimumSize: const Size(double.infinity, 50),
                 ),
                 icon: Image.asset(
                   'assets/images/google_icon.png',
                   height: 32,
                   width: 32
                   ),
-                label: Text('Sign-in with Google'),
+                label: const Text('Sign-in with Google'),
                 onPressed: signin, //signin method
                 ),
               )
@@ -87,7 +83,7 @@ class _LoginPage extends State<LoginPage> {
       print(idToken!.substring(1023));
       print(user.id);
        final response = await http.post(
-        Uri.parse('https://cse216-fl22-team14.herokuapp.com/login?token='+idToken),
+        Uri.parse('https://cse216-fl22-team14.herokuapp.com/login?token=$idToken'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -103,8 +99,39 @@ class _LoginPage extends State<LoginPage> {
             throw Exception('Failed to get session key.');
           }
      // currentUser.setSessionKey(key!);
+      currentUser = await getUserInfo(currentUser);
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfilePage(user: currentUser),
       ));
+    }
+  }
+  Future<User> getUserInfo(User user) async{
+    final response = await http
+        .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${user.sessionKey}'));
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response, then parse the JSON.
+      final List<dbUser> returnData;
+      var res = jsonDecode(response.body);
+      res = res['mData'];
+      print('json decode: $res');
+      // if (res is List) {
+      //   returnData = (res).map((x) => dbUser.fromJson(x)).toList();
+      // } else if (res is Map) {
+      //   returnData = <dbUser>[dbUser.fromJson(res as Map<String, dynamic>)];
+      // } else {
+      //   developer
+      //       .log('ERROR: Unexpected json response type (was not a List or Map).');
+      //   returnData = List.empty();
+      // }
+      user.setSO(res['SO']);
+      print('json so: ${res['SO']}');
+      user.setNewName(res['name']);
+      user.setGI(res['GI']);
+      user.setNote(res['note']);
+      return user;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Did not receive success status code from request.');
     }
   }
 }

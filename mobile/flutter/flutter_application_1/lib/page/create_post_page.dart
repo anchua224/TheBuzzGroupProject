@@ -135,12 +135,12 @@ class _TextBoxState extends State<TextBox> {
   }
   createPost(String title, String message) async {
     final response = await http.post(
-      Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas'),
+      Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas?${widget.user.sessionKey}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'mId': widget.user.id!,
+        'mId': widget.user.sessionKey,
         'mTitle': title,
         'mMessage': message,
       }),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:developer' as developer;
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -61,11 +59,11 @@ class EditProfileState extends State<EditProfilePage> {
     //var user = User();
     //FIXME: initialize user in another page
     //user = User().initializeUser(widget.user, user);
-    if (widget.user.so != "n/a") {
+    if (widget.user.so != 'NO SO YET') {
       valueSO = widget.user.so;
       hintSO = false;
-    }
-    if (widget.user.gi != "n/a") {
+    } 
+    if (widget.user.gi != 'NO GI YET') {
       valueGI = widget.user.gi;
     }
     // user.setName();
@@ -94,7 +92,7 @@ class EditProfileState extends State<EditProfilePage> {
             const SizedBox(height: 15),
             Center(
               child: GestureDetector(
-                child: CircleAvatar(
+                child: const CircleAvatar(
                     radius: 45,
                     backgroundColor: Color.fromARGB(255, 251, 207, 126),),
                 onTap: () async{
@@ -102,7 +100,7 @@ class EditProfileState extends State<EditProfilePage> {
                 },
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             const Text(
               'Private Information',
               style: TextStyle(fontSize: 20, color: Colors.pink, fontWeight: FontWeight.bold),
@@ -118,7 +116,7 @@ class EditProfileState extends State<EditProfilePage> {
                   height: 40,
                   alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
-                    color:  Color.fromARGB(35, 233, 30, 98),
+                    color:  const Color.fromARGB(35, 233, 30, 98),
                     border: Border.all(
                       color: Colors.pink,
                       width: 1,
@@ -221,7 +219,7 @@ class EditProfileState extends State<EditProfilePage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             const Text(
               'Public Information',
               style: TextStyle(fontSize: 20, color: Colors.pink, fontWeight: FontWeight.bold),
@@ -235,7 +233,7 @@ class EditProfileState extends State<EditProfilePage> {
                   height: 40,
                   alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
-                    color:  Color.fromARGB(35, 233, 30, 98),
+                    color:  const Color.fromARGB(35, 233, 30, 98),
                     border: Border.all(
                       color: Colors.pink,
                       width: 1,
@@ -261,7 +259,7 @@ class EditProfileState extends State<EditProfilePage> {
                 maxLines: 20,
                 controller: displayNameController..text = '${widget.user.displayName}',
                 maxLength: 50,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),   
                   ),
                 textAlignVertical: TextAlignVertical.top,
@@ -299,19 +297,22 @@ class EditProfileState extends State<EditProfilePage> {
   }
   
   void updateProfile(User user) async {
-    final response = await http.put(
-      Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${user.id}sessionKey=${user.sessionKey}'),
+    Uri url = Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${user.sessionKey}?sessionKey=${user.sessionKey}');
+    final response = await http.put(url,
+      headers: <String, String>{
+        'content-type': 'application/json',
+      },
       body: jsonEncode(<String, String>{
-        'user_id': widget.user.id!,
-        'name': widget.user.displayName!,
-        'note': widget.user.note!,
-        'SO': widget.user.so!,
-        'GI': widget.user.gi!,
+        'mName': user.displayName!,
+        'mNote': user.note!,
+        'mSO': user.so!,
+        'mGI': user.gi!,
       }),
     );
     if (response.statusCode == 200) {
       // If the server did return a 200 CREATED response,
       // then parse the JSON.
+      print("Updated note: "+ user.note!);
     } else {
       // If the server did not return a 200 CREATED response,
       // then throw an exception.
