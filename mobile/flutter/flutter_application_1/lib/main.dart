@@ -1,9 +1,20 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
+import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/page/view_idea.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:developer' as developer;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import 'page/profile_page.dart';
+import 'page/create_post_page.dart';
+import 'page/login_page.dart';
+import 'page/view_idea.dart';
+
+import '../objects/user.dart';
+
 
 // To the next person writing flutter code. flutter.io and geeksforgeeks is your
 // best friend. Flutter.io to see sample code on how each individual widget works
@@ -24,13 +35,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      home: const MyHomePage(title: 'The Buzz'),
+      home: const LoginPage(title: 'The Buzz'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  final User user;
+  const MyHomePage({super.key, required this.title, required this.user});
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -40,10 +52,10 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+
 
 class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 0;
@@ -52,6 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void itemTapped(int index) {
     setState(() {
       selectedIndex = index;
+      // When profile icon is selected, push Profile Page
+      if (selectedIndex == 1) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute( builder: (context) => ProfilePage(user: widget.user)));
+      }
     });
   }
 
@@ -65,8 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         centerTitle: true,
       ),
-      body: const Center(
-        child: ListofIdeas(),
+      body: Center(
+        child: ListOfIdeas(user: widget.user),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.pinkAccent,
@@ -86,79 +102,161 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add,),
         onPressed: () {
           //This will take me to the page where I can make a post
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddIdeaState()),
+            MaterialPageRoute(builder: (context) => AddIdeaState(user: widget.user)),
           );
         },
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+  
+  
 }
 
-class ListofIdeas extends StatefulWidget {
-  const ListofIdeas({super.key});
+
+
+class ListOfIdeas extends StatefulWidget {
+  final User user;
+
+  const ListOfIdeas({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
-  State<ListofIdeas> createState() => _ListofIdeasState();
+  State<ListOfIdeas> createState() => _ListOfIdeasState();
 }
 
-class _ListofIdeasState extends State<ListofIdeas> {
+class _ListOfIdeasState extends State<ListOfIdeas> {
+  var name = "";
+  Map<String, String> names = HashMap();
   @override
   void initState() {
+    name = "hi";
     super.initState();
   }
 
   void retry() {
     setState(() {});
   }
-
+  int n = 0;
+  // List<bool> postLiked = List.generate(6, (i) => false); // Default State
+  // List<bool> postDisliked = List.generate(6, (i) => false);
   @override
   Widget build(BuildContext context) {
-    // boolean baraible stating that the likes icon should be white
-    bool postLiked = false;
     var fb = FutureBuilder<List<Idea>>(
-      future: fetchIdeas(),
+      future:
+        fetchIdeas(),
+        
       builder: (BuildContext context, AsyncSnapshot<List<Idea>> snapshot) {
         Widget child;
         if (snapshot.hasData) {
           // create listview to show one row per array element of json response
-          child = ListView.builder(
+          child= Scrollbar(
+            child: ListView.builder(
               padding: const EdgeInsets.all(26.0),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, i) {
+                // Hash names into a hash map with user id
+                getProfileData(snapshot.data![i].userid, widget.user).then((String val) {
+                  names[snapshot.data![n].userid] = val;
+                });
                 return Column(
                   children: <Widget>[
                     ListTile(
-                        // This is supposed to remove a like
-                        onLongPress: () {
-                          //updateLike()
-                        },
                         title: Text(
-                          snapshot.data![i].title,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          names[snapshot.data![i].userid]!,
+                          style: const TextStyle(fontSize: 14),
                         ),
-                        subtitle: Text(snapshot.data![i].message),
-                        tileColor: const Color.fromARGB(200, 240, 128, 128),
-                        trailing: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              //pass in snapshot.data.id
-                              postLiked = !postLiked;
-                            });
-                          },
-                          child: Icon(
-                            Icons.favorite,
-                            color: postLiked ? Colors.pink : Colors.white,
-                          ),
-                        )),
+                        subtitle: 
+                        Row(
+                          children: [
+                            Column(
+                              children: [
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    width: 300,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      snapshot.data![i].title,
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 300,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                        snapshot.data![i].message,
+                                        style: const TextStyle(fontSize: 14),
+                                        ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                              Column(
+                              children: [
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  height: 20,
+                                  width: 20,
+                                  child: IconButton(
+                                   //color: postLiked[i] ? Colors.pink : Colors.white, 
+                                    onPressed: () { 
+                                      setState(() {
+                                        //pass in snapshot.data.id
+                                        //postLiked[i] = !postLiked[i];
+                                    });
+                                    }, 
+                                    icon: const Icon(Icons.favorite),
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  height: 30,
+                                  width: 20,
+                                  child: IconButton(
+                                    //color: postDisliked[i] ? Colors.blue : Colors.white, 
+                                    onPressed: () { 
+                                      setState(() {
+                                        //pass in snapshot.data.id
+                                        // postDisliked[i] = !postDisliked[i];
+                                        // postLiked[i] = !postLiked[i];
+                                    });
+                                    }, 
+                                    icon: const Icon(Icons.heart_broken),
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  height: 20,
+                                  width: 20,
+                                  child: IconButton(
+                                    color: Colors.white, 
+                                    onPressed: () { 
+                                      // View Idea Page
+                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ViewIdeaPage(user: widget.user, idea: snapshot.data![i], id: i, title: 'The Buzz',)));
+                                    }, 
+                                    icon: const Icon(Icons.open_in_new),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
+                          ],
+                        ),
+                          
+                        tileColor: const Color.fromARGB(200, 251, 207, 126), // Message Color
+                        ),
                     const Divider(height: 8.0),
                   ],
                 );
-              });
+              }));
         } else if (snapshot.hasError) {
           child = Text('${snapshot.error}');
         } else {
@@ -169,19 +267,51 @@ class _ListofIdeasState extends State<ListofIdeas> {
     );
     return fb;
   }
+  void getName(String userid, User user) {
+    getProfileData(userid, user);
+  }
+  Future<String> getProfileData(String userid, User user) async {
+    final response = await http
+      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${userid}?sessionKey=${user.sessionKey}'));
+      var res = jsonDecode(response.body);
+      res = res['mData'];
+      print(res);
+      var name = res['name'];
+      print(name);
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response, then parse the JSON.
+      
+      //return returnData;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Did not receive success status code from request.');
+    }
+    return name;
+  }
+
 }
 
 // Idea class holds the title and message of every idea
 class Idea {
   final String title;
   final String message;
+  final int id;
+  final int validity;
+  final String userid;
+  final String dateCreated;
 
-  const Idea({required this.title, required this.message});
+  const Idea({required this.title, required this.message, required this.id, required this.validity, 
+    required this.userid, required this.dateCreated});
 
   factory Idea.fromJson(Map<String, dynamic> json) {
     return Idea(
       title: json['title'],
       message: json['massage'],
+      id: json['id'],
+      validity: json['validity'],
+      userid: json['userid'],
+      dateCreated: json['createdDate'],
     );
   }
 }
@@ -189,14 +319,13 @@ class Idea {
 // fetchIdeas cast is in charge of pulling the title and message from the database
 Future<List<Idea>> fetchIdeas() async {
   final response = await http
-      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com//ideas'));
+      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas'));
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, then parse the JSON.
     final List<Idea> returnData;
     var res = jsonDecode(response.body);
     res = res['mData'];
     print('json decode: $res');
-
     if (res is List) {
       returnData = (res).map((x) => Idea.fromJson(x)).toList();
     } else if (res is Map) {
@@ -213,8 +342,7 @@ Future<List<Idea>> fetchIdeas() async {
     throw Exception('Did not receive success status code from request.');
   }
 }
-
-// Likes class holds the num of likes of an individual idea
+// TODO: Add dislike button and functionality, connect to database
 class Likes {
   final int numLikes;
 
@@ -228,11 +356,11 @@ class Likes {
     );
   }
 }
-
+// FIXME:
 // fetchLikes method is supposed to fetch the like # for a specific id
-Future<List<Likes>> fetchLikes(int id) async {
+Future<List<Likes>> fetchLikes(int id, User user) async {
   final response = await http
-      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/likes/:id'));
+      .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas/:${id}/like?sessionKey=${user.sessionKey}'));
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, then parse the JSON.
     final List<Likes> returnData;
@@ -256,11 +384,11 @@ Future<List<Likes>> fetchLikes(int id) async {
     throw Exception('Did not receive success status code from request.');
   }
 }
-
+// FIXME:
 // updateLike method will post the like to the specific post with the specific id
-Future<Likes> updateLike(int id) async {
+Future<Likes> updateLike(int id, User user) async {
   final response = await http.put(
-      Uri.parse('https://cse216-fl22-team14.herokuapp.com/likes/:id'),
+      Uri.parse('https://cse216-fl22-team14.herokuapp.com/likes/$id/like?sessionKey=${user.sessionKey}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -276,98 +404,7 @@ Future<Likes> updateLike(int id) async {
   }
 }
 
-// AddIdeaState class would be the state of the app once you are trying to post
-// an idea
-class AddIdeaState extends StatelessWidget {
-  const AddIdeaState({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Post'),
-      ),
-      body: Column(
-        children: const <Widget>[TextBox()],
-      ),
-    );
-  }
-}
 
-// createPost method is the method called in order to post an idea to the
-// database
-createPost(String title, String message) async {
-  final response = await http.post(
-    Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'mTitle': title,
-      'mMessage': message,
-    }),
-  );
-  if (response.statusCode == 200) {
-    // If the server did return a 200 CREATED response,
-    // then parse the JSON.
-  } else {
-    // If the server did not return a 200 CREATED response,
-    // then throw an exception.
-    throw Exception('Failed to create Post.');
-  }
-}
 
-class TextBox extends StatefulWidget {
-  const TextBox({super.key});
 
-  @override
-  State<TextBox> createState() => _TextBoxState();
-}
-
-class _TextBoxState extends State<TextBox> {
-  // Create a text controller and use it to retrieve the current value
-  // of the TextField.
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  // The field in which users can text
-  final titleController = TextEditingController();
-  final messageController = TextEditingController();
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    titleController.dispose();
-    messageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TextField(
-          controller: titleController,
-          decoration: const InputDecoration(
-              hintText: 'Enter Title', border: OutlineInputBorder()),
-          autofocus: true,
-        ),
-        TextField(
-          controller: messageController,
-          decoration: const InputDecoration(
-              hintText: 'Enter Message', border: OutlineInputBorder()),
-        ),
-        ElevatedButton(
-            onPressed: () {
-              setState(() {
-                createPost(titleController.text, messageController.text);
-              });
-            },
-            child: const Text('Create Post'))
-      ],
-    );
-  }
-}
