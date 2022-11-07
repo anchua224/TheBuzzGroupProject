@@ -29,7 +29,7 @@ export default function Comments(props) {
   
 
   return (
-    <div>
+    <div data-testid='com'>
       <b>Comments:</b>
       {Comments.map(comment => {
             return (

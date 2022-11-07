@@ -75,7 +75,7 @@ export default function Profile({profileOpen, profileOnClose, user_id}) {
   };
 
   return ReactDOM.createPortal(
-    <div style={OVERLAY_STYLE}>
+    <div style={OVERLAY_STYLE} data-testid='profile'>
       { userInfor !== undefined  &&
         <div style={PROFILE_STYLES}>
           <h3>Name: {userInfor.name}</h3>

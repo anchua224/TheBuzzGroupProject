@@ -24,7 +24,7 @@ export default function Ideas() {
     
 
     return (
-    <div>
+    <div data-testid='ideas'>
         <button id='addIdeaButton' onClick={() => setIsOpen(true)}> AddIdea </button>
         <AddIdea 
           open={isOpen}

@@ -53,7 +53,7 @@ const Login = () => {
     },[]);
 
     return (
-        <div className='login'>
+        <div className='login' data-testid='login'>
             <div id='signInDiv'></div>
             {   Object.keys(user).length !== 0 && 
                 <div>
