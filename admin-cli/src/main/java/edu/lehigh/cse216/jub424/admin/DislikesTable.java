@@ -9,34 +9,38 @@ import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 
+<<<<<<< HEAD:admin-cli/src/main/java/edu/lehigh/cse216/jub424/admin/LikeTable.java
 class LikeTable{
+=======
+class DislikesTable{
+>>>>>>> pre_master:admin-cli/src/main/java/edu/lehigh/cse216/jub424/admin/DislikesTable.java
     /**
      * A prepared statement for deleting a row from the database
      */
-    private static PreparedStatement mDeleteOne;
+    private static PreparedStatement mRemoveDislike;
 
     /**
      * A prepared statement for inserting into the database
      */
-    private static PreparedStatement mInsertLike;
+    private static PreparedStatement mAddDislike;
 
     /**
-     * A prepared statement for get like count
+     * A prepared statement for get dislike count
      */
-    private static PreparedStatement mGetLike;
+    private static PreparedStatement mGetDislikes;
 
     /**
-     * A prepared statement for delete all like relative to an idea
+     * A prepared statement for delete all dislike relative to an idea
      */
-    private static PreparedStatement mDeleteIdea;
+    private static PreparedStatement mDeleteDislikes;
 
     /**
-     * create the LIKES table
+     * create the DISLIKES table
      */
     private static PreparedStatement mCreateTable;
      
     /**
-     * drop the LIKES table
+     * drop the DISLIKES table
      */
     private static PreparedStatement mDropTable;
 
@@ -45,6 +49,7 @@ class LikeTable{
      * for prepared statement
      * @param take in the connection object
      */
+<<<<<<< HEAD:admin-cli/src/main/java/edu/lehigh/cse216/jub424/admin/LikeTable.java
     public LikeTable(Connection mConnection) throws SQLException {
         
         mCreateTable = mConnection.prepareStatement(
@@ -56,11 +61,20 @@ class LikeTable{
         mDeleteIdea = mConnection.prepareStatement("DELETE FROM likes WHERE id = ?");
         mDeleteOne = mConnection.prepareStatement(
                 "DELETE FROM likes WHERE like_id IN (SELECT like_id FROM likes WHERE id = ? LIMIT 1)");
+=======
+    public DislikesTable(Connection mConnection) throws SQLException {
+        mCreateTable = mConnection.prepareStatement("CREATE TABLE dislikes (id INT, user_id VARCHAR(64), " + 
+        "FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES USERS(user_id), " + 
+        "PRIMARY KEY(id, user_id))");
+        mDropTable =mConnection.prepareStatement("DROP TABLE DISLIKES");
+        mGetDislikes = mConnection.prepareStatement("SELECT count(*) from dislikes WHERE id=?");
+        mAddDislike = mConnection.prepareStatement("INSERT INTO dislikes VALUES (?, ?)");
+        mDeleteDislikes = mConnection.prepareStatement("DELETE FROM dislikes WHERE id=?");
+        mRemoveDislike = mConnection.prepareStatement("DELETE FROM dislikes WHERE id = ? AND user_id = ?");
+>>>>>>> pre_master:admin-cli/src/main/java/edu/lehigh/cse216/jub424/admin/DislikesTable.java
     }
-
-
     /**
-    * Create the LIKES table
+    * Create the DISLIKES table
     */
     void createTable() {
         try {
@@ -69,9 +83,8 @@ class LikeTable{
             e.printStackTrace();
         }
     }
-
     /**
-    * Drop the LIKES table
+    * Drop the DISLIKES table
     */
     void dropTable() {
         try {
@@ -80,73 +93,71 @@ class LikeTable{
             e.printStackTrace();
         }
     }
-
     /**
-     * insert the likecount for a row in the database let it + 1
+     * insert the dislikecount for a row in the database let it + 1
      * 
      * @param id The id of the row to update
      *
      * @return The number of rows that were inserted
      */
-    public int likeIdea(int id) {
+    public int DislikeIdea(int id, String email) {
         int count = 0;
         try {
-            mInsertLike.setInt(1, id);
-            count += mInsertLike.executeUpdate();
+            mAddDislike.setInt(1, id);
+            mAddDislike.setString(2, HashFunc.hash(email));
+            count += mAddDislike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return count;
     }
-
     /**
-     * Update the likecount for a row in the database let it - 1
+     * Update the dislikecount for a row in the database let it - 1
      * 
      * @param id The id of the row to update
      *
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int cancelLikeIdea(int id) {
+    public int removeDislike(int id, String email) {
         int res = -1;
         try {
-            mDeleteOne.setInt(1, id);
-            res = mDeleteOne.executeUpdate();
+            mRemoveDislike.setInt(1, id);
+            mRemoveDislike.setString(2, HashFunc.hash(email));
+            res = mRemoveDislike.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return res;
     }
-
     /**
-     * delete all like relative to an idea
+     * delete all dislikes relative to an idea
      * 
      * @param id The id of the row to update
      *
      * @return The number of rows that were updated. -1 indicates an error.
      */
-    public int deleteLikeIdea(int id) {
+    public int deleteAllDislikes(int id) {
         int res = -1;
         try {
-            mDeleteIdea.setInt(1, id);
-            res = mDeleteIdea.executeUpdate();
+            mDeleteDislikes.setInt(1, id);
+            res = mDeleteDislikes.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return res;
     }
-
     /**
-     * get the likecount of an ideas of specific id
+     * get the dislikecount of an ideas of specific id
      * 
      * @param id The id of the row to get like count
      * 
      * @return The number of like count of the row. -1 indicates an error.
      */
-    public int getLikeCount(int id) {
+    public int getDislikeCount(int id) {
         int res = -1;
         try {
-            mGetLike.setInt(1, id);
-            ResultSet rs = mGetLike.executeQuery();
+            mGetDislikes.setInt(1, id);
+            ResultSet rs = mGetDislikes.executeQuery();
             if (rs.next()) {
                 res = rs.getInt("count");
             }
@@ -155,5 +166,4 @@ class LikeTable{
         }
         return res;
     }
-
 }

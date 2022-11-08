@@ -37,6 +37,8 @@ public class IdeaTableManager {
      */
     private static PreparedStatement mUpdateOne;
 
+    // private static PreparedStatement mCreateTable;
+    // private static PreparedStatement mDropTable;
     /**
      * This constructer set up all the sql query for the ideas table use the
      * mConnection
@@ -49,12 +51,33 @@ public class IdeaTableManager {
         // CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,
         // message VARCHAR(500) NOT NULL)
 
+        // mCreateTable = mConnection.prepareStatement("CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,message VARCHAR(500) NOT NULL, validity INT NOT NULL, userid VARCHAR(64) NOT NULL)");
+        // mDropTable = mConnection.prepareStatement("DROP TABLE ideas");
+
         mSelectAll = mConnection.prepareStatement("SELECT * FROM ideas ORDER BY id DESC");
         mSelectOne = mConnection.prepareStatement("SELECT * from ideas WHERE id=?");
         mDeleteOne = mConnection.prepareStatement("DELETE FROM ideas WHERE id = ?");
-        mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?)");
+        mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?, ?, ?)");
         mUpdateOne = mConnection.prepareStatement("UPDATE ideas SET subject = ?, message = ? WHERE id = ?");
     }
+
+    // public void createTable(){
+    //     try {
+    //         mCreateTable.executeQuery();
+    //     } catch (SQLException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
+    // }
+    // public void dropTable(){
+    //     try {
+    //         mDropTable.executeQuery();
+    //     } catch (SQLException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
+    // }
+
 
     /**
      * Query the database for a list of all subjects and their IDs
@@ -69,7 +92,9 @@ public class IdeaTableManager {
                 res.add(new Idea(
                         rs.getInt("id"),
                         rs.getString("subject"),
-                        rs.getString("message")));
+                        rs.getString("message"),
+                        rs.getInt("validity"),
+                        rs.getString("userid")));
             }
             rs.close();
             return res;
@@ -95,7 +120,9 @@ public class IdeaTableManager {
                 res = new Idea(
                         rs.getInt("id"),
                         rs.getString("subject"),
-                        rs.getString("message"));
+                        rs.getString("message"),
+                        rs.getInt("validity"),
+                        rs.getString("userid"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -126,14 +153,18 @@ public class IdeaTableManager {
      * 
      * @param subject The subject for this new row
      * @param message The message body for this new row
+     * @param validity valid=1, invalid=0
+     * @param userid of the user
      * 
      * @return The number of rows that were inserted
      */
-    public int insertIdea(String subject, String message) {
+    public int insertIdea(String subject, String message, int validity, String userid) {
         int count = 0;
         try {
             mInsertOne.setString(1, subject);
             mInsertOne.setString(2, message);
+            mInsertOne.setInt(3,validity);
+            mInsertOne.setString(4, userid);
             count += mInsertOne.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

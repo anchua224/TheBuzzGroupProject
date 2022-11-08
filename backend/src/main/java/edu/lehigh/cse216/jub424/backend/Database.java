@@ -30,6 +30,22 @@ public class Database {
     public LikeTableManager mLikeTableManager;
 
     /**
+     * mDislikeTableManager deal with the dislikes table 
+     */
+    public DislikeTableManager mDislikeTableManager;
+
+
+    /**
+     * mCommentsTableManager deal with the comments table 
+     */
+    public CommentsTableManager mCommentsTableManager;
+
+    /**
+     * mUsersTableManager deal with the users table 
+     */
+    public UsersTableManager mUsersTableManager;
+
+    /**
      * The Database constructor is private: we only create Database objects
      * through the getDatabase() method.
      */
@@ -81,6 +97,9 @@ public class Database {
         try {
             db.mIdeaTableManager = new IdeaTableManager(db.mConnection);
             db.mLikeTableManager = new LikeTableManager(db.mConnection);
+            db.mUsersTableManager = new UsersTableManager(db.mConnection);
+            db.mCommentsTableManager = new CommentsTableManager(db.mConnection);
+            db.mDislikeTableManager = new DislikeTableManager(db.mConnection);
         } catch (SQLException e) {
             System.err.println("Error creating prepared statement");
             e.printStackTrace();

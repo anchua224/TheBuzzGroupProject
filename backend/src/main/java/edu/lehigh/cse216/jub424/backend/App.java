@@ -71,7 +71,22 @@ public class App {
 
         DatabaseRoutes.ideasRoutes(mDatabase);
         DatabaseRoutes.likesRoutes(mDatabase);
-
+        DatabaseRoutes.dislikesRoutes(mDatabase);
+        DatabaseRoutes.loginRoutes(mDatabase);
+        DatabaseRoutes.commentsRoutes(mDatabase);
+        DatabaseRoutes.userRoutes(mDatabase);
+        DatabaseRoutes.checkRoutes(mDatabase);
+        // mDatabase.mLikeTableManager.dropTable();
+        // mDatabase.mLikeTableManager.createTable();
+        // mDatabase.mDislikeTableManager.dropTable();
+        // mDatabase.mDislikeTableManager.createTable();
+        // mDatabase.mCommentsTableManager.createTable();
+        // mDatabase.mCommentsTableManager.dropTable();
+        // mDatabase.mIdeaTableManager.dropTable();
+        // mDatabase.mIdeaTableManager.createTable();
+        // mDatabase.mDislikeTableManager.createTable();
+        // mDatabase.mCommentsTableManager.createTable();
+        // mDatabase.mLikeTableManager.createTable();
     }
 
     /**
