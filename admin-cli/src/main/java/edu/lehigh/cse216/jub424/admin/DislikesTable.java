@@ -1,4 +1,5 @@
 package edu.lehigh.cse216.jub424.admin;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -9,11 +10,7 @@ import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 
-<<<<<<< HEAD:admin-cli/src/main/java/edu/lehigh/cse216/jub424/admin/LikeTable.java
-class LikeTable{
-=======
-class DislikesTable{
->>>>>>> pre_master:admin-cli/src/main/java/edu/lehigh/cse216/jub424/admin/DislikesTable.java
+class DislikesTable {
     /**
      * A prepared statement for deleting a row from the database
      */
@@ -38,44 +35,31 @@ class DislikesTable{
      * create the DISLIKES table
      */
     private static PreparedStatement mCreateTable;
-     
+
     /**
      * drop the DISLIKES table
      */
     private static PreparedStatement mDropTable;
 
-
     /**
      * for prepared statement
+     * 
      * @param take in the connection object
      */
-<<<<<<< HEAD:admin-cli/src/main/java/edu/lehigh/cse216/jub424/admin/LikeTable.java
-    public LikeTable(Connection mConnection) throws SQLException {
-        
-        mCreateTable = mConnection.prepareStatement(
-            "CREATE TABLE likes (like_id SERIAL PRIMARY KEY, id INT, FOREIGN KEY (id) REFERENCES ideas(id))");
-        mDropTable =mConnection.prepareStatement("DROP TABLE LIKES");
-        
-        mGetLike = mConnection.prepareStatement("SELECT count(*) from likes WHERE id=?");
-        mInsertLike = mConnection.prepareStatement("INSERT INTO likes VALUES (default, ?)");
-        mDeleteIdea = mConnection.prepareStatement("DELETE FROM likes WHERE id = ?");
-        mDeleteOne = mConnection.prepareStatement(
-                "DELETE FROM likes WHERE like_id IN (SELECT like_id FROM likes WHERE id = ? LIMIT 1)");
-=======
     public DislikesTable(Connection mConnection) throws SQLException {
-        mCreateTable = mConnection.prepareStatement("CREATE TABLE dislikes (id INT, user_id VARCHAR(64), " + 
-        "FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES USERS(user_id), " + 
-        "PRIMARY KEY(id, user_id))");
-        mDropTable =mConnection.prepareStatement("DROP TABLE DISLIKES");
+        mCreateTable = mConnection.prepareStatement("CREATE TABLE dislikes (id INT, user_id VARCHAR(64), " +
+                "FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES USERS(user_id), " +
+                "PRIMARY KEY(id, user_id))");
+        mDropTable = mConnection.prepareStatement("DROP TABLE DISLIKES");
         mGetDislikes = mConnection.prepareStatement("SELECT count(*) from dislikes WHERE id=?");
         mAddDislike = mConnection.prepareStatement("INSERT INTO dislikes VALUES (?, ?)");
         mDeleteDislikes = mConnection.prepareStatement("DELETE FROM dislikes WHERE id=?");
         mRemoveDislike = mConnection.prepareStatement("DELETE FROM dislikes WHERE id = ? AND user_id = ?");
->>>>>>> pre_master:admin-cli/src/main/java/edu/lehigh/cse216/jub424/admin/DislikesTable.java
     }
+
     /**
-    * Create the DISLIKES table
-    */
+     * Create the DISLIKES table
+     */
     void createTable() {
         try {
             mCreateTable.execute();
@@ -83,9 +67,10 @@ class DislikesTable{
             e.printStackTrace();
         }
     }
+
     /**
-    * Drop the DISLIKES table
-    */
+     * Drop the DISLIKES table
+     */
     void dropTable() {
         try {
             mDropTable.execute();
@@ -93,6 +78,7 @@ class DislikesTable{
             e.printStackTrace();
         }
     }
+
     /**
      * insert the dislikecount for a row in the database let it + 1
      * 
@@ -111,6 +97,7 @@ class DislikesTable{
         }
         return count;
     }
+
     /**
      * Update the dislikecount for a row in the database let it - 1
      * 
@@ -129,6 +116,7 @@ class DislikesTable{
         }
         return res;
     }
+
     /**
      * delete all dislikes relative to an idea
      * 
@@ -146,6 +134,7 @@ class DislikesTable{
         }
         return res;
     }
+
     /**
      * get the dislikecount of an ideas of specific id
      * 

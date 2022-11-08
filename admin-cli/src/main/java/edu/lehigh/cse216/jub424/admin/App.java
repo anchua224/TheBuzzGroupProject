@@ -47,7 +47,7 @@ public class App {
                 System.out.println("  [0] Invalidate an idea");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
-            break;
+                break;
             case "LIKES":
                 System.out.println("  [T] Create Table " + tableName);
                 System.out.println("  [D] Drop Table " + tableName);
@@ -57,7 +57,7 @@ public class App {
                 System.out.println("  [0] delete all the likes related to a certain idea");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
-            break;
+                break;
             case "DISLIKES":
                 System.out.println("  [T] Create Table " + tableName);
                 System.out.println("  [D] Drop Table " + tableName);
@@ -67,7 +67,7 @@ public class App {
                 System.out.println("  [0] delete all the dislikes related to a certain idea");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
-            break;
+                break;
             case "COMMENTS":
                 System.out.println("  [T] Create Table " + tableName);
                 System.out.println("  [D] Drop Table " + tableName);
@@ -78,7 +78,7 @@ public class App {
                 System.out.println("  [~] Update a comment");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
-            break;
+                break;
             case "USER":
                 System.out.println("  [T] Create Table " + tableName);
                 System.out.println("  [D] Drop Table " + tableName);
@@ -89,7 +89,7 @@ public class App {
                 System.out.println("  [~] Update a user");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
-            break;
+                break;
         }
     }
 
@@ -177,13 +177,8 @@ public class App {
         // get the Postgres configuration from the environment
         Map<String, String> env = System.getenv();
         String db_url = env.get("DATABASE_URL");
-<<<<<<< HEAD
-        db_url = "postgres://epyqfjqcxwfqev:5592fc974fab7f2e1482fab5391b99a39f085e06aff092e5f9c064e00fc27c8d@ec2-3-216-167-65.compute-1.amazonaws.com:5432/da1nea8nc5r1r";
-        // Get a fully-configured connection to the database, or exit 
-=======
 
         // Get a fully-configured connection to the database, or exit
->>>>>>> pre_master
         // immediately
         Database db = Database.getDatabase(db_url);
         if (db == null)
@@ -252,7 +247,7 @@ public class App {
                                 System.out.println("  --> " + res.massage);
                             }
                         } else if (action == '0') {
-                            int id =getInt(in, "Enter the row ID");
+                            int id = getInt(in, "Enter the row ID");
                             if (id == -1)
                                 continue;
                             int res = db.mIdeaTable.invalidateIdea(id);
@@ -337,7 +332,7 @@ public class App {
                         break;
                     // Table Dislikes
                     case 3:
-                        action = prompt(in, "TD-+g0?<"); 
+                        action = prompt(in, "TD-+g0?<");
                         if (action == '?') {
                             inner_menu("DISLIKES");
                         } else if (action == 'T') {
@@ -426,7 +421,7 @@ public class App {
                                 continue;
                             System.out.println("  " + res + " rows updated");
                         }
-                    break;
+                        break;
                     // User table
                     case 5:
                         action = prompt(in, "TD1*-+~?<");
@@ -477,7 +472,8 @@ public class App {
                             String GI = getString(in, "Enter your gender identity");
                             String SO = getString(in, "Enter your sexual orientation");
                             String note = getString(in, "Enter your note");
-                            if (email.equals("") || name.equals("") || GI.equals("") || SO.equals("") || note.equals(""))
+                            if (email.equals("") || name.equals("") || GI.equals("") || SO.equals("")
+                                    || note.equals(""))
                                 continue;
                             int res = db.mUserTable.insertUser(email, name, GI, SO, note);
                             System.out.println(res + " rows added");
@@ -494,7 +490,7 @@ public class App {
                                 continue;
                             System.out.println("  " + res + " rows updated");
                         }
-                    break;
+                        break;
                 }
             } while (action != '<');
         }
