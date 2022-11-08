@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 
-class LikesTable{
+class LikeTable{
     /**
      * A prepared statement for deleting a row from the database
      */
@@ -45,7 +45,7 @@ class LikesTable{
      * for prepared statement
      * @param take in the connection object
      */
-    public LikesTable(Connection mConnection) throws SQLException {
+    public LikeTable(Connection mConnection) throws SQLException {
         
         mCreateTable = mConnection.prepareStatement(
             "CREATE TABLE likes (like_id SERIAL PRIMARY KEY, id INT, FOREIGN KEY (id) REFERENCES ideas(id))");
