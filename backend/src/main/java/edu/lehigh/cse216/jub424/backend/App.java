@@ -75,6 +75,7 @@ public class App {
         DatabaseRoutes.loginRoutes(mDatabase);
         DatabaseRoutes.commentsRoutes(mDatabase);
         DatabaseRoutes.userRoutes(mDatabase);
+        DatabaseRoutes.checkRoutes(mDatabase);
         // mDatabase.mLikeTableManager.dropTable();
         // mDatabase.mLikeTableManager.createTable();
         // mDatabase.mDislikeTableManager.dropTable();

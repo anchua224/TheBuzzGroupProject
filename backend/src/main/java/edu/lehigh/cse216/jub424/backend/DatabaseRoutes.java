@@ -381,4 +381,24 @@ public class DatabaseRoutes {
             }
         });
     }
+
+    public static void checkRoutes(Database mDatabase){
+        Gson gson = new Gson();
+        Spark.get("/ideas/:id/checklike/:sessionKey",(request, response)->{
+            int idx = Integer.parseInt(request.params("id"));
+            String sessionKeyx = request.params("sessionKey");
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            boolean like_result = mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKeyx);
+            boolean dislike_result = mDatabase.mDislikeTableManager.checkDislikeIdea(idx, sessionKeyx);
+            if(like_result){
+                return gson.toJson(new StructuredResponse("ok", null, 1));
+            }else if(dislike_result){
+                return gson.toJson(new StructuredResponse("ok", null, -1));
+            }else{
+                return gson.toJson(new StructuredResponse("ok", null, 0));
+            }
+        });
+    }
 }

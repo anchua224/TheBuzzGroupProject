@@ -48,7 +48,7 @@ public class UsersTableManager {
      * @throws SQLException when there is an error related to sql
      */
     public UsersTableManager(Connection mConnection) throws SQLException{
-        mInsertUser = mConnection.prepareStatement("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)");
+        mInsertUser = mConnection.prepareStatement("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)");
         mDeleteUser = mConnection.prepareStatement("DELETE FROM users WHERE user_id=?");
         mUpdateNote = mConnection.prepareStatement("UPDATE users SET name=?, GI=?, SO=?, note=? WHERE user_id=?");
         mSelectOneUser = mConnection.prepareStatement("SELECT * FROM users where user_id=?");
@@ -77,6 +77,7 @@ public class UsersTableManager {
             mInsertUser.setString(4,GI);
             mInsertUser.setString(5,SO);
             mInsertUser.setString(6,note);
+            mInsertUser.setInt(7, 1);
             res = mInsertUser.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
@@ -144,7 +145,8 @@ public class UsersTableManager {
                     rs.getString("name"),
                     rs.getString("GI"),
                     rs.getString("SO"),
-                    rs.getString("note")
+                    rs.getString("note"),
+                    rs.getInt("validity")
                 );
             }
             return res;
@@ -169,7 +171,8 @@ public class UsersTableManager {
                     rs.getString("name"),
                     rs.getString("GI"),
                     rs.getString("SO"),
-                    rs.getString("note")
+                    rs.getString("note"),
+                    rs.getInt("validity")
                 ));
             }
         }catch(SQLException e){

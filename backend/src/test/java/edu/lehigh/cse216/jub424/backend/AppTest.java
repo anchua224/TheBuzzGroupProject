@@ -46,6 +46,7 @@ public class AppTest
         assertTrue(idea.id == id);
         assertTrue(idea.title.equals(title));
         assertTrue(idea.massage.equals(content));
+        assertTrue(idea.userid.equals(user_id));
     }
 
     /**
@@ -59,7 +60,7 @@ public class AppTest
         String GI = "Female";
         String SO = "Straight";
         String note = "test note";
-        User user = new User(user_id, email, name, GI, SO, note);
+        User user = new User(user_id, email, name, GI, SO, note,1);
 
         assertTrue(user.user_id.equals(user_id));
         assertTrue(user.email.equals(email));
@@ -67,6 +68,7 @@ public class AppTest
         assertTrue(user.GI.equals(GI));
         assertTrue(user.SO.equals(SO));
         assertTrue(user.note.equals(note));
+        assertTrue(user.validity == 1);
     }
 
     /**
