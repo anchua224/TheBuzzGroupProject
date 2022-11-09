@@ -47,18 +47,19 @@ import java.util.ArrayList;
      * 
      * A prepared statement for invalidating a single idea in the database
      */
-    private static PreparedStatement mInvalidateOne;
+    private static PreparedStatement mValidateOne;
+
     public IdeaTable(Connection mConnection) throws SQLException {
         mCreateTable = mConnection.prepareStatement("CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,"+
-            "message VARCHAR(500) NOT NULL, valid INT NOT NULL, user_id VARCHAR(64), " + 
+            "message VARCHAR(500) NOT NULL, validity INT NOT NULL, user_id VARCHAR(64), " + 
             "FOREIGN KEY (user_id) REFERENCES USERS(user_id))");        
         mDropTable = mConnection.prepareStatement("DROP TABLE IDEAS");     
         mSelectAll = mConnection.prepareStatement("SELECT * FROM ideas ORDER BY id DESC");
-        mSelectOne = mConnection.prepareStatement("SELECT * FROM ideas WHERE id=? AND valid = 1");
+        mSelectOne = mConnection.prepareStatement("SELECT * FROM ideas WHERE id=?");
         mDeleteOne = mConnection.prepareStatement("DELETE FROM ideas WHERE id = ?");
-        mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?, ?)");
+        mInsertOne = mConnection.prepareStatement("INSERT INTO ideas VALUES (default, ?, ?, 1, ?)");
         mUpdateOne = mConnection.prepareStatement("UPDATE ideas SET subject = ?, message = ? WHERE id = ?");
-        mInvalidateOne = mConnection.prepareStatement("UPDATE ideas SET validity = 0 WHERE id = ?");
+        mValidateOne = mConnection.prepareStatement("UPDATE ideas SET validity = ? WHERE id = ?");
     }
 
     //inner class Idea, holds information of one row in the idea table
@@ -82,7 +83,7 @@ import java.util.ArrayList;
          * 
          * idea validility (1 = valid, 0 = invalid)
          */
-        public int valid;
+        public int validity;
         /**
         * Create a new Idea with the provided id, title and massage. And a
         * creation date based on the system clock at the time the constructor was
@@ -94,11 +95,11 @@ import java.util.ArrayList;
         * 
         * @param massage massage of the idea
         */
-        public Idea(int id, String title, String massage, int valid){
+        public Idea(int id, String title, String massage){
             this.id = id;
             this.title = title;
             this.massage = massage;
-            this.valid = valid;
+            validity = 1;
         }
 
     }
@@ -135,8 +136,7 @@ import java.util.ArrayList;
                     res.add(new Idea(
                         rs.getInt("id"),
                         rs.getString("subject"),
-                        rs.getString("message"),
-                        rs.getInt("validity")
+                        rs.getString("message")
                         ));
                 }
                 rs.close();
@@ -162,8 +162,7 @@ import java.util.ArrayList;
                 res = new Idea(
                         rs.getInt("id"),
                         rs.getString("subject"),
-                        rs.getString("message"),
-                        rs.getInt("validity")
+                        rs.getString("message")
                         );
             }
         } catch (SQLException e) {
@@ -197,12 +196,12 @@ import java.util.ArrayList;
      * 
      * @return The number of rows that were inserted
      */
-    public int insertIdea(String subject, String message, int valid) {
+    public int insertIdea(String subject, String message, String email) {
         int count = 0;
         try {
             mInsertOne.setString(1, subject);
             mInsertOne.setString(2, message);
-            mInsertOne.setInt(3, valid);
+            mInsertOne.setString(3, HashFunc.hash(email));
             count += mInsertOne.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -230,16 +229,15 @@ import java.util.ArrayList;
         }
         return res;
     }
-    public int invalidateIdea(int id){
+    public int invalidateIdea(int id, int valid){
         int res = -1;
         try{
-            mInvalidateOne.setInt(1, id);
-            res = mInvalidateOne.executeUpdate();
+            mValidateOne.setInt(1, id);
+            mValidateOne.setInt(2, valid);
+            res = mValidateOne.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return res;
     }
 }
-
-

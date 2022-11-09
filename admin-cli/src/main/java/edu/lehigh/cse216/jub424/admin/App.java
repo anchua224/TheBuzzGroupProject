@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -44,7 +45,7 @@ public class App {
                 System.out.println("  [-] Delete an idea");
                 System.out.println("  [+] Insert a new idea");
                 System.out.println("  [~] Update an idea");
-                System.out.println("  [0] Invalidate an idea");
+                System.out.println("  [0] Validate an idea");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
             break;
@@ -87,6 +88,7 @@ public class App {
                 System.out.println("  [-] Delete a user");
                 System.out.println("  [+] Inset a new user");
                 System.out.println("  [~] Update a user");
+                System.out.println("  [0] Validate a user");
                 System.out.println("  [?] Help (Display menu)");
                 System.out.println("  [<] Return to main menu");
             break;
@@ -245,15 +247,17 @@ public class App {
                             if (res != null) {
                                 System.out.println("  [" + res.id + "] " + res.title);
                                 System.out.println("  --> " + res.massage);
+                                System.out.println("  --> " + res.validity + " (1=valid/0=invalid)");
                             }
                         } else if (action == '0') {
-                            int id =getInt(in, "Enter the row ID");
+                            int id = getInt(in, "Enter the row ID");
+                            int valid = getInt(in, "Is the idea valid (1=yes/0=no)");
                             if (id == -1)
                                 continue;
-                            int res = db.mIdeaTable.invalidateIdea(id);
+                            int res = db.mIdeaTable.invalidateIdea(id, valid);
                             if (res == -1)
                                 continue;
-                            System.out.println("  " + res + " rows invalidated");
+                            System.out.println("  " + res + " rows (in)validated");
                         } else if (action == '*') {
                             ArrayList<IdeaTable.Idea> res = db.mIdeaTable.selectAllIdeas();
                             if (res == null)
@@ -274,17 +278,17 @@ public class App {
                         } else if (action == '+') {
                             String subject = getString(in, "Enter the subject");
                             String message = getString(in, "Enter the message");
-                            int valid = getInt(in, "Is the idea valid (1-yes, 0-no)");
+                            String email = getString(in, "Enter the email");
                             if (subject.equals("") || message.equals(""))
                                 continue;
-                            int res = db.mIdeaTable.insertIdea(subject, message, valid);
+                            int res = db.mIdeaTable.insertIdea(subject, message, email);
                             System.out.println(res + " rows added");
                         } else if (action == '~') {
                             int id = getInt(in, "Enter the row ID ");
                             if (id == -1)
                                 continue;
-                            String newMessage = getString(in, "Enter the new message");
                             String newTitle = getString(in, "Enter the new title");
+                            String newMessage = getString(in, "Enter the new message");
                             int res = db.mIdeaTable.updateIdea(id, newTitle, newMessage);
                             if (res == -1)
                                 continue;
@@ -375,9 +379,9 @@ public class App {
                         if (action == '?') {
                             inner_menu("COMMENTS");
                         } else if (action == 'T') {
-                            db.mIdeaTable.createTable();
+                            db.mCommentsTable.createTable();
                         } else if (action == 'D') {
-                            db.mIdeaTable.dropTable();
+                            db.mCommentsTable.dropTable();
                         } else if (action == '1') {
                             int id = getInt(in, "Enter the row ID");
                             if (id == -1)
@@ -444,6 +448,15 @@ public class App {
                                 System.out.println("  --> " + res.SO);
                                 System.out.println("  --> " + res.note);
                             }
+                        } else if (action == '0') {
+                            String email = getString(in, "Enter the email");
+                            int valid = getInt(in, "Is the idea valid (1=yes/0=no)");
+                            if (email.equals(""))
+                                continue;
+                            int res = db.mUserTable.invalidateUser(email, valid);
+                            if (res == -1)
+                                continue;
+                            System.out.println("  " + res + " rows invalidated");
                         } else if (action == '*') {
                             ArrayList<UserTable.User> res = db.mUserTable.selectAllUsers();
                             if (res == null)

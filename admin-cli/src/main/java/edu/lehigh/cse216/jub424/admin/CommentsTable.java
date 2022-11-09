@@ -40,9 +40,9 @@ class CommentsTable{
 
     public CommentsTable(Connection mConnection) throws SQLException {
         mCreateTable = mConnection.prepareStatement("CREATE TABLE comments (id INT, user_id VARCHAR(64), " + 
-        "com_id SERIAL PRIMARY KEY, FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERNCES USERS(user_id), " + 
+        "com_id SERIAL PRIMARY KEY, FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES USERS(user_id), " + 
         "content VARCHAR(300))");        
-        mDropTable = mConnection.prepareStatement("DROP TABLE COMMENTS");     
+        mDropTable = mConnection.prepareStatement("DROP TABLE comments");     
         mSelectAllComments = mConnection.prepareStatement("SELECT * FROM comments ORDER BY com_id DESC");
         mSelectOneComment = mConnection.prepareStatement("SELECT * FROM comments WHERE com_id = ?");
         mDeleteOneComment = mConnection.prepareStatement("DELETE FROM comments WHERE com_id = ?");
