@@ -4,7 +4,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 ## Details
 - Application Name: The Buzz
 - Bitbucket Repository: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/README.md?mode=edit&at=master
-- Trello Invitation Link: https://trello.com/invite/b/fhnnq6Xk/ATTI5d0396502798efd62e290716a105e707263AFF23/team-fourteam-phase-2
+- Trello Invitation Link: https://trello.com/invite/b/ce1jUW7H/ATTI1c150689108daa233d3151c856bd9e1d945CE3CB/fourteamphase3
 
 ## Contributors
 1. Junchen Bao (jub424@lehigh.edu)
@@ -46,7 +46,30 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 		- In the case when they use the app inappropriately
 	- Ensure invalidated idea does not display
 	- Ensure an invalidated user is not allowed to log in
-
+## Phase 3 Release
+- A single anonymous user can:
+	- Get ideas stored on database
+	- Get the number of likes and dislikes
+	- Get comments on ideas from database 
+	- Get login information from database 
+	- Get profile info from database
+	- Get link of resources from Google Drive
+	- Post new ideas to database
+	- Post token to the backend (login)
+	- Like and remove like from ideas
+	- Dislike and remove dislike from ideas
+	- Post comments under ideas
+	- Post new resource to Google Drive
+	- Edit comments under ideas
+	- Edit profile info
+- The server admin can:
+	- Manage all the tables based on the ERD created
+	- Invalidate an idea
+		- In the case it is inappropriate or redundant
+	- Invalidate a user
+		- In the case when they use the app inappropriately
+	- Ensure invalidated idea does not display
+	- Ensure an invalidated user is not allowed to log in
 ## Building & Running Application
 - Backend
 	- $ mvn package
@@ -67,9 +90,9 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 ## System Architecture Diagram
 ![image](markdown_images/SystemDiagram_v2.png)
 ## Routes
-![image](markdown_images/BackendRoutes_v2.png)
+![image](markdown_images/Routes_v3.png)
 ## Entity Diagram
-![image](markdown_images/ERD_v2.png)
+![image](markdown_images/ERD_v3.png)
 
 ## User Stories
 - Lehigh Current User
@@ -83,16 +106,17 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 	- As a user, i want to comment on a idea, so that I can comment
 	- As a user, I want to edit my comment, so that i can change my opinion
 	- As a user, I want to logout, so that my info is safe remove "edit post"
-
+	- As a user, I would like to upload a resource, so I can save the resource in the app
+	- As a user, I would like to use the link I want, so that i can get the resource from google drive
 - Admin
 	- As an admin, I want to create and drop a table, so that I can manage posts
 	- As an admin, I want a command-line interface, so that I can interact with and manage ideas
 	- As an admin, I want to create other routes, so that I can send data to the front-end
 	- As an admin, I want to view all profiles, so that i can manage the app
-
+	- As an admin, I would like to see all the resources, so I can manage what is shown in the app
 ## User State Machine
 ### Mobile & Web
-![image](markdown_images/StateMachineDiagram_v2.png)
+![image](markdown_images/User_state_machine_v3.png)
 
 ## User Interfaces
 ### Mobile
