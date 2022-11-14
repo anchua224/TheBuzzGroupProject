@@ -82,7 +82,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 - Web
 	- Deploy to localhost (sh ldeploy.sh)
 
-## Code Documentation
+<!--## Code Documentation
 - [Backend](backend/javadocs)
 - [Admin](admin-cli/javadocs) 
 
@@ -92,7 +92,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 ## Routes
 ![image](markdown_images/Route_v3.png)
 ## Entity Diagram
-![image](markdown_images/ERD_v3.png)
+![image](markdown_images/ERD_v3.png)-->
 
 ## User Stories
 - Lehigh Current User
@@ -114,19 +114,21 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 	- As an admin, I want to create other routes, so that I can send data to the front-end
 	- As an admin, I want to view all profiles, so that i can manage the app
 	- As an admin, I would like to see all the resources, so I can manage what is shown in the app
-## User State Machine
+<!-- ## User State Machine
 ### Mobile & Web
 ![image](markdown_images/User_state_machine_v3.png)
 
 ## User Interfaces
 ### Mobile
-<!-- ![image](markdown_images/Mobile_UI_v2.png) -->
 ![image](markdown_images/mobile_ui_1.png)
 ![image](markdown_images/mobile_ui_2.png)
 ![image](markdown_images/mobile_ui_3.png)
 
 ### Web
-![image](markdown_images/Web_UI_v3.png)
+![image](markdown_images/Web_UI_v3.png)-->
+
+## Artifacts:
+- Link: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/markdown_images/Latest_version_artifacts
 	
 ## Backlog Item & Tech Debt List (sprint 10):
 - Mobile:
