@@ -126,7 +126,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 ![image](markdown_images/mobile_ui_3.png)
 
 ### Web
-![image](markdown_images/Web_UI_Drawing.pdf)
+![image](markdown_images/Web_UI_v3.png)
 	
 ## Backlog Item & Tech Debt List (sprint 10):
 - Mobile:
