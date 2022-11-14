@@ -114,18 +114,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 	- As an admin, I want to create other routes, so that I can send data to the front-end
 	- As an admin, I want to view all profiles, so that i can manage the app
 	- As an admin, I would like to see all the resources, so I can manage what is shown in the app
-<!-- ## User State Machine
-### Mobile & Web
-![image](markdown_images/User_state_machine_v3.png)
 
-## User Interfaces
-### Mobile
-![image](markdown_images/mobile_ui_1.png)
-![image](markdown_images/mobile_ui_2.png)
-![image](markdown_images/mobile_ui_3.png)
-
-### Web
-![image](markdown_images/Web_UI_v3.png)-->
 
 ## Artifacts:
 - Link: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/markdown_images/Latest_version_artifacts
