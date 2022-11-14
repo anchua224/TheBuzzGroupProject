@@ -126,9 +126,9 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 ![image](markdown_images/mobile_ui_3.png)
 
 ### Web
-![image](markdown_images/Web UI Drawing.png)
+![image](markdown_images/Web_UI_Drawing.png)
 	
-## Backlog Item & Tech Debt List (Phase 2 Sprint 9):
+## Backlog Item & Tech Debt List (sprint 10):
 - Mobile:
 	- Ideas do not show likes
 	- Ideas do not show names of users, only user ids (Tried implementing a hash map that saves user id and names, couldn’t test with ideas table down)
