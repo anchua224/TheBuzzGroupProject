@@ -90,7 +90,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 ## System Architecture Diagram
 ![image](markdown_images/SystemDiagram_v2.png)
 ## Routes
-![image](markdown_images/Routes_v3.png)
+![image](markdown_images/Route_v3.png)
 ## Entity Diagram
 ![image](markdown_images/ERD_v3.png)
 
