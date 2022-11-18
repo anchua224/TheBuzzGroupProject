@@ -405,7 +405,7 @@ public class DatabaseRoutes {
     public static void resourceRoutes(Database mDatabase) {
         Gson gson = new Gson();
         Spark.get("/resource", (request, response) -> {
-            int cmidx = Integer.parseInt(request.params("comid"));
+            // int cmidx = Integer.parseInt(request.params("comid"));
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
