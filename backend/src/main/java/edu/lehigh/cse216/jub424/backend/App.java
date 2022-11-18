@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * For now, our app creates an HTTP server that can deal with the ideas and like
+ * 
  * @author Junchen Bao
  * @version 1.0.0
  * @since 2022-09-16
@@ -15,6 +16,7 @@ import java.util.Map;
 public class App {
     /**
      * this is the funtion to run the app of the backend
+     * 
      * @param args unsed
      */
     public static void main(String[] args) {
@@ -76,6 +78,7 @@ public class App {
         DatabaseRoutes.commentsRoutes(mDatabase);
         DatabaseRoutes.userRoutes(mDatabase);
         DatabaseRoutes.checkRoutes(mDatabase);
+        DatabaseRoutes.resourceRoutes(mDatabase);
         // mDatabase.mLikeTableManager.dropTable();
         // mDatabase.mLikeTableManager.createTable();
         // mDatabase.mDislikeTableManager.dropTable();

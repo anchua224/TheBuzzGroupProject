@@ -7,7 +7,9 @@ import java.sql.*;
 import edu.lehigh.cse216.jub424.backend.data_manager.*;
 
 /**
- * Database is to setup the connectio of the database also set up the manager of each table
+ * Database is to setup the connectio of the database also set up the manager of
+ * each table
+ * 
  * @author Junchen Bao
  * @version 1.0.0
  * @since 2022-09-16
@@ -25,25 +27,28 @@ public class Database {
     public IdeaTableManager mIdeaTableManager;
 
     /**
-     * mLikeTableManager deal with the likes table 
+     * mLikeTableManager deal with the likes table
      */
     public LikeTableManager mLikeTableManager;
 
     /**
-     * mDislikeTableManager deal with the dislikes table 
+     * mDislikeTableManager deal with the dislikes table
      */
     public DislikeTableManager mDislikeTableManager;
 
-
     /**
-     * mCommentsTableManager deal with the comments table 
+     * mCommentsTableManager deal with the comments table
      */
     public CommentsTableManager mCommentsTableManager;
 
     /**
-     * mUsersTableManager deal with the users table 
+     * mUsersTableManager deal with the users table
      */
     public UsersTableManager mUsersTableManager;
+    /**
+     * mGoogleDriveHandler deals with the google drive resource links
+     */
+    public GoogleDriveManager mGoogleDriveManager;
 
     /**
      * The Database constructor is private: we only create Database objects

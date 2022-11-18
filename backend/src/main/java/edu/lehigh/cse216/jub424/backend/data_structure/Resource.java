@@ -59,5 +59,4 @@ public class Resource {
         this.link = link;
         createdDate = new Date();
     }
-
 }

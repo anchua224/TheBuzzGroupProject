@@ -41,7 +41,7 @@ public class AppTest
         String title = "Test Title";
         String content = "Test Content";
         String user_id = "qwertyuiopasdfghjklzxcvbnm1234567890opuytrewqasdfghjklzxcvbnm34";
-        Idea idea = new Idea(id, title, content,1,user_id);
+        Idea idea = new Idea(id, title, content, 1, user_id);
 
         assertTrue(idea.id == id);
         assertTrue(idea.title.equals(title));
@@ -60,7 +60,7 @@ public class AppTest
         String GI = "Female";
         String SO = "Straight";
         String note = "test note";
-        User user = new User(user_id, email, name, GI, SO, note,1);
+        User user = new User(user_id, email, name, GI, SO, note, 1);
 
         assertTrue(user.user_id.equals(user_id));
         assertTrue(user.email.equals(email));
@@ -88,10 +88,9 @@ public class AppTest
         assertTrue(comment.com_id == com_id);
     }
 
-
     /**
      * test if it can connect to the heroku database by the DATABASE_URL
-     * 
+     *
      * @throws SQLException
      */
     public void testConnection() {
@@ -103,7 +102,8 @@ public class AppTest
             URI dbUri = new URI(db_url);
             String username = dbUri.getUserInfo().split(":")[0];
             String password = dbUri.getUserInfo().split(":")[1];
-            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort()
+                    + dbUri.getPath();
             conn = DriverManager.getConnection(dbUrl, username, password);
             if (conn == null) {
                 fail("Error: DriverManager.getConnection() returned a null object");
