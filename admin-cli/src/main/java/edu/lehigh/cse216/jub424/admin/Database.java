@@ -12,22 +12,25 @@ import java.util.ArrayList;
 
 public class Database {
     /**
-     * The connection to the database.  When there is no connection, it should
-     * be null.  Otherwise, there is a valid open connection
+     * The connection to the database. When there is no connection, it should
+     * be null. Otherwise, there is a valid open connection
      */
     public Connection mConnection;
 
     public IdeaTable mIdeaTable;
-    
+
     public LikesTable mLikesTable;
- 
+
     public DislikesTable mDislikesTable;
 
     public CommentsTable mCommentsTable;
 
     public UserTable mUserTable;
+
+    public ResourceTable mResourceTable;
+
     /**
-     * The Database constructor is private: we only create Database objects 
+     * The Database constructor is private: we only create Database objects
      * through the getDatabase() method.
      */
     private Database() {
@@ -72,7 +75,7 @@ public class Database {
             System.out.println("URI Syntax Error");
             return null;
         }
-        // Attempt to create all of our prepared statements.  If any of these 
+        // Attempt to create all of our prepared statements. If any of these
         // fail, the whole getDatabase() call should fail
         try {
             db.mIdeaTable = new IdeaTable(db.mConnection);
@@ -80,6 +83,7 @@ public class Database {
             db.mDislikesTable = new DislikesTable(db.mConnection);
             db.mCommentsTable = new CommentsTable(db.mConnection);
             db.mUserTable = new UserTable(db.mConnection);
+            db.mResourceTable = new ResourceTable(db.mConnection);
         } catch (SQLException e) {
             System.err.println("Error creating prepared statement");
             e.printStackTrace();
@@ -88,11 +92,12 @@ public class Database {
         }
         return db;
     }
+
     /**
      * Close the current connection to the database, if one exists.
      * 
-     * NB: The connection will always be null after this call, even if an 
-     *     error occurred during the closing operation.
+     * NB: The connection will always be null after this call, even if an
+     * error occurred during the closing operation.
      * 
      * @return True if the connection was cleanly closed, false otherwise
      */
