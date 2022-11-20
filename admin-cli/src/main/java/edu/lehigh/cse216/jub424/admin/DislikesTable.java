@@ -49,7 +49,7 @@ class DislikesTable{
         mCreateTable = mConnection.prepareStatement("CREATE TABLE dislikes (id INT, user_id VARCHAR(64), " + 
         "FOREIGN KEY (id) REFERENCES ideas(id), FOREIGN KEY (user_id) REFERENCES USERS(user_id), " + 
         "PRIMARY KEY(id, user_id))");
-        mDropTable =mConnection.prepareStatement("DROP TABLE DISLIKES");
+        mDropTable =mConnection.prepareStatement("DROP TABLE dislikes");
         mGetDislikes = mConnection.prepareStatement("SELECT count(*) from dislikes WHERE id=?");
         mAddDislike = mConnection.prepareStatement("INSERT INTO dislikes VALUES (?, ?)");
         mDeleteDislikes = mConnection.prepareStatement("DELETE FROM dislikes WHERE id=?");
