@@ -46,7 +46,7 @@ public class Database {
      */
     public UsersTableManager mUsersTableManager;
     /**
-     * mGoogleDriveHandler deals with the google drive resource links
+     * mResourceTableManager deals with the resources table
      */
     public ResourceTableManager mResourceTableManager;
 

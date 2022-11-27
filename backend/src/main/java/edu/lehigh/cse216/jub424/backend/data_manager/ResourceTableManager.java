@@ -2,9 +2,11 @@ package edu.lehigh.cse216.jub424.backend.data_manager;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.io.IOException;
 import java.sql.*;
 
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
+import edu.lehigh.cse216.jub424.backend.data_manager.GoogleDriveManager;
 
 /**
  * ResourceTableManager are all function interact with the resources table
@@ -76,6 +78,13 @@ public class ResourceTableManager {
             mInsertResource.setInt(6, validity);
             count += mInsertResource.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (GoogleDriveManager.uploadBasic(new Resource(idea_id, com_id, user_id, count, link, validity)) != null) {
+                System.out.println("Resource uploaded successfully");
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return count;

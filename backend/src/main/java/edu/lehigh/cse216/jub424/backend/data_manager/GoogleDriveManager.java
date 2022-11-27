@@ -33,6 +33,7 @@ import java.sql.*;
 import java.util.Arrays;
 
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
+import edu.lehigh.cse216.jub424.backend.data_manager.ResourceTableManager;
 
 /**
  * ResourceManager contains a function for making requests to the Drive API
@@ -110,7 +111,7 @@ public class GoogleDriveManager {
   /**
    * Application name.
    */
-  private static final String APPLICATION_NAME = "Google Drive API Java Quickstart";
+  private static final String APPLICATION_NAME = "Google Drive API Java";
   /**
    * Global instance of the JSON factory.
    */
@@ -128,53 +129,55 @@ public class GoogleDriveManager {
   private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
   /**
-   * A prepared statement for inserting a row from the database
+   * Creates an authorized Credential object.
+   *
+   * @param HTTP_TRANSPORT The network HTTP Transport.
+   * @return An authorized Credential object.
+   * @throws IOException If the credentials.json file cannot be found.
    */
-  private static PreparedStatement mInsertResource;
-  /**
-   * A prepared statement for deleting a row from the database
-   */
-  private static PreparedStatement mDeleteResource;
-  /**
-   * A prepared statement for selecting a row from the database
-   */
-  private static PreparedStatement mSelectOneResource;
-  /**
-   * A prepared statement for selecting all the rows in database
-   */
-  private static PreparedStatement mSelectAll;
-
-  /**
-   * A prepared statement for finding a user in database
-   */
-  private static PreparedStatement mFindResource;
-
-  /**
-   * UsersTableManager manage all the SQL queries related to user table
-   * 
-   * @param mConnection connection to the databse
-   * @throws SQLException when there is an error related to sql
-   */
-  public GoogleDriveManager(Connection mConnection) throws SQLException {
-    mInsertResource = mConnection.prepareStatement("INSERT INTO resources VALUES (?, ?, ?, ?, ?, ?, ?)");
-    mDeleteResource = mConnection.prepareStatement("DELETE FROM resources WHERE res_id=?");
-    mSelectOneResource = mConnection.prepareStatement("SELECT * FROM resources where res_id=?");
-    mSelectAll = mConnection.prepareStatement("SELECT * FROM resources");
-    mFindResource = mConnection.prepareStatement("SELECT count(*) where res_id=?");
+  private static GoogleCredentials getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
+    // Load client secrets.
+    InputStream in = GoogleDriveManager.class.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
+    if (in == null) {
+      throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+    }
+    GoogleCredentials credential = GoogleCredentials.fromStream(in).createScoped(SCOPES);
+    // returns an authorized Credential object.
+    return credential;
   }
 
-  public Resource getResource(int cmidx) {
-
+  public static void main(String... args) throws IOException, GeneralSecurityException {
+    // Build a new authorized API client service.
+    final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY,
+        (HttpRequestInitializer) getCredentials(HTTP_TRANSPORT))
+        .setApplicationName(APPLICATION_NAME)
+        .build();
+    // Print the names and IDs for up to 10 files.
+    FileList result = service.files().list()
+        .setPageSize(10)
+        .setFields("nextPageToken, files(id, name)")
+        .execute();
+    List<File> files = result.getFiles();
+    if (files == null || files.isEmpty()) {
+      System.out.println("No files found.");
+    } else {
+      System.out.println("Files:");
+      for (File file : files) {
+        System.out.printf("%s (%s)\n", file.getName(), file.getId());
+      }
+    }
   }
 
   /**
    * Upload new file.
+   * 
+   * @param res The resource object
    *
    * @return Inserted file metadata if successful, {@code null} otherwise.
    * @throws IOException if service account credentials file not found.
    */
-  public String uploadBasic() throws IOException {
-
+  public static String uploadBasic(Resource res) throws IOException {
     // Load pre-authorized user credentials from the environment.
     // TODO(developer) - See https://developers.google.com/identity for
     // guides on implementing OAuth2 for your application.
@@ -182,22 +185,19 @@ public class GoogleDriveManager {
     if (in == null) {
       throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
     }
-    GoogleCredentials credentials = GoogleCredentials.fromStream(in).createScoped(SCOPES);
-    System.out.println("Credential: " + credentials);
-    // GoogleCredentials credentials =
-    // GoogleCredentials.getApplicationDefault().createScoped(Arrays.asList(DriveScopes.DRIVE_FILE));
+    GoogleCredentials credentials = GoogleCredentials.getApplicationDefault()
+        .createScoped(Arrays.asList(DriveScopes.DRIVE_FILE));
     HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credentials);
-
     // Build a new authorized API client service.
     Drive service = new Drive.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance(), requestInitializer)
-        .setApplicationName("Drive samples").build();
+        .setApplicationName(APPLICATION_NAME).build();
     // Upload file photo.jpg on drive.
     File fileMetadata = new File();
-    fileMetadata.setName("photo.jpg");
+    fileMetadata.setName(getFilename(res.link));
     // File's content.
-    java.io.File filePath = new java.io.File("files/photo.jpg");
+    java.io.File filePath = new java.io.File(res.link);
     // Specify media type and file-path for file.
-    FileContent mediaContent = new FileContent("image/jpeg", filePath);
+    FileContent mediaContent = new FileContent(getFileType(res.link), filePath);
     try {
       File file = service.files().create(fileMetadata, mediaContent).setFields("id").execute();
       System.out.println("File ID: " + file.getId());
@@ -208,5 +208,67 @@ public class GoogleDriveManager {
       throw e;
     }
   }
+  // /**
+  // * @param res The resource
+  // * @return String file ID
+  // * @throws IOException
+  // */
+  // public String uploadSimple(Resource res) throws IOException {
+  // InputStream in =
+  // GoogleDriveManager.class.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
+  // if (in == null) {
+  // throw new FileNotFoundException("Resource not found: " +
+  // CREDENTIALS_FILE_PATH);
+  // }
+  // GoogleCredentials credentials =
+  // GoogleCredentials.fromStream(in).createScoped(SCOPES);
+  // System.out.println("Credential: " + credentials);
+  // // GoogleCredentials credentials =
+  // //
+  // GoogleCredentials.getApplicationDefault().createScoped(Arrays.asList(DriveScopes.DRIVE_FILE));
+  // HttpRequestInitializer requestInitializer = new
+  // HttpCredentialsAdapter(credentials);
 
+  // // Build a new authorized API client service.
+  // Drive service = new Drive.Builder(new NetHttpTransport(),
+  // GsonFactory.getDefaultInstance(), requestInitializer)
+  // .setApplicationName(APPLICATION_NAME).build();
+  // File fileMetadata = new File();
+  // fileMetadata.setName(getFilename(res.link));
+  // fileMetadata.setMimeType(null);
+
+  // java.io.File filePath = new java.io.File(res.link);
+  // FileContent mediaContent = new FileContent(getFileType(res.link), filePath);
+  // File file = service.files().create(fileMetadata, mediaContent)
+  // .setFields("id")
+  // .execute();
+  // return file.getId();
+  // }
+
+  /**
+   * getFilename is a helper function for getting the name of a file
+   * 
+   * @param link
+   * @return
+   */
+  public static String getFilename(String link) {
+    int count = 0;
+    for (int i = 0; i < link.length(); i++) {
+      if (link.charAt(i) == '/')
+        count++;
+    }
+    String[] name = link.split("/");
+    return name[count];
+  }
+
+  public static String getFileType(String link) {
+    int count = 0;
+    for (int i = 0; i < link.length(); i++) {
+      if (link.charAt(i) == '/')
+        count++;
+    }
+    String[] name = link.split("/");
+    String file = name[count];
+    return (file.split("."))[1];
+  }
 }

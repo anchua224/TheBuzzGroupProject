@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import com.google.gson.*;
 
 import edu.lehigh.cse216.jub424.backend.data_manager.OAuthManager;
-import edu.lehigh.cse216.jub424.backend.data_manager.*;
 import edu.lehigh.cse216.jub424.backend.data_request.*;
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 
@@ -404,7 +403,7 @@ public class DatabaseRoutes {
      */
     public static void resourceRoutes(Database mDatabase) {
         Gson gson = new Gson();
-        Spark.get("/resource", (request, response) -> {
+        Spark.get("/resource/:id/:com_id?sessionKey", (request, response) -> {
             int cmidx = Integer.parseInt(request.params("comid"));
             int idx = Integer.parseInt(request.params("id"));
             // ensure status 200 OK, with a MIME type of JSON
@@ -413,7 +412,7 @@ public class DatabaseRoutes {
             Resource rResource = mDatabase.mResourceTableManager.selectOneResource(cmidx, idx);
             return gson.toJson(new StructuredResponse("ok", null, rResource));
         });
-        Spark.post("/resource", (request, response) -> {
+        Spark.post("/resource/:id/:com_id?sessionKey", (request, response) -> {
             int cmidx = Integer.parseInt(request.params("comid"));
             int idx = Integer.parseInt(request.params("id"));
             String sessionKey = request.queryParams("sessionKey");
