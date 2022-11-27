@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import com.google.gson.*;
 
 import edu.lehigh.cse216.jub424.backend.data_manager.OAuthManager;
-import edu.lehigh.cse216.jub424.backend.data_manager.GoogleDriveManager;
+import edu.lehigh.cse216.jub424.backend.data_manager.*;
 import edu.lehigh.cse216.jub424.backend.data_request.*;
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 
@@ -405,17 +405,29 @@ public class DatabaseRoutes {
     public static void resourceRoutes(Database mDatabase) {
         Gson gson = new Gson();
         Spark.get("/resource", (request, response) -> {
-            // int cmidx = Integer.parseInt(request.params("comid"));
+            int cmidx = Integer.parseInt(request.params("comid"));
+            int idx = Integer.parseInt(request.params("id"));
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
-            // TODO: create getResource method in ResourceManager
-            // int resource = mDatabase.mGoogleDriveHandler.getResource(cmidx);
-            // mDatabase.mGoogleDriveManager.GoogleDrive();
-            return gson.toJson(new StructuredResponse("ok", null, 1));
-            // return gson.toJson(new StructuredResponse("ok", null,
-            // mDatabase.mGoogleDriveHandler.selectResource(cmidx))); //TODO: create select
-            // resource method in ResourceManager.java
+            Resource rResource = mDatabase.mResourceTableManager.selectOneResource(cmidx, idx);
+            return gson.toJson(new StructuredResponse("ok", null, rResource));
+        });
+        Spark.post("/resource", (request, response) -> {
+            int cmidx = Integer.parseInt(request.params("comid"));
+            int idx = Integer.parseInt(request.params("id"));
+            String sessionKey = request.queryParams("sessionKey");
+            SimpleResourceRequest req = gson.fromJson(request.body(), SimpleResourceRequest.class);
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            int newRes = mDatabase.mResourceTableManager.insertOneResource(idx, cmidx, sessionKey, req.mLink, 1);
+            if (newRes != 0) {
+                return gson.toJson(new StructuredResponse("ok", "" + newRes, null));
+            } else {
+                return gson.toJson(
+                        new StructuredResponse("error", "error inserting link " + req.mLink + " " + sessionKey, null));
+            }
         });
     }
 

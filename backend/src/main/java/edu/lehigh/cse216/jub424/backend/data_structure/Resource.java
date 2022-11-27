@@ -32,6 +32,10 @@ public class Resource {
      */
     public String link;
     /**
+     * validity of the resource
+     */
+    public int validity;
+    /**
      * the creation time, cannot be changed
      */
     public final Date createdDate;
@@ -41,22 +45,25 @@ public class Resource {
      * and comment.
      * Also provide the content of the comment
      * 
-     * @param idea_id id of the idea which the resource related to
+     * @param idea_id  id of the idea which the resource related to
      * 
-     * @param user_id id of the user who post the resource
+     * @param user_id  id of the user who post the resource
      * 
-     * @param com_id  id of the comment which the resource is related to
+     * @param com_id   id of the comment which the resource is related to
      * 
-     * @param res_id  id of the resource, should be unique
+     * @param res_id   id of the resource, should be unique
      * 
-     * @param link    the link for the resource
+     * @param link     the link for the resource
+     * 
+     * @param validity the validity of the resource
      * 
      */
-    public Resource(int idea_id, int com_id, String user_id, int res_id, String link) {
+    public Resource(int idea_id, int com_id, String user_id, int res_id, String link, int validity) {
         this.idea_id = idea_id;
         this.com_id = com_id;
         this.res_id = res_id;
         this.link = link;
+        this.validity = validity;
         createdDate = new Date();
     }
 }

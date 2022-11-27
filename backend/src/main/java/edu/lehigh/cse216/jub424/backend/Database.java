@@ -48,7 +48,7 @@ public class Database {
     /**
      * mGoogleDriveHandler deals with the google drive resource links
      */
-    public GoogleDriveManager mGoogleDriveManager;
+    public ResourceTableManager mResourceTableManager;
 
     /**
      * The Database constructor is private: we only create Database objects
