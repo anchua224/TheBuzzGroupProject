@@ -89,6 +89,59 @@ public class AppTest
     }
 
     /**
+     * Ensure that the constructor populates every field of the object it
+     * creates
+     */
+    public void testResourceConstructor() {
+        int idea_id = 4000;
+        int com_id = 2000;
+        String user_id = "qwertyuiopasdfghjklzxcvbnm1234567890opuytrewqasdfghjklzxcvbnm34";
+        int res_id = 1000;
+        String link = "/home/user/Documents/folder/filename.txt";
+        int validity = 1;
+        Resource resource = new Resource(idea_id, com_id, user_id, res_id, link, validity);
+
+        assertTrue(resource.idea_id == idea_id);
+        assertTrue(resource.com_id == com_id);
+        assertTrue(resource.user_id.equals(user_id));
+        assertTrue(resource.res_id == res_id);
+        assertTrue(resource.link.equals(link));
+        assertTrue(resource.validity == validity);
+    }
+
+    /**
+     * test if a file can be uploaded to the service account drive
+     * 
+     * @throws Exception
+     */
+    public void testFileUpload() {
+        int idea_id = 4000;
+        int com_id = 2000;
+        String user_id = "qwertyuiopasdfghjklzxcvbnm1234567890opuytrewqasdfghjklzxcvbnm34";
+        int res_id = 1000;
+        String link = "file:///Users/achua/Desktop/image.png"; // Change link to a file on tester's computer
+        int validity = 1;
+        Resource resource = new Resource(idea_id, com_id, user_id, res_id, link, validity);
+
+        try {
+            String fileID = GoogleDriveManager.uploadBasic(resource);
+        } catch (Exception e) {
+            fail("Failed to upload resource " + resource.link);
+        }
+    }
+
+    /**
+     * test for google drive service account connection
+     */
+    public void testGoogeDriveConnection() {
+        try {
+            GoogleDriveManager.main();
+        } catch (Exception e) {
+            fail("Failed to connect to service account Google Drive ");
+        }
+    }
+
+    /**
      * test if it can connect to the heroku database by the DATABASE_URL
      *
      * @throws SQLException
