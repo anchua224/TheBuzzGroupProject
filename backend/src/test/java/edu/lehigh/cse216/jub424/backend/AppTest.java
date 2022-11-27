@@ -152,6 +152,11 @@ public class AppTest
         } catch (Exception e) {
             fail("not able to set up the users Table Manager");
         }
+        try {
+            mDatabase.mResourceTableManager = new ResourceTableManager(mDatabase.mConnection);
+        } catch (Exception e) {
+            fail("not able to set up the resource Table Manager");
+        }
         mDatabase.disconnect();
     }
 
