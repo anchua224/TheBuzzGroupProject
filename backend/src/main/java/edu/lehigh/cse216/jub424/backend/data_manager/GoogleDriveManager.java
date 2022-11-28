@@ -45,45 +45,6 @@ import edu.lehigh.cse216.jub424.backend.data_manager.ResourceTableManager;
 /* class to demonstarte use of Drive files list API */
 // public class GoogleDriveManager {
 
-// /**
-// * Creates an authorized Credential object.
-// *
-// * @param HTTP_TRANSPORT The network HTTP Transport.
-// * @return An authorized Credential object.
-// * @throws IOException If the credentials.json file cannot be found.
-// */
-// private static Credential getCredentials(final NetHttpTransport
-// HTTP_TRANSPORT)
-// throws IOException {
-// // Load client secrets.
-// InputStream in =
-// GoogleDriveManager.class.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
-// if (in == null) {
-// throw new FileNotFoundException("Resource not found: " +
-// CREDENTIALS_FILE_PATH);
-// }
-// // GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-// // new InputStreamReader(in));
-
-// // // Build flow and trigger user authorization request.
-// // GoogleAuthorizationCodeFlow flow = new
-// GoogleAuthorizationCodeFlow.Builder(
-// // HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-// // .setDataStoreFactory(new FileDataStoreFactory(new
-// // java.io.File(TOKENS_DIRECTORY_PATH)))
-// // .setAccessType("offline")
-// // .build();
-// // LocalServerReceiver receiver = new
-// // LocalServerReceiver.Builder().setPort(8888).build();
-// // Credential credential = new AuthorizationCodeInstalledApp(flow,
-// // receiver).authorize("user");
-// GoogleCredential credential =
-// GoogleCredential.fromStream(in).createScoped(SCOPES);
-// System.out.println("Credential: " + credential);
-// // returns an authorized Credential object.
-// return credential;
-// }
-
 // public void GoogleDrive(String... args) throws IOException,
 // GeneralSecurityException {
 // // Build a new authorized API client service.
@@ -135,38 +96,77 @@ public class GoogleDriveManager {
    * @return An authorized Credential object.
    * @throws IOException If the credentials.json file cannot be found.
    */
+  // private static GoogleCredentials getCredentials(final NetHttpTransport
+  // HTTP_TRANSPORT) throws IOException {
+  // // Load client secrets.
+  // InputStream in =
+  // GoogleDriveManager.class.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
+  // if (in == null) {
+  // throw new FileNotFoundException("Resource not found: " +
+  // CREDENTIALS_FILE_PATH);
+  // }
+  // GoogleCredentials credential =
+  // GoogleCredentials.fromStream(in).createScoped(SCOPES);
+  // // returns an authorized Credential object.
+  // return credential;
+  // }
+
+  // /**
+  // * Creates an authorized Credential object.
+  // *
+  // * @param HTTP_TRANSPORT The network HTTP Transport.
+  // * @return An authorized Credential object.
+  // * @throws IOException If the credentials.json file cannot be found.
+  // */
   private static GoogleCredentials getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
     // Load client secrets.
     InputStream in = GoogleDriveManager.class.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
     if (in == null) {
       throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
     }
-    GoogleCredentials credential = GoogleCredentials.fromStream(in).createScoped(SCOPES);
+    // GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
+    // new InputStreamReader(in));
+
+    // // Build flow and trigger user authorization request.
+    // GoogleAuthorizationCodeFlow flow = new
+    // GoogleAuthorizationCodeFlow.Builder(
+    // HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+    // .setDataStoreFactory(new FileDataStoreFactory(new
+    // java.io.File(TOKENS_DIRECTORY_PATH)))
+    // .setAccessType("offline")
+    // .build();
+    // LocalServerReceiver receiver = new
+    // LocalServerReceiver.Builder().setPort(8888).build();
+    // Credential credential = new AuthorizationCodeInstalledApp(flow,
+    // receiver).authorize("user");
+    GoogleCredentials credential = GoogleCredentials.fromStream(in).createScoped(Arrays.asList(DriveScopes.DRIVE_FILE));
+    System.out.println("Credential: " + credential);
     // returns an authorized Credential object.
     return credential;
   }
 
-  public static void main(String... args) throws IOException, GeneralSecurityException {
+  public static void quickStart() throws IOException, GeneralSecurityException {
     // Build a new authorized API client service.
     final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-    Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-        (HttpRequestInitializer) getCredentials(HTTP_TRANSPORT))
-        .setApplicationName(APPLICATION_NAME)
-        .build();
-    // Print the names and IDs for up to 10 files.
-    FileList result = service.files().list()
-        .setPageSize(10)
-        .setFields("nextPageToken, files(id, name)")
-        .execute();
-    List<File> files = result.getFiles();
-    if (files == null || files.isEmpty()) {
-      System.out.println("No files found.");
-    } else {
-      System.out.println("Files:");
-      for (File file : files) {
-        System.out.printf("%s (%s)\n", file.getName(), file.getId());
-      }
-    }
+    GoogleCredentials credentials = getCredentials(HTTP_TRANSPORT);
+    // Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY,
+    // (HttpRequestInitializer) getCredentials(HTTP_TRANSPORT))
+    // .setApplicationName(APPLICATION_NAME)
+    // .build();
+    // // Print the names and IDs for up to 10 files.
+    // FileList result = service.files().list()
+    // .setPageSize(10)
+    // .setFields("nextPageToken, files(id, name)")
+    // .execute();
+    // List<File> files = result.getFiles();
+    // if (files == null || files.isEmpty()) {
+    // System.out.println("No files found.");
+    // } else {
+    // System.out.println("Files:");
+    // for (File file : files) {
+    // System.out.printf("%s (%s)\n", file.getName(), file.getId());
+    // }
+    // }
   }
 
   /**
@@ -178,16 +178,17 @@ public class GoogleDriveManager {
    * @throws IOException if service account credentials file not found.
    */
   public static String uploadBasic(Resource res) throws IOException {
-    // Load pre-authorized user credentials from the environment.
-    // TODO(developer) - See https://developers.google.com/identity for
-    // guides on implementing OAuth2 for your application.
     InputStream in = GoogleDriveManager.class.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
     if (in == null) {
       throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
     }
+    // Load pre-authorized user credentials from the environment.
+    // TODO(developer) - See https://developers.google.com/identity for
+    // guides on implementing OAuth2 for your application.
     GoogleCredentials credentials = GoogleCredentials.getApplicationDefault()
         .createScoped(Arrays.asList(DriveScopes.DRIVE_FILE));
-    HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credentials);
+    HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(
+        credentials);
     // Build a new authorized API client service.
     Drive service = new Drive.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance(), requestInitializer)
         .setApplicationName(APPLICATION_NAME).build();

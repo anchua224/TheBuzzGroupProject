@@ -62,6 +62,7 @@ public class Resource {
         this.idea_id = idea_id;
         this.com_id = com_id;
         this.res_id = res_id;
+        this.user_id = user_id;
         this.link = link;
         this.validity = validity;
         createdDate = new Date();

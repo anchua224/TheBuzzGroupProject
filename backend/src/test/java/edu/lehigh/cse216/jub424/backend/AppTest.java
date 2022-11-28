@@ -1,7 +1,9 @@
 package edu.lehigh.cse216.jub424.backend;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 import java.sql.*;
 import java.util.Map;
 
@@ -135,9 +137,11 @@ public class AppTest
      */
     public void testGoogeDriveConnection() {
         try {
-            GoogleDriveManager.main();
-        } catch (Exception e) {
-            fail("Failed to connect to service account Google Drive ");
+            GoogleDriveManager.quickStart();
+        } catch (IOException e) {
+            fail("IOException, failed to connect service account Google Drive ");
+        } catch (GeneralSecurityException e) {
+            fail("GeneralSecurityException, failed to connect to Google Drive");
         }
     }
 
@@ -148,16 +152,14 @@ public class AppTest
      */
     public void testConnection() {
         Map<String, String> env = System.getenv();
-        String db_url = env.get("DATABASE_URL");
+        String ip = env.get("POSTGRES_IP");
+        String port = env.get("POSTGRES_PORT");
+        String user = env.get("POSTGRES_USER");
+        String pass = env.get("POSTGRES_PASS");
         Connection conn = null;
         try {
             Class.forName("org.postgresql.Driver");
-            URI dbUri = new URI(db_url);
-            String username = dbUri.getUserInfo().split(":")[0];
-            String password = dbUri.getUserInfo().split(":")[1];
-            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort()
-                    + dbUri.getPath();
-            conn = DriverManager.getConnection(dbUrl, username, password);
+            conn = DriverManager.getConnection("jdbc:postgresql://" + ip + ":" + port + "/", user, pass);
             if (conn == null) {
                 fail("Error: DriverManager.getConnection() returned a null object");
             }
@@ -166,8 +168,6 @@ public class AppTest
             fail("connect fail because the SQLException" + e.getMessage());
         } catch (ClassNotFoundException cnfe) {
             fail("Unable to find postgresql driver");
-        } catch (URISyntaxException s) {
-            fail("URI Syntax Error");
         }
     }
 
@@ -177,8 +177,11 @@ public class AppTest
      */
     public void testManager() {
         Map<String, String> env = System.getenv();
-        String db_url = env.get("DATABASE_URL");
-        Database mDatabase = Database.getDatabase(db_url);
+        String ip = env.get("POSTGRES_IP");
+        String port = env.get("POSTGRES_PORT");
+        String user = env.get("POSTGRES_USER");
+        String pass = env.get("POSTGRES_PASS");
+        Database mDatabase = Database.getDatabase(ip, port, user, pass);
         assert (mDatabase != null);
         try {
             mDatabase.mIdeaTableManager = new IdeaTableManager(mDatabase.mConnection);
@@ -219,8 +222,11 @@ public class AppTest
      */
     public void testRoutes() {
         Map<String, String> env = System.getenv();
-        String db_url = env.get("DATABASE_URL");
-        Database mDatabase = Database.getDatabase(db_url);
+        String ip = env.get("POSTGRES_IP");
+        String port = env.get("POSTGRES_PORT");
+        String user = env.get("POSTGRES_USER");
+        String pass = env.get("POSTGRES_PASS");
+        Database mDatabase = Database.getDatabase(ip, port, user, pass);
         assert (mDatabase != null);
         try {
             DatabaseRoutes.ideasRoutes(mDatabase);
