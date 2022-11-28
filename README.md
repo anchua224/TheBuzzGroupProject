@@ -124,6 +124,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
     - Admin:
       - 1. javadoc
     - Backend:
+	  - 1. Getting the Google API to work an some problems with credentials 
     - Mobile:
       - 1. Ideas aren’t able to display because of the null error
       - 2. Google API not fully tested
