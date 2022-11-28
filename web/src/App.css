@@ -1,31 +1,36 @@
 .ideaList{
-    border: 1px solid black;
-    border-radius: 15px;
-    padding: 15px;
-    margin: 0 auto;
-    margin-top: 10 ;
-    margin-left: auto;
-    margin-right: auto;
+    border: 7px solid #fa206e;
+    border-radius: 55px;
+    padding: 20px;
+    margin: auto;
+    margin-top: 10px;
     width: 30em;
-    background-color: beige;
+    background-color: whitesmoke;
+    margin-bottom: 10px;
 }
 .comment{
-    border: 1px solid black;
+    border: none;
     border-radius: 15px;
-    padding: 15px;
+    padding: 1px;
     margin: 0 auto;
-    margin-top: 10 ;
+    margin-bottom: 10px;
+    margin-top: 10;
     margin-left: auto;
     margin-right: auto;
-    background-color: blanchedalmond;
+    background-color: pink;
 }
 #addIdeaButton,#myProfileButton{
     margin-top: 10 ;
     margin: 0 auto;
     margin-left: auto;
     margin-right: auto;
-    width: 6em;
+    width: 8em;
+    border-radius: 12px;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 body{
+    margin-left: 20%;
+    margin-right: 20%;
     background-image: url('background.jpg');
 }
+

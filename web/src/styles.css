@@ -1,0 +1,146 @@
+*{
+  box-sizing: border-box;
+}
+
+body{
+  margin: 0;
+}
+/* navigation bar */
+.nav{
+  background-color: #fa206e;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 0 1rem;
+}
+/* The Buzz */
+.site-title{
+  font-size: 4rem;
+  font-family: 'Cardo', serif;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.nav ul{
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+.nav a{
+  color: whitesmoke;
+}
+/* My Profile and Create Idea Button */
+.button{
+  transition-duration: 0.4s;
+  background-color: inherit;
+  color:white;
+  border: none;
+  margin-left: 5px;
+  padding: 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+/* Animation for button to change color */
+.button:hover{
+  background-color: pink;
+  color: black;
+}
+/* Description of Ideas */
+.description{
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: black;
+}
+/* User Name Button */
+.user-button{
+  transition-duration: 0.04s;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  border: none;
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 16px;
+}
+/* Animation for the user button to change color */
+.user-button:hover{
+  background-color: palevioletred;
+  color:white;
+}
+/* Like button */
+.like-button{
+  border:none;
+  border-radius: 10px;
+  height: 30px;
+  width: 80px;
+  background-color: #fa206e;
+  color:white;
+  margin-right: 266px;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+/* Dislike button */
+.dislike-button{
+  border:none;
+  border-radius: 10px;
+  height: 30px;
+  width: 80px;
+  color: white;
+  background-color: #ffa500;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+/* Comment button */
+.comment-button{
+  border: 2px solid pink;
+  border-radius: 5px;
+  background-color: inherit;
+  transform: translateX(160%);
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.comment-button:hover{
+  background-color:pink;
+}
+/* Add/Close/Upload buttons */
+.acu-buttons{
+  transition-duration: 0.5s;
+  border: 2px solid pink;
+  background-color: inherit;
+  margin-bottom: 5px;
+  margin-left: 5px ;
+}
+/* Animation for Add/Close/Upload Buttons */
+.acu-buttons:hover{
+  background-color: #FFC0CB;
+}
+/* input boxes */
+input{
+  border: 2px solid pink;
+  border-radius: 5px;
+  width:100%;
+  font-family: 'Times New Roman', Times, serif;
+  font-size:16px;
+}
+/* idea box*/
+textarea{
+  width: 100%;
+  height: 100%;
+  border: 2px solid pink;
+  border-radius: 5px;
+  font-family: 'Times New Roman', Times, serif;
+  resize: none;
+}
+
+.text{
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+select{
+  width:80%;
+  border: 2px solid pink;
+  border-radius: 5px;
+}

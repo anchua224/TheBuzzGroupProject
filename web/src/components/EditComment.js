@@ -5,11 +5,12 @@ import { getSessionKey } from '../Situation';
 
 const AddIdea_STYLES = {
   position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate (-50%,-50%)',
+  top: '33%',
+  left: '36%',
+  right: '36%',
   backgroundColor: '#FFF',
-  padding: '50px',
+  border: '3px solid pink',
+  padding: '20px',
   zIndex: 1000
 }
 
@@ -32,7 +33,7 @@ export default function EditComment({open, onClose,idea_id, com_id,old_content})
       }
     
     const changeComment = async(e) =>{
-    axios.put(`https://cse216-fl22-team14.herokuapp.com/ideas/${idea_id}/comment/${com_id}?sessionKey=${getSessionKey()}`,{
+    axios.put(`https://cse216-fl22-team14-new.herokuapp.com/ideas/${idea_id}/comment/${com_id}?sessionKey=${getSessionKey()}`,{
         mContent: content
     })
         .catch(error => {
@@ -41,14 +42,14 @@ export default function EditComment({open, onClose,idea_id, com_id,old_content})
         onClose();
     }
 
-      
     return ReactDOM.createPortal(
         <div style={OVERLAY_STYLE}>
           <div style={AddIdea_STYLES}>
-            <label>Change Idea Comment:</label>
+            <label className='text'><b>Change Idea Comment:</b></label>
             <input type="text" id="newConnent" onChange={(e) => setContent(e.target.value)}/>
-            <button id="addButton" onClick={(e) => changeComment(e)}>Change</button>
-            <button id="addCancel" onClick={onClose}>Cancel</button>
+            <hr></hr>
+            <button className='acu-buttons' id="addButton" onClick={(e) => changeComment(e)}>Change</button>
+            <button className='acu-buttons' id="addCancel" onClick={onClose}>Cancel</button>
           </div>
         </div>,
         document.getElementById('portal')
