@@ -1,5 +1,6 @@
 package edu.lehigh.cse216.jub424.backend;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -116,7 +117,7 @@ public class AppTest
      * 
      * @throws Exception
      */
-    public void testFileUpload() {
+    public void testFileUpload() throws IOException {
         int idea_id = 4000;
         int com_id = 2000;
         String user_id = "qwertyuiopasdfghjklzxcvbnm1234567890opuytrewqasdfghjklzxcvbnm34";
@@ -127,8 +128,8 @@ public class AppTest
 
         try {
             String fileID = GoogleDriveManager.uploadBasic(resource);
-        } catch (Exception e) {
-            fail("Failed to upload resource " + resource.link);
+        } catch (IOException e) {
+            fail("Failed to get credentials, cannot upload resource " + resource.link);
         }
     }
 
@@ -139,14 +140,14 @@ public class AppTest
         try {
             GoogleDriveManager.quickStart();
         } catch (IOException e) {
-            fail("IOException, failed to connect service account Google Drive ");
+            fail("IOException, failed to get credentials");
         } catch (GeneralSecurityException e) {
             fail("GeneralSecurityException, failed to connect to Google Drive");
         }
     }
 
     /**
-     * test if it can connect to the heroku database by the DATABASE_URL
+     * test if it can connect to the elephantSQL database
      *
      * @throws SQLException
      */
