@@ -120,25 +120,22 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 - Link: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/markdown_images/Latest_version_artifacts
 	
 ## Backlog Item & Tech Debt List (sprint 10):
-- Mobile:
-	- Ideas do not show likes
-	- Ideas do not show names of users, only user ids (Tried implementing a hash map that saves user id and names, couldn’t test with ideas table down)
-	- Ideas cannot be liked
-	- Unit tests not implemented
-	- User cannot view other profiles (Tried to implement, couldn’t test with technical difficulties)
-	- Users cannot view comments
+- Backlogs:
+    - Admin:
+      - 1. javadoc
+    - Backend:
+    - Mobile:
+      - 1. Ideas aren’t able to display because of the null error
+      - 2. Google API not fully tested
+      - 3. Able to post things but not able to view it
+    - Web:
+      - 1. Functionality for adding files (Code is provided but not fully work)
+- Tech Debt:
+    - Web:
+      - 1. Final touch with CSS
+           - Making it very web friendly and not seem like a knock off mobile app
+           - Reload automatically when adding ideas or comments
 
-- Backend:
-	- Deploy not working
-
-- Admin:
-	- not specific methods to do each update of items in database specifically
-	- no fast way to drop and create all tables with one method
-	- moving from table to table isn't very optimal
-
-- Web 
-	- The JS Documentation
-	- Unit test for react
 	
 
 
