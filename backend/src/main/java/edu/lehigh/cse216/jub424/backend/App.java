@@ -20,7 +20,6 @@ public class App {
      * @param args unsed
      */
     public static void main(String[] args) {
-
         // gson provides us with a way to turn JSON into objects, and objects
         // into JSON.
         //

@@ -100,9 +100,10 @@ public class AppTest
         int com_id = 2000;
         String user_id = "qwertyuiopasdfghjklzxcvbnm1234567890opuytrewqasdfghjklzxcvbnm34";
         int res_id = 1000;
-        String link = "/home/user/Documents/folder/filename.txt";
+        String link = "https://upload.wikimedia.org/wikipedia/en/thumb/6/65/LehighMountainHawks.svg/1200px-LehighMountainHawks.svg.png";
         int validity = 1;
-        Resource resource = new Resource(idea_id, com_id, user_id, res_id, link, validity);
+        Resource resource = new Resource(idea_id, com_id, user_id, res_id, link,
+                validity);
 
         assertTrue(resource.idea_id == idea_id);
         assertTrue(resource.com_id == com_id);
@@ -110,27 +111,6 @@ public class AppTest
         assertTrue(resource.res_id == res_id);
         assertTrue(resource.link.equals(link));
         assertTrue(resource.validity == validity);
-    }
-
-    /**
-     * test if a file can be uploaded to the service account drive
-     * 
-     * @throws Exception
-     */
-    public void testFileUpload() throws IOException {
-        int idea_id = 4000;
-        int com_id = 2000;
-        String user_id = "qwertyuiopasdfghjklzxcvbnm1234567890opuytrewqasdfghjklzxcvbnm34";
-        int res_id = 1000;
-        String link = "file:///Users/achua/Desktop/image.png"; // Change link to a file on tester's computer
-        int validity = 1;
-        Resource resource = new Resource(idea_id, com_id, user_id, res_id, link, validity);
-
-        try {
-            String fileID = GoogleDriveManager.uploadBasic(resource);
-        } catch (IOException e) {
-            fail("Failed to get credentials, cannot upload resource " + resource.link);
-        }
     }
 
     /**
@@ -143,6 +123,31 @@ public class AppTest
             fail("IOException, failed to get credentials");
         } catch (GeneralSecurityException e) {
             fail("GeneralSecurityException, failed to connect to Google Drive");
+        } catch (Exception e) {
+            fail("Could not load credentials");
+        }
+    }
+
+    /**
+     * test if a file can be uploaded to the service account drive
+     *
+     * @throws Exception
+     */
+    public void testFileUpload() throws IOException {
+        int idea_id = 4000;
+        int com_id = 2000;
+        String user_id = "qwertyuiopasdfghjklzxcvbnm1234567890opuytrewqasdfghjklzxcvbnm34";
+        int res_id = 1000;
+        String link = "https://upload.wikimedia.org/wikipedia/en/thumb/6/65/LehighMountainHawks.svg/1200px-LehighMountainHawks.svg.png";
+        int validity = 1;
+        Resource resource = new Resource(idea_id, com_id, user_id, res_id, link, validity);
+        try {
+            if (GoogleDriveManager.uploadBasic(resource) != null)
+                assertTrue(true);
+        } catch (IOException e) {
+            fail("Failed to upload resource " + resource.link);
+        } catch (Exception e) {
+            fail("Failed to load credentials");
         }
     }
 
@@ -160,7 +165,8 @@ public class AppTest
         Connection conn = null;
         try {
             Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("jdbc:postgresql://" + ip + ":" + port + "/", user, pass);
+            conn = DriverManager.getConnection("jdbc:postgresql://" + ip + ":" + port +
+                    "/", user, pass);
             if (conn == null) {
                 fail("Error: DriverManager.getConnection() returned a null object");
             }

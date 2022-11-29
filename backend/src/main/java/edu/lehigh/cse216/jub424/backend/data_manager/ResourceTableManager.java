@@ -80,13 +80,14 @@ public class ResourceTableManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try {
-            if (GoogleDriveManager.uploadBasic(new Resource(idea_id, com_id, user_id, count, link, validity)) != null) {
-                System.out.println("Resource uploaded successfully");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // try {
+        // if (GoogleDriveManager.uploadBasic(new Resource(idea_id, com_id, user_id,
+        // count, link, validity)) != null) {
+        // System.out.println("Resource uploaded successfully");
+        // }
+        // } catch (IOException e) {
+        // e.printStackTrace();
+        // }
         return count;
     }
 
