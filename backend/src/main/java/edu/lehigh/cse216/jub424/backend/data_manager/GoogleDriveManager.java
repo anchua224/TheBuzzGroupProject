@@ -12,11 +12,13 @@ import com.google.api.services.drive.model.File;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
@@ -64,31 +66,10 @@ public class GoogleDriveManager {
    * Global instance of the scopes required by this quickstart.
    * If modifying these scopes, delete your previously saved tokens/ folder.
    */
-  // private static final List<String> SCOPES =
-  // Collections.singletonList(DriveScopes.DRIVE_FILE);
-  private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
-
-  /**
-   * Creates an authorized Credential object.
-   *
-   * @param HTTP_TRANSPORT The network HTTP Transport.
-   * @return An authorized Credential object.
-   * @throws Exception
-   */
-  // private static GoogleCredentials getCredentials(final NetHttpTransport
-  // HTTP_TRANSPORT) throws IOException {
-  // // Load client secrets.
-  // InputStream in =
-  // GoogleDriveManager.class.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
-  // if (in == null) {
-  // throw new FileNotFoundException("Resource not found: " +
-  // CREDENTIALS_FILE_PATH);
-  // }
-  // GoogleCredentials credential =
-  // GoogleCredentials.fromStream(in).createScoped(SCOPES);
-  // // returns an authorized Credential object.
-  // return credential;
-  // }
+  private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
+  // Not getting credentials from file, getting credentials from Heroku config
+  // vars
+  // private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
   // /**
   // * Creates an authorized Credential object.
@@ -98,36 +79,29 @@ public class GoogleDriveManager {
   // * @throws IOException If the credentials.json file cannot be found.
   // */
   private static GoogleCredentials getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws Exception {
-    // Load client secrets.
+    // Load credentials
     Map<String, String> env = System.getenv();
     if (env.get("CREDENTIALS_KEY") == null) {
       throw new Exception("Cannot load credentials key");
     }
+    // Convert to input stream
     InputStream in = GoogleDriveManager.class.getClass().getResourceAsStream(env.get("CREDENTIALS_KEY"));
     if (in == null) {
-      throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
+      throw new Exception("Cannot load credentials key");
     }
-    // GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-    // new InputStreamReader(in));
-
-    // // Build flow and trigger user authorization request.
-    // GoogleAuthorizationCodeFlow flow = new
-    // GoogleAuthorizationCodeFlow.Builder(
-    // HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-    // .setDataStoreFactory(new FileDataStoreFactory(new
-    // java.io.File(TOKENS_DIRECTORY_PATH)))
-    // .setAccessType("offline")
-    // .build();
-    // LocalServerReceiver receiver = new
-    // LocalServerReceiver.Builder().setPort(8888).build();
-    // Credential credential = new AuthorizationCodeInstalledApp(flow,
-    // receiver).authorize("user");
+    // Get GoogleCredentials object
     GoogleCredentials credential = GoogleCredentials.fromStream(in).createScoped(Arrays.asList(DriveScopes.DRIVE_FILE));
-    System.out.println("Credential: " + credential);
+    // System.out.println("Credential: " + credential);
     // returns an authorized Credential object.
     return credential;
   }
 
+  /**
+   * quickStart Method to test getting credentials
+   * 
+   * @throws IOException
+   * @throws GeneralSecurityException
+   */
   public static void quickStart() throws IOException, GeneralSecurityException {
     // Build a new authorized API client service.
     final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -158,7 +132,7 @@ public class GoogleDriveManager {
   }
 
   /**
-   * Upload new file.
+   * Upload new file to the Google Drive service account
    * 
    * @param res The resource object
    *
@@ -167,18 +141,16 @@ public class GoogleDriveManager {
    */
   public static String uploadBasic(Resource res) throws Exception {
     final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    // Try and catch block for loading credentials
     try {
       // Load pre-authorized user credentials from the environment.
-      // TODO(developer) - See https://developers.google.com/identity for
-      // guides on implementing OAuth2 for your application.
-      // GoogleCredentials credential =
-      // GoogleCredentials.fromStream(credentials).createScoped(Arrays.asList(DriveScopes.DRIVE_FILE));
       GoogleCredentials credentials = getCredentials(HTTP_TRANSPORT);
       HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credentials);
       // Build a new authorized API client service.
       Drive service = new Drive.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance(), requestInitializer)
           .setApplicationName(APPLICATION_NAME).build();
-      // Upload file photo.jpg on drive.
+      // Upload file on drive
+      // Create file object and initialize with file information
       File fileMetadata = new File();
       fileMetadata.setName(getFilename(res.link));
       // File's content.
@@ -190,58 +162,22 @@ public class GoogleDriveManager {
         System.out.println("File ID: " + file.getId());
         return file.getId();
       } catch (GoogleJsonResponseException e) {
-        // TODO(developer) - handle error appropriately
         System.err.println("Unable to upload file: " + e.getDetails());
         throw e;
       }
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    return "Error";
+    return null;
   }
-  // /**
-  // * @param res The resource
-  // * @return String file ID
-  // * @throws IOException
-  // */
-  // public String uploadSimple(Resource res) throws IOException {
-  // InputStream in =
-  // GoogleDriveManager.class.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
-  // if (in == null) {
-  // throw new FileNotFoundException("Resource not found: " +
-  // CREDENTIALS_FILE_PATH);
-  // }
-  // GoogleCredentials credentials =
-  // GoogleCredentials.fromStream(in).createScoped(SCOPES);
-  // System.out.println("Credential: " + credentials);
-  // // GoogleCredentials credentials =
-  // //
-  // GoogleCredentials.getApplicationDefault().createScoped(Arrays.asList(DriveScopes.DRIVE_FILE));
-  // HttpRequestInitializer requestInitializer = new
-  // HttpCredentialsAdapter(credentials);
 
-  // // Build a new authorized API client service.
-  // Drive service = new Drive.Builder(new NetHttpTransport(),
-  // GsonFactory.getDefaultInstance(), requestInitializer)
-  // .setApplicationName(APPLICATION_NAME).build();
-  // File fileMetadata = new File();
-  // fileMetadata.setName(getFilename(res.link));
-  // fileMetadata.setMimeType(null);
-
-  // java.io.File filePath = new java.io.File(res.link);
-  // FileContent mediaContent = new FileContent(getFileType(res.link), filePath);
-  // File file = service.files().create(fileMetadata, mediaContent)
-  // .setFields("id")
-  // .execute();
-  // return file.getId();
-  // }
-
+  // Not sure if these methods are relavent if links do not need to be uploaded to
+  // drive
   /**
    * getFilename is a helper function for getting the name of a file
    * 
-   * @param link
-   * @return
+   * @param link Resource link
+   * @return String returns the filename
    */
   public static String getFilename(String link) {
     int count = 0;
@@ -253,6 +189,12 @@ public class GoogleDriveManager {
     return name[count];
   }
 
+  /**
+   * getFileType is a helper function for getting the file extension of the file
+   * 
+   * @param link Resource link
+   * @return String Returns the file extension type
+   */
   public static String getFileType(String link) {
     int count = 0;
     for (int i = 0; i < link.length(); i++) {
