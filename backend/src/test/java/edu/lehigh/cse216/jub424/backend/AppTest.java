@@ -1,12 +1,13 @@
 package edu.lehigh.cse216.jub424.backend;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.sql.*;
+import java.util.Base64;
 import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
 
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 import edu.lehigh.cse216.jub424.backend.data_manager.*;
@@ -124,7 +125,7 @@ public class AppTest
         } catch (GeneralSecurityException e) {
             fail("GeneralSecurityException, failed to connect to Google Drive");
         } catch (Exception e) {
-            fail("Could not load credentials");
+            fail("Could not load credentials: " + e.getMessage());
         }
     }
 
@@ -133,21 +134,42 @@ public class AppTest
      *
      * @throws Exception
      */
-    public void testFileUpload() throws IOException {
+    public void testFileUpload() throws Exception {
         int idea_id = 4000;
         int com_id = 2000;
         String user_id = "qwertyuiopasdfghjklzxcvbnm1234567890opuytrewqasdfghjklzxcvbnm34";
         int res_id = 1000;
-        String link = "https://upload.wikimedia.org/wikipedia/en/thumb/6/65/LehighMountainHawks.svg/1200px-LehighMountainHawks.svg.png";
+        String filePath = "./src/main/java/resources/image.png";
+        File inputFile = new File(filePath);
+        // byte[] fileContent = FileUtils.readFileToByteArray(new File(filePath));
+        // String encoded = Base64.getEncoder().encodeToString(fileContent);
+        byte[] fileContent = FileUtils.readFileToByteArray(inputFile);
+        String encodedString = Base64
+                .getEncoder()
+                .encodeToString(fileContent);
+        String fileMIME = "image/png";
+        String filename = "image.png";
+        if (encodedString == null)
+            fail("Failed to encode file");
         int validity = 1;
-        Resource resource = new Resource(idea_id, com_id, user_id, res_id, link, validity);
         try {
-            if (GoogleDriveManager.uploadBasic(resource) != null)
-                assertTrue(true);
+            String link = GoogleDriveManager.uploadBasic(encodedString, fileMIME,
+                    filename, idea_id, com_id);
+            if (link == null) {
+                throw new Exception("No link for file " + link);
+            }
+            Resource resource = new Resource(idea_id, com_id, user_id, res_id, link,
+                    validity);
+            assertTrue(resource.idea_id == idea_id);
+            assertTrue(resource.com_id == com_id);
+            assertTrue(resource.user_id.equals(user_id));
+            assertTrue(resource.res_id == res_id);
+            assertTrue(resource.link.equals(link));
+            assertTrue(resource.validity == validity);
         } catch (IOException e) {
-            fail("Failed to upload resource " + resource.link);
+            fail("Failed to upload resource " + filePath);
         } catch (Exception e) {
-            fail("Failed to load credentials");
+            fail(e.getMessage());
         }
     }
 

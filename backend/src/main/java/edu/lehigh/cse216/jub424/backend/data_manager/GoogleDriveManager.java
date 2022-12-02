@@ -163,7 +163,6 @@ public class GoogleDriveManager {
     // Create file object and initialize with file information
     // Decode base64
     byte[] decodedBytes = Base64.getDecoder().decode(base64);
-    String decodedBase64 = new String(decodedBytes);
     // throw new Exception("decoded: " + decodedBytes);
     File fileMetadata = new File();
     fileMetadata.setName(filename);
@@ -177,16 +176,6 @@ public class GoogleDriveManager {
     File getFile = service.files().get(file.getId()).setFields("webViewLink").execute();
     String link = getFile.getWebViewLink();
     return link;
-    // String base64Content = getBase64(base64);
-    // URI uri = new URI(base64);
-    // if (uri.getPath() == null) {
-    // throw new Exception("URI path not found.");
-    // }
-    // java.io.File filePath = new java.io.File(uri.getPath());
-    // Specify media type and file-path for file.
-    // FileContent mediaContent = new FileContent(MIME, new
-    // java.io.File(uri.getPath()));
-    // throw new Exception("File content " + mediaContent);
   }
 
 }

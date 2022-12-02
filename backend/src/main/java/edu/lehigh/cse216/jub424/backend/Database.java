@@ -49,6 +49,10 @@ public class Database {
      * mResourceTableManager deals with the resources table
      */
     public ResourceTableManager mResourceTableManager;
+    /**
+     * mResourceTableManager deals with the resources table
+     */
+    public GoogleDriveManager mGoogleDriveManager;
 
     /**
      * The Database constructor is private: we only create Database objects

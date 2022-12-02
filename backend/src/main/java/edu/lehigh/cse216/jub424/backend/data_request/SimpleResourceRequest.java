@@ -9,7 +9,15 @@ package edu.lehigh.cse216.jub424.backend.data_request;
  */
 public class SimpleResourceRequest {
     /**
-     * The link being provided by the client.
+     * The link being provided by the client. Or the base64 string for the file
      */
     public String mLink;
+    /**
+     * The file mimeType, left null if Link
+     */
+    public String mFileMIME;
+    /**
+     * The file name, left null if Link
+     */
+    public String mFilename;
 }
