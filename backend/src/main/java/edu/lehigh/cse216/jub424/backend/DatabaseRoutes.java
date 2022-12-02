@@ -3,11 +3,13 @@ package edu.lehigh.cse216.jub424.backend;
 
 import spark.Spark;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 // Import Google's JSON library
 import com.google.gson.*;
 
+import edu.lehigh.cse216.jub424.backend.data_manager.GoogleDriveManager;
 import edu.lehigh.cse216.jub424.backend.data_manager.OAuthManager;
 import edu.lehigh.cse216.jub424.backend.data_request.*;
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
@@ -420,7 +422,17 @@ public class DatabaseRoutes {
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
-            int newRes = mDatabase.mResourceTableManager.insertOneResource(idx, cmidx, sessionKey, req.mLink, 1);
+            String link = "";
+            // FIXME: change to parse input for base64, mimetype, and filename
+            if ((req.mLink).contains("https://")) {
+                // If resource string is a link, set link
+                link = req.mLink;
+            } else {
+                // If resource string is base64, upload to drive and get link
+                link = GoogleDriveManager.uploadBasic(req.mLink, req.mFileMIME, req.mFilename, idx, cmidx);
+            }
+            // Insert resource link into the resource table
+            int newRes = mDatabase.mResourceTableManager.insertOneResource(idx, cmidx, sessionKey, link, 1);
             if (newRes != 0) {
                 return gson.toJson(new StructuredResponse("ok", "" + newRes, null));
             } else {
