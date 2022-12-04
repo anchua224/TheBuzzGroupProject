@@ -37,31 +37,7 @@ import edu.lehigh.cse216.jub424.backend.data_structure.*;
  * @since 2022-11-16
  */
 /* class to demonstarte use of Drive files list API */
-// public class GoogleDriveManager {
 
-// public void GoogleDrive(String... args) throws IOException,
-// GeneralSecurityException {
-// // Build a new authorized API client service.
-// final NetHttpTransport HTTP_TRANSPORT =
-// GoogleNetHttpTransport.newTrustedTransport();
-// Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-// getCredentials(HTTP_TRANSPORT))
-// .setApplicationName(APPLICATION_NAME).build();
-
-// // Print the names and IDs for up to 10 files.
-// FileList result =
-// service.files().list().setPageSize(10).setFields("nextPageToken, files(id,
-// name)").execute();
-// List<File> files = result.getFiles();
-// if (files == null || files.isEmpty()) {
-// System.out.println("No files found.");
-// } else {
-// System.out.println("Files:");
-// for (File file : files) {
-// System.out.printf("%s (%s)\n", file.getName(), file.getId());
-// }
-// }
-// }
 public class GoogleDriveManager {
   /**
    * Application name.
@@ -77,13 +53,12 @@ public class GoogleDriveManager {
   // vars
   // private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
-  // /**
-  // * Creates an authorized Credential object.
-  // *
-  // * @param HTTP_TRANSPORT The network HTTP Transport.
-  // * @return An authorized Credential object.
-  // * @throws IOException If the credentials.json file cannot be found.
-  // */
+  /**
+   * Creates an authorized Credential object.
+   *
+   * @return An authorized Credential object.
+   * @throws IOException If the credentials.json file cannot be found.
+   */
   private static GoogleCredentials getCredentials() throws Exception {
     final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     // Load credentials
@@ -92,11 +67,6 @@ public class GoogleDriveManager {
     // throw new Exception("Cannot get credentials key");
     // }
     String filepath = "./src/main/java/resources/credentials.json";
-    // Convert to input stream
-    // InputStream in =
-    // GoogleDriveManager.class.getClass().getResourceAsStream(env.get("CREDENTIALS_KEY"));
-    // InputStream in =
-    // GoogleDriveManager.class.getClass().getResourceAsStream(filepath);
     InputStream in = new FileInputStream(filepath);
     if (in == null) {
       throw new Exception("Cannot load credentials key" + filepath);
@@ -143,7 +113,11 @@ public class GoogleDriveManager {
   /**
    * Upload new file to the Google Drive service account
    * 
-   * @param res The resource object
+   * @param base64   The resource object
+   * @param MIME     File mime type
+   * @param filename Name of file
+   * @param id       id of idea
+   * @param com_id   id of comment
    *
    * @return Inserted file metadata if successful, {@code null} otherwise.
    * @throws Exception

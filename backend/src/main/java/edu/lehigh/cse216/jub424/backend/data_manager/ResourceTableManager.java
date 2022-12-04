@@ -59,11 +59,11 @@ public class ResourceTableManager {
     /**
      * insert a new resource to table
      *
-     * @param idea_id id of the idea
-     * @param com_id  id of the comment
-     * @param user_id id of the user
-     * @param res_id  id of the resource
-     * @param link    source for resource
+     * @param idea_id  id of the idea
+     * @param com_id   id of the comment
+     * @param user_id  id of the user
+     * @param link     source for resource
+     * @param validity validity of the resource
      * 
      * @return number of rows inserted to the table
      * @throws Exception
