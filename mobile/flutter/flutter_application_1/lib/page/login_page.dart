@@ -28,89 +28,92 @@ class _LoginPage extends State<LoginPage> {
         centerTitle: true,
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            child: Padding(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+                child: Padding(
               padding: const EdgeInsets.all(100.0),
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.pink,
                   foregroundColor: Colors.white,
-                  fixedSize: const Size(240, 80), 
+                  fixedSize: const Size(240, 80),
                   minimumSize: const Size(double.infinity, 50),
                 ),
-                icon: Image.asset(
-                  'assets/images/google_icon.png',
-                  height: 32,
-                  width: 32
-                  ),
+                icon: Image.asset('assets/images/google_icon.png',
+                    height: 32, width: 32),
                 label: const Text('Sign-in with Google'),
                 onPressed: signin, //signin method
-                ),
-              )
-
-          ),
-        ]
-      ),
+              ),
+            )),
+          ]),
     );
   }
+
   // Signin Method from GoogleSignInApi
   Future signin() async {
     final user = await GoogleSignInApi.login();
-    GoogleSignInAuthentication googleSignInAuthentication = await user!.authentication;
+    GoogleSignInAuthentication googleSignInAuthentication =
+        await user!.authentication;
 
     //print(googleSignInAuthentication.accessToken);
     //print(googleSignInAuthentication.idToken);
 
     // If user is not in database, create new user object and send to a new page
-      // to complete their profile information
+    // to complete their profile information
     var currentUser = User(user);
     //currentUser = User(user).initializeUser(user, currentUser);
     // Else, pull user information from database and send to home page
-    
-    if (user == null) { // If the user login is not valid, show that sign-in failed
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sign in Failed')));
+
+    if (user == null) {
+      // If the user login is not valid, show that sign-in failed
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Sign in Failed')));
       GoogleSignInApi.logout();
-    } else if (((user.email).split('@'))[1] != 'lehigh.edu'){ // If the user is not under the domain lehigh.edu, login fails
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Unauthorized User')));
+    } else if (((user.email).split('@'))[1] != 'lehigh.edu') {
+      // If the user is not under the domain lehigh.edu, login fails
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Unauthorized User')));
       GoogleSignInApi.logout();
-    }else {
+    } else {
       // If user logging in is valid, send user to profile page
       // FIXME: change to send user to home page
       String? idToken = googleSignInAuthentication.idToken;
-      print(idToken);
-      print(idToken!.substring(1023));
-      print(user.id);
-       final response = await http.post(
-        Uri.parse('https://cse216-fl22-team14.herokuapp.com/login?token=$idToken'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-         if (response.statusCode == 200) {
-            // If the server did return a 200 CREATED response,
-            // then parse the JSON.
-            print(response.body);
-            currentUser.setSessionKey((response.body).split('"')[1]);
-            print(currentUser.sessionKey);
-          } else {
-            // If the server did not return a 200 CREATED response,
-            // then throw an exception.
-            throw Exception('Failed to get session key.');
-          }
-     // currentUser.setSessionKey(key!);
+      // print(idToken);
+      // print(idToken!.substring(1023));
+      // print(user.id);
+      final response = await http.post(
+          Uri.parse(
+              'https://cse216-fl22-team14-new.herokuapp.com/login?token=$idToken'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          });
+      if (response.statusCode == 200) {
+        // If the server did return a 200 CREATED response,
+        // then parse the JSON.
+        // print(response.body);
+        currentUser.setSessionKey((response.body).split('"')[1]);
+        // print(currentUser.sessionKey);
+      } else {
+        // If the server did not return a 200 CREATED response,
+        // then throw an exception.
+        throw Exception('Failed to get session key.');
+      }
+      // currentUser.setSessionKey(key!);
       // Get user information from database
       currentUser = await getUserInfo(currentUser);
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProfilePage(user: currentUser),
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => ProfilePage(user: currentUser),
       ));
     }
   }
-  Future<User> getUserInfo(User user) async{
-    final response = await http
-        .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/${user.sessionKey}'));
+
+  Future<User> getUserInfo(User user) async {
+    final response = await http.get(Uri.parse(
+        'https://cse216-fl22-team14-new.herokuapp.com/profile/${user.sessionKey}'));
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response, then parse the JSON.
-      final List<dbUser> returnData;
+      final List<DBUser> returnData;
       var res = jsonDecode(response.body);
       res = res['mData'];
       // print('json decode: $res');
@@ -127,4 +130,3 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 }
-
