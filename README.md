@@ -119,7 +119,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 ## Artifacts:
 - Link: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/markdown_images/Latest_version_artifacts
 	
-## Backlog Item & Tech Debt List (sprint 10):
+## Backlog Item & Tech Debt List (sprint 12):
 - Backlogs:
     - Mobile:
       - 1. Get request for retrieving mp3 & mp4 video files
