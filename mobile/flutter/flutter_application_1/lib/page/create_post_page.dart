@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -76,6 +77,8 @@ class _TextBoxState extends State<TextBox> {
   }
 
   late File _image;
+  late File _PDFFILE;
+
   String? _image_type;
   String? _mimeType_image;
   String? mimeType_Camera; // jpeg, png, etc...
@@ -101,6 +104,9 @@ class _TextBoxState extends State<TextBox> {
 
   bool isPDF(String file) {
     final mimeType = lookupMimeType(file);
+    // if (mimeType!.endsWith('application/')) {
+    //   mimeType_File = file.split(".").last; //stores the extension type
+    // }
     return mimeType!.endsWith('pdf') || mimeType.endsWith('application/pdf');
   }
 
@@ -114,6 +120,19 @@ class _TextBoxState extends State<TextBox> {
       setState(() {
         _image = File(image.path);
       });
+    }
+  }
+
+  _getFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      setState(() {
+        // _PDFFILE = file.path as File;
+        _PDFFILE = File(file.path);
+      });
+    } else {
+      // User canceled the picker
     }
   }
 
@@ -150,6 +169,14 @@ class _TextBoxState extends State<TextBox> {
                 title: Text('Camera'),
                 onTap: () {
                   _getImageFromCamera();
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.file_upload),
+                title: Text('Upload File (pdf)'),
+                onTap: () {
+                  _getFile();
                   Navigator.of(context).pop();
                 },
               ),
@@ -267,13 +294,13 @@ class _TextBoxState extends State<TextBox> {
                     //below we want this to be in the main file or a newly created file
                     // fetch the content (images) ==> /resources/:id/:com_id?sessionKey
 
-                    String credentials =
-                        "demo_test"; //for now it's just nothing important we need to make a get request for retrieving the link
-                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
-                    String encoded = stringToBase64.encode(
-                        credentials); // encoding will produce random characters
-                    String decoded = stringToBase64.decode(
-                        encoded); //decoding will output the original credentials that had been encoded
+                    // String credentials =
+                    //     "demo_test"; //for now it's just nothing important we need to make a get request for retrieving the link
+                    // Codec<String, String> stringToBase64 = utf8.fuse(base64);
+                    // String encoded = stringToBase64.encode(
+                    //     credentials); // encoding will produce random characters
+                    // String decoded = stringToBase64.decode(
+                    //     encoded); //decoding will output the original credentials that had been encoded
                     //
                     //
                   });
@@ -310,6 +337,22 @@ class _TextBoxState extends State<TextBox> {
                           MyHomePage(title: 'The Buzz', user: widget.user)),
                 );
                 setState(() {
+                  // if (isPDF(_image.toString())) {
+                  //   _CreateCameraGalleryPost(_image);
+                  // } else if (isImage(_image.toString())) {
+                  // } else if (isPDF(_image.toString()) &&
+                  //     isImage(_image.toString())) {}
+                  if (isPDF(_PDFFILE.toString()) &&
+                      isImage(_image.toString())) {
+                    _CreateCameraGalleryPost(_image);
+                    createFileSender(_PDFFILE);
+                  } else if (isPDF(_PDFFILE.toString())) {
+                    createFileSender(_PDFFILE);
+                  } else if (isImage(_image.toString())) {
+                    _CreateCameraGalleryPost(_image);
+                  }
+
+                  // createFileSender(File filesender)
                   createPost(titleController.text, messageController.text);
                 });
               },
@@ -338,10 +381,36 @@ class _TextBoxState extends State<TextBox> {
   //     }),
   //   );
   // }
-
+  var _pdfFileBase64;
   createFileSender(File filesender) async {
     //convert to base64
+    //get name of pdf
+    //use isPDF method
+    if (isPDF(filesender.toString())) {
+      //true:
+      var FileName = (filesender.toString().split('/').last);
+      var file_extension = (filesender.toString().split('.').last);
+      mimeType_File = lookupMimeType(filesender.toString());
+      http.Response pdfRep = await http.get(Uri.parse(filesender.path));
+      _pdfFileBase64 = base64Encode(pdfRep.bodyBytes);
+
+      final response = await http.post(Uri.parse(//uncertain on what :com_id is
+              'https://cse216-fl22-team14-new.herokuapp.com/resources/${widget.user.id}/com_id?sessionKey=${widget.user.sessionKey}'),
+          headers: <String, String>{
+            'Content-Type': 'application/pdf',
+          },
+          body: jsonEncode(<String, dynamic>{
+            'mId': widget.user.sessionKey,
+            'mFile': _pdfFileBase64,
+            'mMimeType': mimeType_File,
+            'mFileName': FileName,
+          }));
+    } else {
+      // print("failed, not a pdf");
+    }
+    //
   }
+
   var _imageBase64;
 
   _CreateCameraGalleryPost(File _image_copy) async {
