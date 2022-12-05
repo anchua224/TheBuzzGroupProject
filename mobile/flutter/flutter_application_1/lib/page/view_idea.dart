@@ -17,7 +17,8 @@ class ViewIdeaPage extends StatefulWidget {
     Key? key,
     required this.user,
     required this.idea,
-    required this.id, required String title,
+    required this.id,
+    required String title,
   }) : super(key: key);
 
   @override
@@ -26,7 +27,7 @@ class ViewIdeaPage extends StatefulWidget {
 
 class ViewIdeaState extends State<ViewIdeaPage> {
   final commentController = TextEditingController();
-      
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -45,19 +46,19 @@ class ViewIdeaState extends State<ViewIdeaPage> {
             label: const Text('Home'),
             icon: const Icon(Icons.home),
             onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage(user: widget.user, title: 'The Buzz'),
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) =>
+                    MyHomePage(user: widget.user, title: 'The Buzz'),
               ));
             },
           )
         ],
       ),
-      body: 
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          child: Column(
-            children: [
-            Container(
-            ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Column(
+          children: [
+            Container(),
             Container(
               alignment: Alignment.topLeft,
               width: 400,
@@ -69,26 +70,36 @@ class ViewIdeaState extends State<ViewIdeaPage> {
                   width: 1.5,
                 ),
                 borderRadius: BorderRadius.circular(3),
-                ),    
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment. start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.idea.userid,
-                    style: const TextStyle(color: Colors.black, fontSize: 18,),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
                     textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 7),
                   Text(
                     textAlign: TextAlign.left,
                     widget.idea.title,
-                    style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold,),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 5),
                   Text(
                     textAlign: TextAlign.left,
                     '  ${widget.idea.message}',
-                    style: const TextStyle(color: Colors.black, fontSize: 16,),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
@@ -108,50 +119,48 @@ class ViewIdeaState extends State<ViewIdeaPage> {
                 children: [
                   Container(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      ' @${widget.user.uid}'
-                    ),
+                    child: Text(' @${widget.user.uid}'),
                   ),
                   const SizedBox(width: 150),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                    color: Colors.pink, 
-                                    onPressed: () { 
-                                      setState(() {
-                                        //pass in snapshot.data.id
-                                        //postLiked[i] = !postLiked[i];
-                                    });
-                                    }, 
-                                    icon: const Icon(Icons.favorite_outline),
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                    color: Colors.blue, 
-                                    onPressed: () { 
-                                      setState(() {
-                                        //pass in snapshot.data.id
-                                        // postDisliked[i] = !postDisliked[i];
-                                        // postLiked[i] = !postLiked[i];
-                                    });
-                                    }, 
-                                    icon: const Icon(Icons.heart_broken_outlined),
-                                  ),
-                                ),
-                                // Container(
-                                //   alignment: Alignment.centerRight,
-                                //   child: IconButton(
-                                //     color: Colors.blue, 
-                                //     onPressed: () { 
-                                //       setState(() {
-                                //         addComment(String);
-                                //     });
-                                //     }, 
-                                //     icon: const Icon(Icons.comment),
-                                //   ),
-                                // )
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      color: Colors.pink,
+                      onPressed: () {
+                        setState(() {
+                          //pass in snapshot.data.id
+                          //postLiked[i] = !postLiked[i];
+                        });
+                      },
+                      icon: const Icon(Icons.favorite_outline),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          //pass in snapshot.data.id
+                          // postDisliked[i] = !postDisliked[i];
+                          // postLiked[i] = !postLiked[i];
+                        });
+                      },
+                      icon: const Icon(Icons.heart_broken_outlined),
+                    ),
+                  ),
+                  // Container(
+                  //   alignment: Alignment.centerRight,
+                  //   child: IconButton(
+                  //     color: Colors.blue,
+                  //     onPressed: () {
+                  //       setState(() {
+                  //         addComment(String);
+                  //     });
+                  //     },
+                  //     icon: const Icon(Icons.comment),
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -160,7 +169,8 @@ class ViewIdeaState extends State<ViewIdeaPage> {
               child: TextField(
                 controller: commentController,
                 maxLength: 50,
-                keyboardType: TextInputType.multiline, //Expands text and creates a new line
+                keyboardType: TextInputType
+                    .multiline, //Expands text and creates a new line
                 minLines: 1,
                 maxLines: 3,
                 decoration: const InputDecoration(
@@ -169,19 +179,23 @@ class ViewIdeaState extends State<ViewIdeaPage> {
             ),
             ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink,
-                      foregroundColor: Colors.white,
-                      fixedSize: const Size(200, 80), 
-                    ),
+                  backgroundColor: Colors.pink,
+                  foregroundColor: Colors.white,
+                  fixedSize: const Size(200, 80),
+                ),
                 onPressed: () {
-                    // View User Profile
-                    DBUser viewProfile;
-                    setState(() {
-                      getUserInfo(widget.idea.userid).then((DBUser val) {
-                        viewProfile = val;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PublicProfilePage( user: viewProfile, currentUser: widget.user,)),
+                  // View User Profile
+                  DBUser viewProfile;
+                  setState(() {
+                    getUserInfo(widget.idea.userid).then((DBUser val) {
+                      viewProfile = val;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PublicProfilePage(
+                                  user: viewProfile,
+                                  currentUser: widget.user,
+                                )),
                       );
                     });
                   });
@@ -189,20 +203,18 @@ class ViewIdeaState extends State<ViewIdeaPage> {
                 icon: const Icon(Icons.person),
                 label: const Text(
                   'Add Comment',
-                  style: TextStyle(
-                    fontSize: 20
-                  ),
-                )
-              ),
-            ],
-          ),
+                  style: TextStyle(fontSize: 20),
+                )),
+          ],
         ),
+      ),
     );
   }
-  
+
   addComment(String comment, int id, User user) async {
     final response = await http.post(
-      Uri.parse('https://cse216-fl22-team14.herokuapp.com/ideas/$id/comment?sessionKey=${user.sessionKey}'),
+      Uri.parse(
+          'https://cse216-fl22-team14-new.herokuapp.com/ideas/${id}/comment?sessionKey=${user.sessionKey}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -220,12 +232,13 @@ class ViewIdeaState extends State<ViewIdeaPage> {
       throw Exception('Failed to create Post.');
     }
   }
-  Future<DBUser> getUserInfo(String userId) async{
-    final response = await http
-        .get(Uri.parse('https://cse216-fl22-team14.herokuapp.com/profile/$userId'));
+
+  Future<DBUser> getUserInfo(String userId) async {
+    final response = await http.get(Uri.parse(
+        'https://cse216-fl22-team14-new.herokuapp.com/profile/$userId'));
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response, then parse the JSON.
-      Map<String,String> userMap = jsonDecode(response.body);
+      Map<String, String> userMap = jsonDecode(response.body);
       DBUser user = DBUser.fromJson(userMap);
       return user;
     } else {
