@@ -40,6 +40,8 @@ dependencies:
   http: ^0.13.5
   # Google Sign-In Package
   google_sign_in: ^5.0.3
+  image_picker: ^0.8.6
+  mime: ^1.0.3
 
 dev_dependencies:
   flutter_test:

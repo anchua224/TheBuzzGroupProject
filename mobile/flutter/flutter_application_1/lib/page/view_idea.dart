@@ -214,7 +214,7 @@ class ViewIdeaState extends State<ViewIdeaPage> {
   addComment(String comment, int id, User user) async {
     final response = await http.post(
       Uri.parse(
-          'https://cse216-fl22-team14-new.herokuapp.com/ideas/$id/comment?sessionKey=${user.sessionKey}'),
+          'https://cse216-fl22-team14-new.herokuapp.com/ideas/${id}/comment?sessionKey=${user.sessionKey}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

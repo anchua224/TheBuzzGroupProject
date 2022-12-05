@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'profile_page.dart';
 import '../objects/user.dart';
 import '../main.dart';
+import 'package:mime/mime.dart';
 
 // AddIdeaState class would be the state of the app once you are trying to post
 // an idea
@@ -75,6 +76,34 @@ class _TextBoxState extends State<TextBox> {
   }
 
   late File _image;
+  String? _image_type;
+  String? _mimeType_image;
+  String? mimeType_Camera; // jpeg, png, etc...
+  String? mimeType_Gallery; // jpeg, png, etc...
+  String? mimeType_File; //pdf
+  String? mimeType_Video; //MP3, MP4, etc...
+
+  bool isImage(String path) {
+    final mimeType = lookupMimeType(path);
+    _mimeType_image = lookupMimeType(path);
+    if (mimeType!.endsWith('image/')) {
+      _image_type = path.split(".").last; //stores the extension type
+    }
+    return mimeType!.endsWith('jpg') ||
+        mimeType!.endsWith('png') ||
+        mimeType!.endsWith('jpeg') ||
+        mimeType.endsWith('image/');
+  }
+
+  // bool isVideo(String path) {
+  //   final mimeType = lookupMimeType(path);
+  // }
+
+  bool isPDF(String file) {
+    final mimeType = lookupMimeType(file);
+    return mimeType!.endsWith('pdf') || mimeType.endsWith('application/pdf');
+  }
+
   // createLinks(String url) async {}
   _getImageFromCamera() async {
     // var image = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -101,7 +130,6 @@ class _TextBoxState extends State<TextBox> {
   }
 
   //gallery or camera option:
-
   void _showPicked(context) {
     showModalBottomSheet(
       context: context,
@@ -294,25 +322,45 @@ class _TextBoxState extends State<TextBox> {
     );
   }
 
-  createCameraImage(FileImage file) async {
-    //convert image to base64 and send to google drive
-    // we want to send the name and the MIME type
+  // createCameraImage(FileImage file) async {
+  //   //convert image to base64 and send to google drive
+  //   // we want to send the name and the MIME type
 
-    final response = await http.post(
-      Uri.parse(
-          'https://cse216-fl22-team14-new.herokuapp.com/resources/:${widget.user.id}/:com_id?sessionKey=${widget.user.sessionKey}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, String>{
-        'mId': widget.user.sessionKey,
-        'mImageFile': file.toString(),
-      }),
-    );
-  }
+  //   final response = await http.post(
+  //     Uri.parse(
+  //         'https://cse216-fl22-team14-new.herokuapp.com/resources/:${widget.user.id}/:com_id?sessionKey=${widget.user.sessionKey}'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: jsonEncode(<String, dynamic>{
+  //       'mId': widget.user.sessionKey,
+  //       'mImageFile': file,
+  //     }),
+  //   );
+  // }
 
   createFileSender(File filesender) async {
     //convert to base64
+  }
+  var _imageBase64;
+
+  _CreateCameraGalleryPost(File _image_copy) async {
+    //convert to base64
+    var FileName = (_image_copy.toString().split('/').last);
+    http.Response imageRep = await http.get(Uri.parse(_image_copy.path));
+    _imageBase64 = base64Encode(imageRep.bodyBytes);
+
+    final response = await http.post(Uri.parse(//uncertain on what :com_id is
+            'https://cse216-fl22-team14-new.herokuapp.com/resources/${widget.user.id}/com_id?sessionKey=${widget.user.sessionKey}'),
+        headers: <String, String>{
+          'Content-Type': 'image/${_image_type}',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'mId': widget.user.sessionKey,
+          'mImage': _imageBase64,
+          'mMimeType': _mimeType_image,
+          'mFileName': FileName,
+        }));
   }
 
   createPost(String title, String message) async {

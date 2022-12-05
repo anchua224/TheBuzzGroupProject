@@ -405,7 +405,7 @@ class Likes {
 // fetchLikes method is supposed to fetch the like # for a specific id
 Future<List<Likes>> fetchLikes(int id, User user) async {
   final response = await http.get(Uri.parse(
-      'https://cse216-fl22-team14-new.herokuapp.com/ideas/:${id}/like?sessionKey=${user.sessionKey}'));
+      'https://cse216-fl22-team14-new.herokuapp.com/ideas/${id}/like?sessionKey=${user.sessionKey}'));
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, then parse the JSON.
     final List<Likes> returnData;
