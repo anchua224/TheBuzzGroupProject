@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * For now, our app creates an HTTP server that can deal with the ideas and like
+ * 
  * @author Junchen Bao
  * @version 1.0.0
  * @since 2022-09-16
@@ -15,10 +16,10 @@ import java.util.Map;
 public class App {
     /**
      * this is the funtion to run the app of the backend
+     * 
      * @param args unsed
      */
     public static void main(String[] args) {
-
         // gson provides us with a way to turn JSON into objects, and objects
         // into JSON.
         //
@@ -35,14 +36,17 @@ public class App {
         // with IDs starting over from 0.
         // final DataStore dataStore = new DataStore();
         Map<String, String> env = System.getenv();
-        String db_url = env.get("DATABASE_URL");
+        String ip = env.get("POSTGRES_IP");
+        String port = env.get("POSTGRES_PORT");
+        String user = env.get("POSTGRES_USER");
+        String pass = env.get("POSTGRES_PASS");
         // postgres://idbttiaffnxknz:accfe21dd483005ea86f0a4c763a3c9efafeed22a95540ddd69b3aaacd7412ea@ec2-54-91-223-99.compute-1.amazonaws.com:5432/d8o35qeqah6p4p
-        Database mDatabase = Database.getDatabase(db_url);
+        Database mDatabase = Database.getDatabase(ip, port, user, pass);
         if (mDatabase == null)
             return;
 
         // Get the port on which to listen for requests
-        Spark.port(getIntFromEnv("PORT", 4567));
+        Spark.port(getIntFromEnv("PORT", 5432));
 
         // Set up the location for serving static files. If the STATIC_LOCATION
         // environment variable is set, we will serve from it. Otherwise, serve
@@ -76,6 +80,7 @@ public class App {
         DatabaseRoutes.commentsRoutes(mDatabase);
         DatabaseRoutes.userRoutes(mDatabase);
         DatabaseRoutes.checkRoutes(mDatabase);
+        DatabaseRoutes.resourceRoutes(mDatabase);
         // mDatabase.mLikeTableManager.dropTable();
         // mDatabase.mLikeTableManager.createTable();
         // mDatabase.mDislikeTableManager.dropTable();

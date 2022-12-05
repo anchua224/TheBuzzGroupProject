@@ -3,17 +3,20 @@ package edu.lehigh.cse216.jub424.backend;
 
 import spark.Spark;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 // Import Google's JSON library
 import com.google.gson.*;
 
+import edu.lehigh.cse216.jub424.backend.data_manager.GoogleDriveManager;
 import edu.lehigh.cse216.jub424.backend.data_manager.OAuthManager;
 import edu.lehigh.cse216.jub424.backend.data_request.*;
 import edu.lehigh.cse216.jub424.backend.data_structure.*;
 
 /**
  * DatabaseRoutes is to use the database connection to set up the routes
+ * 
  * @author Junchen Bao
  * @version 1.0.0
  * @since 2022-09-16
@@ -24,6 +27,7 @@ public class DatabaseRoutes {
      * set up all the routes for the ideas table
      * /ideas get, post
      * /ideas/:id get
+     * 
      * @param mDatabase connection of the database
      */
     public static void ideasRoutes(Database mDatabase) {
@@ -57,7 +61,7 @@ public class DatabaseRoutes {
             response.status(200);
             response.type("application/json");
             // NB: createEntry checks for null title and message
-            int newId = mDatabase.mIdeaTableManager.insertIdea(req.mTitle, req.mMessage,1,sessionKey);
+            int newId = mDatabase.mIdeaTableManager.insertIdea(req.mTitle, req.mMessage, 1, sessionKey);
             if (newId == -1) {
                 return gson.toJson(new StructuredResponse("error", "error performing insertion", null));
             } else {
@@ -87,38 +91,42 @@ public class DatabaseRoutes {
 
         // // DELETE route for removing a row from the table ideas
         // Spark.delete("/ideas/:id", (request, response) -> {
-        //     // If we can't get an ID, Spark will send a status 500
-        //     int idx = Integer.parseInt(request.params("id"));
-        //     // ensure status 200 OK, with a MIME type of JSON
-        //     response.status(200);
-        //     response.type("application/json");
-        //     // NB: we won't concern ourselves too much with the quality of the
-        //     // message sent on a successful delete
-        //     int result_like = mDatabase.mLikeTableManager.deleteLikeIdea(idx);
-        //     int result = mDatabase.mIdeaTableManager.deleteIdeas(idx);
-        //     if (result == -1 || result_like == -1) {
-        //         return gson.toJson(new StructuredResponse("error", "unable to delete row " + idx, null));
-        //     } else {
-        //         return gson.toJson(new StructuredResponse("ok", null, null));
-        //     }
+        // // If we can't get an ID, Spark will send a status 500
+        // int idx = Integer.parseInt(request.params("id"));
+        // // ensure status 200 OK, with a MIME type of JSON
+        // response.status(200);
+        // response.type("application/json");
+        // // NB: we won't concern ourselves too much with the quality of the
+        // // message sent on a successful delete
+        // int result_like = mDatabase.mLikeTableManager.deleteLikeIdea(idx);
+        // int result = mDatabase.mIdeaTableManager.deleteIdeas(idx);
+        // if (result == -1 || result_like == -1) {
+        // return gson.toJson(new StructuredResponse("error", "unable to delete row " +
+        // idx, null));
+        // } else {
+        // return gson.toJson(new StructuredResponse("ok", null, null));
+        // }
         // });
 
         // // PUT route for updating a row in the ideas tabel. This is almost
         // // exactly the same as POST
         // Spark.put("/ideas/:id", (request, response) -> {
-        //     // If we can't get an ID or can't parse the JSON, Spark will send
-        //     // a status 500
-        //     int idx = Integer.parseInt(request.params("id"));
-        //     SimpleIdeaRequest req = gson.fromJson(request.body(), SimpleIdeaRequest.class);
-        //     // ensure status 200 OK, with a MIME type of JSON
-        //     response.status(200);
-        //     response.type("application/json");
-        //     int result = mDatabase.mIdeaTableManager.updateIdea(idx, req.mTitle, req.mMessage);
-        //     if (result == -1) {
-        //         return gson.toJson(new StructuredResponse("error", "unable to update row " + idx, null));
-        //     } else {
-        //         return gson.toJson(new StructuredResponse("ok", null, result));
-        //     }
+        // // If we can't get an ID or can't parse the JSON, Spark will send
+        // // a status 500
+        // int idx = Integer.parseInt(request.params("id"));
+        // SimpleIdeaRequest req = gson.fromJson(request.body(),
+        // SimpleIdeaRequest.class);
+        // // ensure status 200 OK, with a MIME type of JSON
+        // response.status(200);
+        // response.type("application/json");
+        // int result = mDatabase.mIdeaTableManager.updateIdea(idx, req.mTitle,
+        // req.mMessage);
+        // if (result == -1) {
+        // return gson.toJson(new StructuredResponse("error", "unable to update row " +
+        // idx, null));
+        // } else {
+        // return gson.toJson(new StructuredResponse("ok", null, result));
+        // }
         // });
 
     }
@@ -126,6 +134,7 @@ public class DatabaseRoutes {
     /**
      * set up all the routes for the likes table
      * /ideas/:id/likes?sessionKey get, post, delete
+     * 
      * @param mDatabase connection of the database
      */
     public static void likesRoutes(Database mDatabase) {
@@ -137,23 +146,23 @@ public class DatabaseRoutes {
         // ID of the newly created row.
         Spark.post("/ideas/:id/like", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
-            String sessionKey= request.queryParams("sessionKey");
+            String sessionKey = request.queryParams("sessionKey");
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
             // NB: createEntry checks for null title and message
-            int newId; 
-            
-            if(mDatabase.mDislikeTableManager.checkDislikeIdea(idx, sessionKey)){
+            int newId;
+
+            if (mDatabase.mDislikeTableManager.checkDislikeIdea(idx, sessionKey)) {
                 int disR;
                 disR = mDatabase.mDislikeTableManager.cancelDislikeIdea(idx, sessionKey);
-                if(disR == -1){
+                if (disR == -1) {
                     return gson.toJson(new StructuredResponse("error", "unable to cancel disliked record", null));
                 }
             }
-            if(!mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKey)){
+            if (!mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKey)) {
                 newId = mDatabase.mLikeTableManager.likeIdea(idx, sessionKey);
-            }else {
+            } else {
                 newId = mDatabase.mLikeTableManager.cancelLikeIdea(idx, sessionKey);
             }
             if (newId == -1) {
@@ -201,28 +210,29 @@ public class DatabaseRoutes {
     /**
      * set up all the routes for the dislikes table
      * /ideas/:id/dislikes?sessionKey get, post, delete
+     * 
      * @param mDatabase connection of the database
      */
-    public static void dislikesRoutes(Database mDatabase){
+    public static void dislikesRoutes(Database mDatabase) {
         final Gson gson = new Gson();
         Spark.post("/ideas/:id/dislike", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
-            String sessionKey= request.queryParams("sessionKey");
+            String sessionKey = request.queryParams("sessionKey");
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
             // NB: createEntry checks for null title and message
-            int newId; 
-            if(mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKey)){
+            int newId;
+            if (mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKey)) {
                 int disR;
                 disR = mDatabase.mLikeTableManager.cancelLikeIdea(idx, sessionKey);
-                if(disR == -1){
+                if (disR == -1) {
                     return gson.toJson(new StructuredResponse("error", "unable to cancel liked record", null));
                 }
             }
-            if(!mDatabase.mDislikeTableManager.checkDislikeIdea(idx, sessionKey)){
+            if (!mDatabase.mDislikeTableManager.checkDislikeIdea(idx, sessionKey)) {
                 newId = mDatabase.mDislikeTableManager.dislikeIdea(idx, sessionKey);
-            }else {
+            } else {
                 newId = mDatabase.mDislikeTableManager.cancelDislikeIdea(idx, sessionKey);
             }
             if (newId == -1) {
@@ -270,37 +280,39 @@ public class DatabaseRoutes {
     /**
      * set up all the routes for the OAuth login
      * /login post
+     * 
      * @param mDatabase connection of the database
      */
-    public static void loginRoutes(Database mDatabase){
+    public static void loginRoutes(Database mDatabase) {
         final Gson gson = new Gson();
-        Spark.post("/login",(request, response) -> {
+        Spark.post("/login", (request, response) -> {
             String tokenString = request.queryParams("token");
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
             ArrayList<String> result = OAuthManager.OAuthHandling(tokenString);
-            if(result.get(1).contains("lehigh.edu")){
-                //System.out.println("user is from lehigh");
+            if (result.get(1).contains("lehigh.edu")) {
+                // System.out.println("user is from lehigh");
                 String sessionKey = result.get(7);
-                mDatabase.mUsersTableManager.insertOneUser(sessionKey,result.get(1),
-                result.get(2),"NO GI YET", "NO SO YET", "NO NOTE YET");
-                //System.out.println("after sql");
+                mDatabase.mUsersTableManager.insertOneUser(sessionKey, result.get(1),
+                        result.get(2), "NO GI YET", "NO SO YET", "NO NOTE YET");
+                // System.out.println("after sql");
                 return gson.toJson(sessionKey);
-            }else{
+            } else {
                 return gson.toJson(new StructuredResponse("error", "User not from Lehigh", null));
             }
-            
+
         });
     }
 
     /**
      * set up all the routes for the comments table
-     * /ideas/:id/comment,  get, post
+     * /ideas/:id/comment, get, post
      * /ideas/:id/comment/:comid get, put
+     * 
      * @param mDatabase connection of the database
      */
-    public static void commentsRoutes(Database mDatabase){
+    public static void commentsRoutes(Database mDatabase) {
         final Gson gson = new Gson();
         Spark.get("/ideas/:id/comment", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
@@ -320,20 +332,21 @@ public class DatabaseRoutes {
             response.status(200);
             response.type("application/json");
             int result = mDatabase.mCommentsTableManager.insertOneComment(idx, sessionKey, req.mContent);
-            if(result != 0){
+            if (result != 0) {
                 return gson.toJson(new StructuredResponse("ok", null, null));
-            }else{
-                return gson.toJson(new StructuredResponse("error", "insert comment error " + idx + " " + sessionKey, null));
+            } else {
+                return gson.toJson(
+                        new StructuredResponse("error", "insert comment error " + idx + " " + sessionKey, null));
             }
         });
-        Spark.get("/ideas/:id/comment/:comid",(request, response) -> {
-            //int idx = Integer.parseInt(request.params("id"));
+        Spark.get("/ideas/:id/comment/:comid", (request, response) -> {
+            // int idx = Integer.parseInt(request.params("id"));
             int cmidx = Integer.parseInt(request.params("comid"));
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
             return gson.toJson(new StructuredResponse("ok", null,
-                mDatabase.mCommentsTableManager.selectOneComment(cmidx)));    
+                    mDatabase.mCommentsTableManager.selectOneComment(cmidx)));
         });
         Spark.put("/ideas/:id/comment/:comid", (request, response) -> {
             int cmidx = Integer.parseInt(request.params("comid"));
@@ -341,50 +354,97 @@ public class DatabaseRoutes {
             response.status(200);
             response.type("application/json");
             SimpleCommentRequest req = gson.fromJson(request.body(), SimpleCommentRequest.class);
-            int result = mDatabase.mCommentsTableManager.updateOneComment(cmidx,req.mContent);
-            if(result != 0){
+            int result = mDatabase.mCommentsTableManager.updateOneComment(cmidx, req.mContent);
+            if (result != 0) {
                 return gson.toJson(new StructuredResponse("ok", null, null));
-            }else{
+            } else {
                 return gson.toJson(new StructuredResponse("error", "update comment error " + cmidx, null));
             }
-        });    
+        });
     }
+
     /**
      * set up all the routes for the users table
-     * /profile/:userid,  get, put
+     * /profile/:userid, get, put
+     * 
      * @param mDatabase connection of the database
      */
-    public static void userRoutes(Database mDatabase){
+    public static void userRoutes(Database mDatabase) {
         final Gson gson = new Gson();
-        Spark.get("/profile/:userid", (request, response) ->{
+        Spark.get("/profile/:userid", (request, response) -> {
             String useridx = request.params("userid");
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
-            //System.out.println("hello");
+            // System.out.println("hello");
             User rUser = mDatabase.mUsersTableManager.selectOneUser(useridx);
-            return gson.toJson(new StructuredResponse("ok", null,rUser));   
+            return gson.toJson(new StructuredResponse("ok", null, rUser));
         });
-        Spark.put("/profile/:userid", (request, response) ->{
+        Spark.put("/profile/:userid", (request, response) -> {
             String useridx = request.params("userid");
             SimpleUserRequest req = gson.fromJson(request.body(), SimpleUserRequest.class);
             // ensure status 200 OK, with a MIME type of JSON
             response.status(200);
             response.type("application/json");
-            
-            //System.out.println("hello"+req.mGI);
-            int result = mDatabase.mUsersTableManager.updateProfile(useridx, req.mName,req.mGI,req.mSO,req.mNote);
-            if(result != 0){
+
+            // System.out.println("hello"+req.mGI);
+            int result = mDatabase.mUsersTableManager.updateProfile(useridx, req.mName, req.mGI, req.mSO, req.mNote);
+            if (result != 0) {
                 return gson.toJson(new StructuredResponse("ok", null, null));
-            }else{
+            } else {
                 return gson.toJson(new StructuredResponse("error", "update user profile error " + useridx, null));
             }
         });
     }
 
-    public static void checkRoutes(Database mDatabase){
+    /**
+     * set up all the routes for the users table
+     * /resource/:id, get, post
+     * 
+     * @param mDatabase connection of the database
+     */
+    public static void resourceRoutes(Database mDatabase) {
         Gson gson = new Gson();
-        Spark.get("/ideas/:id/checklike/:sessionKey",(request, response)->{
+        Spark.get("/resource/:id/:com_id?sessionKey", (request, response) -> {
+            int cmidx = Integer.parseInt(request.params("comid"));
+            int idx = Integer.parseInt(request.params("id"));
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            Resource rResource = mDatabase.mResourceTableManager.selectOneResource(cmidx, idx);
+            return gson.toJson(new StructuredResponse("ok", null, rResource));
+        });
+        Spark.post("/resource/:id/:com_id?sessionKey", (request, response) -> {
+            int cmidx = Integer.parseInt(request.params("comid"));
+            int idx = Integer.parseInt(request.params("id"));
+            String sessionKey = request.queryParams("sessionKey");
+            SimpleResourceRequest req = gson.fromJson(request.body(), SimpleResourceRequest.class);
+            // ensure status 200 OK, with a MIME type of JSON
+            response.status(200);
+            response.type("application/json");
+            String link = "";
+            // FIXME: change to parse input for base64, mimetype, and filename
+            if ((req.mLink).contains("https://")) {
+                // If resource string is a link, set link
+                link = req.mLink;
+            } else {
+                // If resource string is base64, upload to drive and get link
+                link = GoogleDriveManager.uploadBasic(req.mLink, req.mFileMIME, req.mFilename, idx, cmidx);
+            }
+            // Insert resource link into the resource table
+            int newRes = mDatabase.mResourceTableManager.insertOneResource(idx, cmidx, sessionKey, link, 1);
+            if (newRes != 0) {
+                return gson.toJson(new StructuredResponse("ok", "" + newRes, null));
+            } else {
+                return gson.toJson(
+                        new StructuredResponse("error", "error inserting link " + req.mLink + " " + sessionKey, null));
+            }
+        });
+    }
+
+    public static void checkRoutes(Database mDatabase) {
+        Gson gson = new Gson();
+        Spark.get("/ideas/:id/checklike/:sessionKey", (request, response) -> {
             int idx = Integer.parseInt(request.params("id"));
             String sessionKeyx = request.params("sessionKey");
             // ensure status 200 OK, with a MIME type of JSON
@@ -392,11 +452,11 @@ public class DatabaseRoutes {
             response.type("application/json");
             boolean like_result = mDatabase.mLikeTableManager.checkLikeIdea(idx, sessionKeyx);
             boolean dislike_result = mDatabase.mDislikeTableManager.checkDislikeIdea(idx, sessionKeyx);
-            if(like_result){
+            if (like_result) {
                 return gson.toJson(new StructuredResponse("ok", null, 1));
-            }else if(dislike_result){
+            } else if (dislike_result) {
                 return gson.toJson(new StructuredResponse("ok", null, -1));
-            }else{
+            } else {
                 return gson.toJson(new StructuredResponse("ok", null, 0));
             }
         });

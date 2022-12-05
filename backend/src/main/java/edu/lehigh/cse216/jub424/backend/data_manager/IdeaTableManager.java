@@ -7,6 +7,7 @@ import edu.lehigh.cse216.jub424.backend.data_structure.*;
 
 /**
  * IdeaTableManager all function interact with the ideas table
+ * 
  * @author Junchen Bao
  * @version 1.0.0
  * @since 2022-09-16
@@ -51,7 +52,9 @@ public class IdeaTableManager {
         // CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,
         // message VARCHAR(500) NOT NULL)
 
-        // mCreateTable = mConnection.prepareStatement("CREATE TABLE ideas (id SERIAL PRIMARY KEY, subject VARCHAR(50) NOT NULL,message VARCHAR(500) NOT NULL, validity INT NOT NULL, userid VARCHAR(64) NOT NULL)");
+        // mCreateTable = mConnection.prepareStatement("CREATE TABLE ideas (id SERIAL
+        // PRIMARY KEY, subject VARCHAR(50) NOT NULL,message VARCHAR(500) NOT NULL,
+        // validity INT NOT NULL, userid VARCHAR(64) NOT NULL)");
         // mDropTable = mConnection.prepareStatement("DROP TABLE ideas");
 
         mSelectAll = mConnection.prepareStatement("SELECT * FROM ideas ORDER BY id DESC");
@@ -62,22 +65,21 @@ public class IdeaTableManager {
     }
 
     // public void createTable(){
-    //     try {
-    //         mCreateTable.executeQuery();
-    //     } catch (SQLException e) {
-    //         // TODO Auto-generated catch block
-    //         e.printStackTrace();
-    //     }
+    // try {
+    // mCreateTable.executeQuery();
+    // } catch (SQLException e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
     // }
     // public void dropTable(){
-    //     try {
-    //         mDropTable.executeQuery();
-    //     } catch (SQLException e) {
-    //         // TODO Auto-generated catch block
-    //         e.printStackTrace();
-    //     }
+    // try {
+    // mDropTable.executeQuery();
+    // } catch (SQLException e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
     // }
-
+    // }
 
     /**
      * Query the database for a list of all subjects and their IDs
@@ -94,7 +96,7 @@ public class IdeaTableManager {
                         rs.getString("subject"),
                         rs.getString("message"),
                         rs.getInt("validity"),
-                        rs.getString("userid")));
+                        rs.getString("user_id")));
             }
             rs.close();
             return res;
@@ -122,7 +124,7 @@ public class IdeaTableManager {
                         rs.getString("subject"),
                         rs.getString("message"),
                         rs.getInt("validity"),
-                        rs.getString("userid"));
+                        rs.getString("user_id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -151,10 +153,10 @@ public class IdeaTableManager {
     /**
      * Insert a row into the database
      * 
-     * @param subject The subject for this new row
-     * @param message The message body for this new row
+     * @param subject  The subject for this new row
+     * @param message  The message body for this new row
      * @param validity valid=1, invalid=0
-     * @param userid of the user
+     * @param userid   of the user
      * 
      * @return The number of rows that were inserted
      */
@@ -163,7 +165,7 @@ public class IdeaTableManager {
         try {
             mInsertOne.setString(1, subject);
             mInsertOne.setString(2, message);
-            mInsertOne.setInt(3,validity);
+            mInsertOne.setInt(3, validity);
             mInsertOne.setString(4, userid);
             count += mInsertOne.executeUpdate();
         } catch (SQLException e) {
@@ -172,11 +174,10 @@ public class IdeaTableManager {
         return count;
     }
 
-    
     /**
      * Update the subject and message for a row in the database
      * 
-     * @param id The id of the row to update
+     * @param id      The id of the row to update
      * @param subject The subject for update
      * @param message The new message contents
      * @return The number of rows that were updated. -1 indicates an error.

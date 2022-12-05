@@ -1,6 +1,7 @@
 package edu.lehigh.cse216.jub424.backend.data_structure;
 
 import java.util.Date;
+
 /**
  * User holds information of one user.
  * 
@@ -42,23 +43,26 @@ public class User {
      * the creation time, should not be changed
      */
     public final Date createdDate;
+
     /**
      * constructor of the user, create a user with id, email, name, GI, SO, and note
-     * @param user_id id of the user
-     * @param email email of the user
-     * @param name name of the user
-     * @param GI GI of the user
-     * @param SO SO of the user
-     * @param note note from the user
+     * 
+     * @param user_id  id of the user
+     * @param email    email of the user
+     * @param name     name of the user
+     * @param GI       GI of the user
+     * @param SO       SO of the user
+     * @param note     note from the user
+     * @param validity validity of the user
      * 
      */
-    public User(String user_id, String email, String name, String GI, String SO, String note, int validity){
-        this.user_id=user_id;
-        this.email=email;
-        this.name=name;
-        this.GI=GI;
-        this.SO=SO;
-        this.note=note;
+    public User(String user_id, String email, String name, String GI, String SO, String note, int validity) {
+        this.user_id = user_id;
+        this.email = email;
+        this.name = name;
+        this.GI = GI;
+        this.SO = SO;
+        this.note = note;
         this.validity = validity;
         createdDate = new Date();
     }
