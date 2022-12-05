@@ -8,12 +8,12 @@ export default function Header() {
 
   return (
     <div id="header">
-        <button id='myProfileButton' onClick={() => setProfileIsOpen(true)}>My Profile</button>
+      <button className="button" id='myProfileButton' onClick={() => setProfileIsOpen(true)}>My Profile</button>
         <Profile 
-            profileOpen={profileIsOpen}
-            profileOnClose = {() => setProfileIsOpen(false)}
-            user_id={getSessionKey()}
-        />
+          profileOpen={profileIsOpen}
+          profileOnClose = {() => setProfileIsOpen(false)}
+          user_id={getSessionKey()}
+      />
     </div>
   )
 }

@@ -1,68 +1,65 @@
-import React,{useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import jwt_decode from "jwt-decode";
 import axios from 'axios';
-import Situation, { getLogin, setSessionKey,logout } from '../Situation';
+import Situation, { getLogin, setSessionKey, logout } from '../Situation';
 import Ideas from './Ideas';
 import Header from './Header';
 import Profile from './Profile';
+import Navbar from './Navbar';
 
 
 const Login = () => {
+  const [user, setUser] = useState({});
+  const handleCallbackResponse = async (response) => {
+    // console.log("Encoded JWT ID token: ", response.credential);
+    var userObject = jwt_decode(response.credential);
+    // console.log(userObject);
 
-    const [user, setUser] = useState({});
-    
+    document.getElementById("signInDiv").hidden = true;
+    //Retrieves session key
+    axios.post(`https://cse216-fl22-team14-new.herokuapp.com/login?token=${response.credential}`)
+      .then(response => {
+        setSessionKey(response.data);
+      })
+      .catch(error => {
+        console.log(error)
+      })
 
-    const handleCallbackResponse = async(response) =>{
-        // console.log("Encoded JWT ID token: ", response.credential);
-        var userObject = jwt_decode(response.credential);
-        // console.log(userObject);
-        
+    setUser(userObject);
+  }
 
-        document.getElementById("signInDiv").hidden = true;
+  function handleSignOut(event) {
+    setUser({});
+    logout();
+    document.getElementById("signInDiv").hidden = false;
+  }
 
-        axios.post(`https://cse216-fl22-team14.herokuapp.com/login?token=${response.credential}`)
-            .then(response =>{
-                setSessionKey(response.data);
-            })
-            .catch(error => {
-                console.log(error)
-            })
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: "259939040609-4gh5cug157ecmc3igr6qtpqojjl6813g.apps.googleusercontent.com",
+      callback: handleCallbackResponse
+    })
 
-        setUser(userObject);
-    }
-
-    function handleSignOut(event){
-        setUser({});
-        logout();
-        document.getElementById("signInDiv").hidden = false;
-    }
-
-    useEffect(() =>{
-        /* global google */
-        google.accounts.id.initialize({
-            client_id: "259939040609-4gh5cug157ecmc3igr6qtpqojjl6813g.apps.googleusercontent.com",
-            callback: handleCallbackResponse
-        })
-
-        google.accounts.id.renderButton(
-            document.getElementById("signInDiv"),
-            {theme: "outline", size: "large"}
-        )
-
-        google.accounts.id.prompt();
-    },[]);
-
-    return (
-        <div className='login'>
-            <div id='signInDiv'></div>
-            {   Object.keys(user).length !== 0 && 
-                <div>
-                    <Header />
-                    <Ideas />
-                </div>
-            }
-        </div>
+    google.accounts.id.renderButton(
+      document.getElementById("signInDiv"),
+      { theme: "outline", size: "large" }
     )
+
+    google.accounts.id.prompt();
+  }, []);
+
+  return (
+    <div className='login'>
+      <div id='signInDiv'></div>
+      {Object.keys(user).length !== 0 &&
+        <div>
+          <Navbar />
+          <Ideas />
+        </div>
+      }
+    </div>
+  )
 }
 
 export default Login

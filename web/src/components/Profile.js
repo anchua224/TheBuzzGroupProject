@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { getSessionKey } from '../Situation';
 
-/**
- * 
- */
 const PROFILE_STYLES = {
   position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate (-50%,-50%)',
+  top: '33%',
+  left: '33%',
+  right: '33%',
+  border: '3px solid pink',
+  borderRadius: '20px',
   backgroundColor: '#FFF',
-  padding: '50px',
+  textAlign: 'center',
+  padding: '20px',
   zIndex: 1000
 }
 
@@ -37,7 +37,7 @@ export default function Profile({profileOpen, profileOnClose, user_id}) {
   const [so,setSO] = useState();
 
   const getUserInformation = async() =>{
-    axios.get(`https://cse216-fl22-team14.herokuapp.com/profile/${user_id}?sessionKey=${getSessionKey()}`)
+    axios.get(`https://cse216-fl22-team14-new.herokuapp.com/profile/${user_id}?sessionKey=${getSessionKey()}`)
         .then(response =>{
           serUserInfor(response.data.mData);
           setGI(response.data.mData.GI);
@@ -50,19 +50,19 @@ export default function Profile({profileOpen, profileOnClose, user_id}) {
   };
   
   const changeUserInfor = async() =>{
-    axios.put(`https://cse216-fl22-team14.herokuapp.com/profile/${user_id}?sessionKey=${getSessionKey()}`,{
+    axios.put(`https://cse216-fl22-team14-new.herokuapp.com/profile/${user_id}?sessionKey=${getSessionKey()}`,{
       mName: userInfor.name,
       mGI: gi,
       mSO: so,
       mNote: note
     })
-        .then(response =>{
-          serUserInfor(response.data.mData);
-        })
-        .catch(error => {
-            console.log(error.massage)
-        });
-        profileOnClose();
+    .then(response =>{
+      serUserInfor(response.data.mData);
+    })
+    .catch(error => {
+      console.log(error.massage)
+    });
+    profileOnClose();
   };
 
   useEffect(() => {
@@ -71,17 +71,17 @@ export default function Profile({profileOpen, profileOnClose, user_id}) {
 
   if(!profileOpen){
     return null;
-  }else{
   };
 
   return ReactDOM.createPortal(
     <div style={OVERLAY_STYLE}>
       { userInfor !== undefined  &&
         <div style={PROFILE_STYLES}>
-          <h3>Name: {userInfor.name}</h3>
-          <h3>Email: {userInfor.email}</h3>
-          <label id='gi'><b>GI: </b></label>
-          <select id="gi" value={gi} onChange={event => setGI(event.target.value)}>
+          <h3 className='text'>Name: {userInfor.name}</h3>
+          <h3 className='text'>Email: {userInfor.email}</h3>
+          <label className='text' id='gi'><b>Gender Identity: </b></label>
+          <br></br>
+          <select className='text' id="gi" value={gi} onChange={event => setGI(event.target.value)}>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
                       <option value="trans_man">Transgender man/trans man</option>
@@ -90,24 +90,28 @@ export default function Profile({profileOpen, profileOnClose, user_id}) {
                       <option value="no_anw">Decline to answer</option>
           </select>
           <br></br>
-          <label id='so'><b>SO: </b></label>
-          <select id="so" value={so} onChange={event => setSO(event.target.value)}>
-                      <option value="Straight">Straight or heterosexual</option>
-                      <option value="Lesbian">Lesbian or gay</option>
+          <label className='text' id='so'><b>Sexual Orientation: </b></label>
+          <br></br>
+          <select className='text' id="so" value={so} onChange={event => setSO(event.target.value)}>
+                      <option value="Straight">Straight or Heterosexual</option>
+                      <option value="Lesbian">Lesbian or Gay</option>
                       <option value="Bisexual">Bisexual</option>
-                      <option value="qpq">Queer, pansexual, and/or questioning</option>
+                      <option value="qpq">Queer, Pansexual, and/or Questioning</option>
                       <option value="dont">Don't know</option>
                       <option value="no_anw">Decline to answer</option>
           </select>
           <br></br>
-          <label id='note'><b>Note: </b></label>
+          <label className='text' id='note'><b>Note: </b></label>
+          <br></br>
           <input
+            placeholder='Quick fun info about you...'
             id='note'
             value={note}
             onChange={event => setNote(event.target.value)}
           />
-          <button id="changeButton" onClick={() => changeUserInfor()}>Change</button>
-          <button id="cancelCancel" onClick={profileOnClose}>Cancel</button>
+          <hr></hr>
+          <button className='acu-buttons' id="changeButton" onClick={() => changeUserInfor()}>Change</button>
+          <button className='acu-buttons' id="cancelCancel" onClick={profileOnClose}>Cancel</button>
         </div>
       }
     </div>,
