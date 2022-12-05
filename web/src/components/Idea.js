@@ -10,6 +10,7 @@ export default function Idea(props) {
   const [dislike, setDislike] = useState();
   const [profileIsOpen, setProfileIsOpen] = useState(false);
   const [User, setUser] = useState();
+  const [link, setLinkOpen] = useState();
 
   const getLike = async () => {
     axios.get(`https://cse216-fl22-team14-new.herokuapp.com/ideas/${props.id}/like`)
@@ -62,6 +63,30 @@ export default function Idea(props) {
       })
   }
 
+  function linkIsPresent(props) {
+    return <div>
+      <p>
+        <a href="https://www.google.com/">Supporting Link</a>
+      </p>
+    </div>
+  }
+
+  function linkIsNotPresent(props){
+    return <div>
+      <p>
+        No link provided
+      </p>
+    </div>
+  }
+
+  function linkStatus(props) {
+    const isLinkPresent = props.linkIsPresent;
+    if (isLinkPresent) {
+      return <linkIsPresent />
+    }
+    return <linkIsNotPresent />
+  }
+
   useEffect(() => {
     getLike();
     getDislike();
@@ -77,7 +102,9 @@ export default function Idea(props) {
         </button>
       </p>
       <h2>{props.title}</h2>
-      <p>{props.massage}</p>
+      <p>
+        {props.massage}<br></br>
+      </p>
       {/* <p>{props.createDate}</p> */}
       <button className='like-button' id={props.id} onClick={(e) => handleLike(e)}>
         Likes: {like}

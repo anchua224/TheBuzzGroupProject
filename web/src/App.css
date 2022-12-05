@@ -4,9 +4,9 @@
     padding: 20px;
     margin: auto;
     margin-top: 10px;
+    margin-bottom: 10px;
     width: 30em;
     background-color: whitesmoke;
-    margin-bottom: 10px;
 }
 .comment{
     border: none;
@@ -15,8 +15,6 @@
     margin: 0 auto;
     margin-bottom: 10px;
     margin-top: 10;
-    margin-left: auto;
-    margin-right: auto;
     background-color: pink;
 }
 #addIdeaButton,#myProfileButton{

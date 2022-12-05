@@ -30,6 +30,7 @@ export default function Navbar() {
         <AddIdea
           open={isOpen}
           onClose={() => { setIsOpen(false); getPosts()}}
+          
         />
       </li>
     </ul>

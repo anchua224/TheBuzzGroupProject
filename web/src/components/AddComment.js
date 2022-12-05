@@ -31,21 +31,25 @@ export default function AddComment({open, onClose,idea_id}) {
         return null;
       }
       const addNewLink = async(e) =>{
-        // axios.post(`https://cse216-fl22-team14-new.herokuapp.com/resources/:${idea_id}/:${com_id}?sessionKey=${getSessionKey()}`,{
-        //   mLink: link,
-        // })
-        // .catch(error => {
-        //   console.log(error.massage)
-        // });
-        // onClose();
+        axios.post(`https://cse216-fl22-team14-new.herokuapp.com/resources/:${idea_id}/:${com_id}?sessionKey=${getSessionKey()}`,{
+          mLink: link,
+        })
+        .catch(error => {
+          console.log(error.massage)
+        });
+        onClose();
       }
     const addNewComment = async(e) =>{
       axios.post(`https://cse216-fl22-team14-new.herokuapp.com/ideas/${idea_id}/comment?sessionKey=${getSessionKey()}`,{
         mContent: content
       })
+      .then(response => {
+        console.log(response.data);
+      })
       .catch(error => {
       console.log(error.massage)
       });
+      addNewLink();
       onClose();
     }
     
@@ -59,6 +63,8 @@ export default function AddComment({open, onClose,idea_id}) {
             <hr></hr>
             <button className="acu-buttons" id="addButton" onClick={(e) => addNewComment(e)}>Add</button>
             <button className="acu-buttons" id="addCancel" onClick={onClose}>Cancel</button>
+            <br></br>
+        <button className='acu-buttons' id="addFile" onClick={handleFile} type="file" >Upload File</button>
           </div>
         </div>,
         document.getElementById('portal')

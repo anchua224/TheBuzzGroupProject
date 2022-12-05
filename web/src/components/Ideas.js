@@ -31,11 +31,11 @@ export default function Ideas() {
         return (
           <div className='ideaList' key={idea.id}>
             <Idea
-              id={idea.id}
-              title={idea.title}
-              massage={idea.massage}
+              id={1}
+              title={"Sunny"}
+              massage={"What should my grade be"}
               createDate={idea.createdDate}
-              validity={idea.validity}
+              validity={1}
               user_id={idea.userid}
             />
           </div>
