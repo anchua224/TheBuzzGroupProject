@@ -121,21 +121,18 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 	
 ## Backlog Item & Tech Debt List (sprint 10):
 - Backlogs:
-    - Admin:
-      - 1. javadoc
-    - Backend:
-	  - 1. Getting the Google API to work an some problems with credentials 
     - Mobile:
-      - 1. Ideas aren’t able to display because of the null error
-      - 2. Google API not fully tested
-      - 3. Able to post things but not able to view it
+      - 1. Get request for retrieving mp3 & mp4 video files
+      - 2. Likes/dislikes & comments
     - Web:
-      - 1. Functionality for adding files (Code is provided but not fully work)
+      - 1. Being able to test and demo the website
+	  - 2. Functionality fully implemented to view file
 - Tech Debt:
     - Web:
-      - 1. Final touch with CSS
-           - Making it very web friendly and not seem like a knock off mobile app
-           - Reload automatically when adding ideas or comments
+      - 1. Although functiosn may work, it could always be more user friendly
+			(Only showing links or files when present)
+	- Mobile:
+	  - 1.  Ideas display page (null errors still occur)
 
 	
 
