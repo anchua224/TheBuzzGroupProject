@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { getSessionKey } from '../Situation';
 
-/**
- * 
- */
 const PROFILE_STYLES = {
   position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate (-50%,-50%)',
+  top: '33%',
+  left: '40%',
+  right: '40%',
+  border: '3px solid pink',
+  borderRadius: '20px',
   backgroundColor: '#FFF',
-  padding: '50px',
+  textAlign: 'center',
+  padding: '20px',
   zIndex: 1000
 }
 
@@ -28,12 +28,12 @@ const OVERLAY_STYLE = {
 
 export default function ProfileSimple({profileOpen, profileOnClose, user_id}) {
 
-  const [userInfor, serUserInfor] = useState();
+  const [userInfo, setUserInfo] = useState();
 
   const getUserInformation = async(e) =>{
-    axios.get(`https://cse216-fl22-team14.herokuapp.com/profile/${user_id}?sessionKey=${getSessionKey()}`)
+    axios.get(`https://cse216-fl22-team14-new.herokuapp.com/profile/${user_id}?sessionKey=${getSessionKey()}`)
         .then(response =>{
-          serUserInfor(response.data.mData);
+          setUserInfo(response.data.mData);
         })
         .catch(error => {
             console.log(error.massage)
@@ -50,12 +50,12 @@ export default function ProfileSimple({profileOpen, profileOnClose, user_id}) {
 
   return ReactDOM.createPortal(
     <div style={OVERLAY_STYLE}>
-      { userInfor !== undefined  &&
+      { userInfo !== undefined  &&
         <div style={PROFILE_STYLES}>
-          <h3>Name: {userInfor.name}</h3>
-          <h3>Email: {userInfor.email}</h3>
-          <h3>Note: {userInfor.note}</h3>
-          <button id="close" onClick={profileOnClose}>Close</button>
+          <h3 className='text'>Name: {userInfo.name}</h3>
+          <h3 className='text'>Email: {userInfo.email}</h3>
+          <h3 className='text'>Note: {userInfo.note}</h3>
+          <button className='acu-buttons' id="close" onClick={profileOnClose}>Close</button>
         </div>
       }
     </div>,

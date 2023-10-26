@@ -5,11 +5,13 @@ import { getSessionKey } from '../Situation';
 
 const AddIdea_STYLES = {
   position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate (-50%,-50%)',
+  top: '33%',
+  left: '33%',
+  right: '33%',
+  border: '3px solid pink',
+  borderRadius: '20px',
   backgroundColor: '#FFF',
-  padding: '50px',
+  padding: '20px',
   zIndex: 1000
 }
 
@@ -28,25 +30,41 @@ export default function AddComment({open, onClose,idea_id}) {
     if(!open){
         return null;
       }
-    
-    const addNewComment = async(e) =>{
-        axios.post(`https://cse216-fl22-team14.herokuapp.com/ideas/${idea_id}/comment?sessionKey=${getSessionKey()}`,{
-            mContent: content
+      const addNewLink = async(e) =>{
+        axios.post(`https://cse216-fl22-team14-new.herokuapp.com/resources/:${idea_id}/:${com_id}?sessionKey=${getSessionKey()}`,{
+          mLink: link,
         })
-            .catch(error => {
-                console.log(error.massage)
-            });
-            onClose();
+        .catch(error => {
+          console.log(error.massage)
+        });
+        onClose();
+      }
+    const addNewComment = async(e) =>{
+      axios.post(`https://cse216-fl22-team14-new.herokuapp.com/ideas/${idea_id}/comment?sessionKey=${getSessionKey()}`,{
+        mContent: content
+      })
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+      console.log(error.massage)
+      });
+      addNewLink();
+      onClose();
     }
-
-      
+    
     return ReactDOM.createPortal(
         <div style={OVERLAY_STYLE}>
           <div style={AddIdea_STYLES}>
-            <label>Idea Comment:</label>
-            <input type="text" id="newConnent" onChange={(e) => setContent(e.target.value)}/>
-            <button id="addButton" onClick={(e) => addNewComment(e)}>Add</button>
-            <button id="addCancel" onClick={onClose}>Cancel</button>
+            <label className='text'><b>Idea Comment:</b></label>
+            <input placeholder="Share your thoughts..." type="text" id="newConnent" onChange={(e) => setContent(e.target.value)}/>
+            <label className='text'><b>Link</b></label>
+            <input placeholder='Provide link here if needed' id="newLink" onChange={(e) => setContent(e.target.value)}/>
+            <hr></hr>
+            <button className="acu-buttons" id="addButton" onClick={(e) => addNewComment(e)}>Add</button>
+            <button className="acu-buttons" id="addCancel" onClick={onClose}>Cancel</button>
+            <br></br>
+        <button className='acu-buttons' id="addFile" onClick={handleFile} type="file" >Upload File</button>
           </div>
         </div>,
         document.getElementById('portal')
