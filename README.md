@@ -1,10 +1,8 @@
-# CSE 216
-This is Team Fourteam's repository. It is intended for use during phase 2.
-
+# Software Engineering Group Project
+This project is not intended for commercial use or production. This repository is an archive of a past project. 
 ## Details
 - Application Name: The Buzz
-- Bitbucket Repository: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/README.md?mode=edit&at=master
-- Trello Invitation Link: https://trello.com/invite/b/ce1jUW7H/ATTI1c150689108daa233d3151c856bd9e1d945CE3CB/fourteamphase3
+- Purpose: Users under a verified organization can interact with other users by creating, liking, and commenting on posts. Users access the application by signing in using Google Sign-In.
 
 ## Contributors
 1. Junchen Bao (jub424@lehigh.edu)
@@ -95,7 +93,7 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 ![image](markdown_images/ERD_v3.png)-->
 
 ## User Stories
-- Lehigh Current User
+- Verified User
 	- As a user, I want to create and save posts, so that I can share my ideas
 	- As a user, I want to interact with other posts, so that I can like and dislike ideas
 	- As a user, I want to see other posts, so that I can view other users' ideas
@@ -116,8 +114,8 @@ This is Team Fourteam's repository. It is intended for use during phase 2.
 	- As an admin, I would like to see all the resources, so I can manage what is shown in the app
 
 
-## Artifacts:
-- Link: https://bitbucket.org/junchenbao/cse216_fl22_group14/src/master/markdown_images/Latest_version_artifacts
+## Design Artifacts:
+Found in /markdown_images/.
 	
 ## Backlog Item & Tech Debt List (sprint 12):
 - Backlogs:
